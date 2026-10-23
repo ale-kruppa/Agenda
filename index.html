@@ -1,0 +1,2504 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f0d13">
+<meta name="description" content="Mi espacio: agenda de uñas, ciclo menstrual, turnos y recordatorios. Todo en un solo lugar, guardado en tu dispositivo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi espacio">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Mi espacio</title>
+<style>
+:root {
+  --radius: 20px; --radius-sm: 14px; --radius-xs: 10px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --accent: #c04e88; --accent-2: #7c5cff;
+  --good: #4ade80; --warn: #fbbf24; --danger: #f87171;
+  --grad: linear-gradient(135deg, #c04e88 0%, #7c5cff 100%);
+  --grad-soft: linear-gradient(135deg, rgba(192,78,136,.15) 0%, rgba(124,92,255,.15) 100%);
+}
+[data-theme="dark"] {
+  --bg: #0f0d13; --bg-soft: #1a1720;
+  --card: #211d29; --card-hover: #2a2534;
+  --border: #322c3e; --border-soft: #262130;
+  --ink: #f2eef8; --ink-strong: #ffffff;
+  --muted: #9b93aa; --muted-soft: #6e687a;
+  --header-bg: rgba(15,13,19,.72); --nav-bg: rgba(26,23,32,.92);
+  --shadow-lg: 0 20px 50px -12px rgba(0,0,0,.6);
+  --phase-menstrual: #e64980; --phase-follicular: #4dabf7;
+  --phase-fertile: #37b24d; --phase-luteal: #f59f00;
+}
+[data-theme="light"] {
+  --bg: #faf7fb; --bg-soft: #f2ecf5;
+  --card: #ffffff; --card-hover: #faf5fc;
+  --border: #ebe3f0; --border-soft: #f2ecf5;
+  --ink: #1a1720; --ink-strong: #0f0d13;
+  --muted: #6b6279; --muted-soft: #9b93aa;
+  --header-bg: rgba(250,247,251,.78); --nav-bg: rgba(255,255,255,.92);
+  --shadow-lg: 0 20px 50px -12px rgba(60,30,80,.15);
+  --phase-menstrual: #e64980; --phase-follicular: #4dabf7;
+  --phase-fertile: #37b24d; --phase-luteal: #f59f00;
+}
+html { scroll-behavior: smooth; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font); background: var(--bg); color: var(--ink);
+  min-height: 100vh; -webkit-font-smoothing: antialiased;
+  transition: background-color .3s ease, color .3s ease;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(192,78,136,.10), transparent 50%),
+    radial-gradient(ellipse at top right, rgba(124,92,255,.10), transparent 50%);
+}
+[data-theme="light"] body {
+  background-image:
+    radial-gradient(ellipse at top left, rgba(192,78,136,.06), transparent 50%),
+    radial-gradient(ellipse at top right, rgba(124,92,255,.06), transparent 50%);
+}
+button { font: inherit; border: 0; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+button:disabled { opacity: .55; cursor: not-allowed; }
+a { color: inherit; text-decoration: none; }
+
+.app-header { position: sticky; top: 0; z-index: 50; background: var(--header-bg); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border-soft); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; cursor: pointer; padding: 4px 8px; border-radius: 10px; transition: background-color .2s ease; }
+.brand:hover { background: var(--card-hover); }
+.brand-icon { width: 36px; height: 36px; border-radius: 11px; background: var(--grad); display: grid; place-items: center; font-size: 1.1rem; box-shadow: 0 8px 20px -6px rgba(192,78,136,.55); }
+.brand-text { font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--ink-strong); }
+.nav-desktop { display: none; flex: 1; align-items: center; gap: 4px; margin-left: 8px; }
+.nav-desktop button { padding: 9px 14px; border-radius: 10px; font-size: .88rem; font-weight: 600; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; position: relative; transition: color .2s ease, background-color .2s ease; }
+.nav-desktop button:hover { color: var(--ink); background: var(--card-hover); }
+.nav-desktop button.active { color: var(--ink-strong); }
+.nav-desktop button.active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: var(--grad); border-radius: 2px; }
+.theme-toggle { width: 40px; height: 40px; border-radius: 11px; background: var(--card); border: 1px solid var(--border); display: grid; place-items: center; font-size: 1.05rem; margin-left: auto; transition: all .2s ease; }
+.theme-toggle:hover { background: var(--card-hover); transform: rotate(15deg); }
+
+.app-main { max-width: 1200px; margin: 0 auto; padding: 28px 20px calc(96px + env(safe-area-inset-bottom)); min-height: calc(100vh - 65px); }
+.view-enter { animation: viewIn .35s cubic-bezier(.2,.8,.2,1); }
+@keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.page-head { margin-bottom: 24px; }
+.page-head .tag { display: inline-block; padding: 5px 12px; background: var(--grad-soft); border: 1px solid rgba(192,78,136,.28); border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.page-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; color: var(--ink-strong); margin-bottom: 8px; }
+.page-head p { color: var(--muted); font-size: .98rem; line-height: 1.55; max-width: 620px; }
+
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-top: 16px; }
+.panel h2 { font-size: 1.12rem; font-weight: 750; margin-bottom: 6px; color: var(--ink-strong); }
+.panel > p { color: var(--muted); margin-bottom: 16px; font-size: .91rem; line-height: 1.5; }
+.section-title { font-size: 1.1rem; font-weight: 750; color: var(--ink-strong); margin: 28px 0 14px; }
+
+.alert-banner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.35); color: var(--ink); font-size: .9rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; }
+[data-theme="light"] .alert-banner { background: rgba(251,191,36,.12); }
+.alert-banner .ab-icon { font-size: 1.15rem; flex-shrink: 0; }
+.alert-banner.danger { background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.35); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 8px; }
+.summary-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
+.summary-card:hover { transform: translateY(-3px); border-color: rgba(192,78,136,.4); box-shadow: 0 20px 50px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(192,78,136,.15); }
+.summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); opacity: 0; transition: opacity .2s ease; }
+.summary-card:hover::before { opacity: 1; }
+.summary-card.is-empty { border-style: dashed; }
+.summary-card.is-empty .sc-ico { opacity: .55; }
+.summary-card.is-empty .sc-value { color: var(--muted); }
+.summary-card.is-warn::before { background: var(--warn); opacity: 1; }
+.summary-card.is-warn .sc-value { color: var(--warn); }
+.summary-card.is-overdue::before { background: var(--danger); opacity: 1; }
+.summary-card.is-overdue .sc-value { color: var(--danger); }
+.summary-card.is-today::before { background: var(--accent); opacity: 1; }
+.summary-card.is-today .sc-value { color: var(--accent); }
+.summary-card .sc-ico { width: 42px; height: 42px; border-radius: 12px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.2rem; border: 1px solid rgba(192,78,136,.15); }
+.summary-card .sc-label { font-size: .74rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.summary-card .sc-value { font-size: 1.08rem; font-weight: 750; color: var(--ink-strong); line-height: 1.3; }
+.summary-card .sc-sub { font-size: .82rem; color: var(--muted); margin-top: -2px; line-height: 1.4; }
+
+.event-list { display: flex; flex-direction: column; gap: 10px; }
+.event-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: transform .2s ease, border-color .2s ease, background-color .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
+.event-item:hover { transform: translateX(3px); border-color: rgba(192,78,136,.35); background: var(--card-hover); }
+.event-item .ei-ico { width: 42px; height: 42px; border-radius: 12px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.15rem; flex-shrink: 0; border: 1px solid rgba(192,78,136,.15); }
+.event-item .ei-body { flex: 1; min-width: 0; }
+.event-item .ei-title { font-weight: 700; font-size: .95rem; color: var(--ink-strong); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-item .ei-meta { font-size: .82rem; color: var(--muted); }
+.event-item .ei-when { font-size: .82rem; font-weight: 750; color: var(--accent); flex-shrink: 0; text-align: right; line-height: 1.3; }
+.event-item .ei-when .ei-when-sub { display: block; font-size: .72rem; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.event-item.is-today .ei-when { color: var(--warn); }
+.event-item.is-today .ei-ico { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.3); }
+
+.empty-dashboard { text-align: center; padding: 36px 24px; background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); margin-top: 24px; }
+.empty-dashboard h2 { font-size: 1.1rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 6px; }
+.empty-dashboard p { color: var(--muted); font-size: .9rem; margin-bottom: 22px; line-height: 1.5; }
+.empty-shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; max-width: 480px; margin: 0 auto; }
+.empty-shortcuts button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; background: var(--grad-soft); border: 1px solid rgba(192,78,136,.2); border-radius: 14px; font-size: .85rem; font-weight: 650; color: var(--ink); transition: all .2s ease; }
+.empty-shortcuts button:hover { transform: translateY(-2px); border-color: rgba(192,78,136,.45); background: var(--card-hover); }
+.empty-shortcuts button .es-ico { font-size: 1.4rem; }
+
+.placeholder { background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); padding: 44px 28px; text-align: center; margin-top: 20px; }
+.placeholder .ph-icon { width: 64px; height: 64px; border-radius: 20px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.8rem; margin: 0 auto 18px; border: 1px solid rgba(192,78,136,.2); }
+.placeholder h2 { font-size: 1.15rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 8px; }
+.placeholder p { color: var(--muted); font-size: .92rem; line-height: 1.55; max-width: 420px; margin: 0 auto 20px; }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 12px; font-weight: 700; font-size: .9rem; transition: all .2s ease; }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn-primary { background: var(--grad); color: #fff; box-shadow: 0 10px 26px -8px rgba(192,78,136,.6); }
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.btn-secondary { background: var(--grad-soft); color: var(--ink); border: 1px solid rgba(192,78,136,.25); }
+.btn-secondary:hover { border-color: rgba(192,78,136,.5); background: var(--card-hover); }
+.btn-ghost { border: 1px solid var(--border); color: var(--ink); background: transparent; }
+.btn-ghost:hover { background: var(--card-hover); }
+.btn-danger { background: rgba(248,113,113,.15); color: var(--danger); border: 1px solid rgba(248,113,113,.35); }
+.btn-danger:hover { background: rgba(248,113,113,.25); }
+.btn-sm { padding: 7px 12px; font-size: .82rem; }
+.btn-icon { padding: 8px; width: 34px; height: 34px; display: grid; place-items: center; }
+.actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
+
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.form-grid .full { grid-column: 1 / -1; }
+label { display: block; font-size: .88rem; font-weight: 650; margin-bottom: 6px; color: var(--ink); }
+input, select, textarea { width: 100%; font: inherit; padding: 11px 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--bg-soft); color: var(--ink); transition: border-color .2s ease, background-color .2s ease; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--card); }
+textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+input[type="file"] { padding: 8px; cursor: pointer; }
+.field-hint { font-size: .78rem; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+.required { color: var(--danger); }
+
+.cards-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.nail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; position: relative; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
+.nail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); }
+.card-top { display: flex; gap: 12px; align-items: center; padding: 18px 18px 10px; }
+.emoji { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--grad-soft); font-size: 1.5rem; border: 1px solid rgba(192,78,136,.15); flex-shrink: 0; }
+.card-top h3 { font-size: 1.06rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 3px; }
+.card-top small { color: var(--muted); font-size: .82rem; }
+.card-photo { padding: 0 18px 10px; }
+.card-photo img { width: 100%; max-height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); cursor: zoom-in; display: block; transition: filter .2s ease; }
+.card-photo img:hover { filter: brightness(1.08); }
+.card-body { padding: 4px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+.next-label { color: var(--muted); font-size: .82rem; }
+.next-date { font-size: 1.16rem; font-weight: 750; color: var(--ink-strong); margin-top: -6px; }
+.pill { display: inline-block; align-self: flex-start; font-size: .78rem; font-weight: 650; background: var(--grad-soft); color: var(--ink); padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(192,78,136,.2); }
+.pill.warn { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.35); color: var(--warn); }
+.pill.overdue { background: rgba(248,113,113,.15); border-color: rgba(248,113,113,.35); color: var(--danger); }
+.pill.today { background: rgba(192,78,136,.2); border-color: rgba(192,78,136,.5); color: var(--accent); }
+.card-body button { width: 100%; margin-top: auto; }
+.photo-preview-wrap { margin-top: 10px; }
+.photo-preview img { max-width: 100%; max-height: 180px; border-radius: 10px; border: 1px solid var(--border); display: block; }
+.history-item { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
+.history-item:last-child { border-bottom: 0; }
+.history-left { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.history-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); cursor: zoom-in; flex-shrink: 0; transition: filter .2s ease; }
+.history-thumb:hover { filter: brightness(1.1); }
+.history-item strong { display: block; font-size: .95rem; color: var(--ink-strong); }
+.history-item small { color: var(--muted); font-size: .82rem; display: block; margin-top: 2px; }
+.history-item button { padding: 7px 12px; font-size: .8rem; flex-shrink: 0; }
+.empty { color: var(--muted); padding: 16px 0; font-size: .9rem; text-align: center; }
+
+.phase-wrap { padding-top: 26px; }
+.phase-bar { display: flex; height: 40px; border-radius: 20px; overflow: visible; position: relative; background: var(--bg-soft); border: 1px solid var(--border); }
+.phase-segment { height: 100%; }
+.phase-segment:first-child { border-top-left-radius: 20px; border-bottom-left-radius: 20px; }
+.phase-segment:last-child { border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+.phase-segment.menstrual { background: var(--phase-menstrual); }
+.phase-segment.follicular { background: var(--phase-follicular); }
+.phase-segment.fertile { background: var(--phase-fertile); }
+.phase-segment.luteal { background: var(--phase-luteal); }
+.phase-marker { position: absolute; top: -24px; transform: translateX(-50%); color: var(--accent); font-size: 1.15rem; line-height: 1; text-shadow: 0 0 3px var(--card); pointer-events: none; }
+.phase-marker.overdue { color: var(--danger); }
+.phase-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; font-size: .82rem; color: var(--muted); }
+.phase-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.phase-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.phase-legend .dot.menstrual { background: var(--phase-menstrual); }
+.phase-legend .dot.follicular { background: var(--phase-follicular); }
+.phase-legend .dot.fertile { background: var(--phase-fertile); }
+.phase-legend .dot.luteal { background: var(--phase-luteal); }
+.phase-today-label { margin-top: 14px; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+.phase-today-label strong { color: var(--ink); }
+.quick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.quick-actions button { flex: 1 1 200px; padding: 15px 16px; font-size: 1rem; }
+.badge-ongoing { display: inline-block; font-size: .72rem; font-weight: 700; background: var(--grad-soft); color: var(--ink); padding: 3px 8px; border-radius: 999px; margin-left: 6px; border: 1px solid rgba(192,78,136,.2); }
+.badge-long { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.35); color: var(--warn); }
+.end-form { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 8px; padding: 8px; background: var(--bg-soft); border-radius: 10px; }
+.end-form input { width: 150px; padding: 6px 8px; font-size: .85rem; }
+.end-form button { padding: 6px 10px; font-size: .82rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.stat { padding: 14px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--border-soft); }
+.stat span { display: block; color: var(--muted); font-size: .78rem; margin-bottom: 4px; font-weight: 650; }
+.stat strong { font-size: 1rem; color: var(--ink-strong); }
+
+.appt-list { display: flex; flex-direction: column; gap: 10px; }
+.appt-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; display: flex; gap: 14px; align-items: flex-start; position: relative; overflow: hidden; transition: border-color .2s ease, background-color .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
+.appt-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grad); }
+.appt-item.attended::before { background: var(--good); }
+.appt-item.no_show::before { background: var(--muted-soft); }
+.appt-item.overdue::before { background: var(--danger); }
+.appt-item.today::before { background: var(--warn); }
+.appt-item.is-editing { border-color: var(--accent); }
+.appt-date-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 58px; padding: 8px 6px; background: var(--bg-soft); border-radius: 12px; flex-shrink: 0; border: 1px solid var(--border-soft); }
+.appt-date-badge .db-day { font-size: 1.35rem; font-weight: 800; color: var(--ink-strong); line-height: 1; }
+.appt-date-badge .db-month { font-size: .68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+.appt-item.attended .appt-date-badge, .appt-item.no_show .appt-date-badge { opacity: .6; }
+.appt-item.attended .db-day, .appt-item.no_show .db-day { text-decoration: line-through; }
+.appt-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.appt-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.appt-title { font-size: 1.02rem; font-weight: 750; color: var(--ink-strong); line-height: 1.3; }
+.appt-item.attended .appt-title, .appt-item.no_show .appt-title { color: var(--muted); text-decoration: line-through; }
+.appt-badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .05em; }
+.appt-badge.attended { background: rgba(74,222,128,.15); color: var(--good); border: 1px solid rgba(74,222,128,.3); }
+.appt-badge.no_show { background: rgba(155,147,170,.15); color: var(--muted); border: 1px solid rgba(155,147,170,.3); }
+.appt-badge.overdue { background: rgba(248,113,113,.15); color: var(--danger); border: 1px solid rgba(248,113,113,.3); }
+.appt-badge.today { background: rgba(251,191,36,.15); color: var(--warn); border: 1px solid rgba(251,191,36,.3); }
+.appt-meta { font-size: .84rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.appt-meta .meta-item { display: inline-flex; align-items: center; gap: 4px; }
+.appt-meta .meta-item.meta-place::before { content: '📍'; }
+.appt-meta .meta-item.meta-time::before { content: '🕐'; }
+.appt-notes { font-size: .84rem; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid var(--border); margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
+.appt-actions { display: flex; gap: 6px; flex-direction: column; flex-shrink: 0; align-self: flex-start; }
+.appt-actions-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.appt-actions-row .btn-close { padding: 6px 10px; font-size: .78rem; font-weight: 700; }
+.appt-actions-row .btn-close.attended { background: rgba(74,222,128,.15); color: var(--good); border: 1px solid rgba(74,222,128,.35); }
+.appt-actions-row .btn-close.attended:hover { background: rgba(74,222,128,.25); }
+.appt-actions-row .btn-close.no_show { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.appt-actions-row .btn-close.no_show:hover { background: var(--card-hover); color: var(--ink); }
+.edit-form { margin-top: 8px; padding: 12px; background: var(--bg-soft); border-radius: 10px; border: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 10px; animation: fadeInUp .2s ease; }
+.edit-form .form-grid { gap: 10px; }
+.edit-form .actions { margin-top: 4px; }
+.filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-tabs button { padding: 7px 14px; border-radius: 999px; font-size: .82rem; font-weight: 650; color: var(--muted); border: 1px solid var(--border); background: transparent; transition: all .2s ease; display: inline-flex; align-items: center; }
+.filter-tabs button:hover { background: var(--card-hover); color: var(--ink); }
+.filter-tabs button.active { background: var(--grad); color: #fff; border-color: transparent; }
+.filter-tabs button .tab-count { display: inline-block; margin-left: 6px; padding: 1px 7px; background: rgba(0,0,0,.08); color: var(--muted); border-radius: 999px; font-size: .72rem; font-weight: 700; }
+[data-theme="dark"] .filter-tabs button .tab-count { background: rgba(255,255,255,.1); color: var(--ink); }
+.filter-tabs button.active .tab-count { background: rgba(255,255,255,.28); color: #fff; }
+
+.reminder-list { display: flex; flex-direction: column; gap: 8px; }
+.reminder-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); position: relative; transition: border-color .2s ease, background-color .2s ease, opacity .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
+.reminder-item.overdue { border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.04); }
+.reminder-item.today { border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.04); }
+.reminder-item.done { opacity: .55; }
+.reminder-item.is-editing { border-color: var(--accent); }
+.reminder-check { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: transparent; display: grid; place-items: center; flex-shrink: 0; cursor: pointer; transition: all .2s ease; margin-top: 1px; }
+.reminder-check:hover:not(:disabled) { border-color: var(--accent); background: var(--grad-soft); }
+.reminder-check .check-icon { opacity: 0; font-size: 1rem; font-weight: 800; color: #fff; transform: scale(.5); transition: all .2s ease; }
+.reminder-item.done .reminder-check { background: var(--grad); border-color: transparent; cursor: default; }
+.reminder-item.done .reminder-check .check-icon { opacity: 1; transform: scale(1); }
+.reminder-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.reminder-title { font-size: 1rem; font-weight: 700; color: var(--ink-strong); line-height: 1.35; word-break: break-word; }
+.reminder-item.done .reminder-title { text-decoration: line-through; color: var(--muted); }
+.reminder-meta { font-size: .82rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.reminder-meta .rm-date, .reminder-meta .rm-time { display: inline-flex; align-items: center; gap: 4px; }
+.reminder-meta .rm-date.overdue { color: var(--danger); font-weight: 700; }
+.reminder-meta .rm-date.today { color: var(--warn); font-weight: 700; }
+.reminder-notes { font-size: .84rem; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid var(--border); margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
+.reminder-actions { display: flex; gap: 4px; flex-shrink: 0; align-self: flex-start; }
+.reminder-actions button { width: 32px; height: 32px; padding: 0; display: grid; place-items: center; border-radius: 8px; font-size: .9rem; }
+.reminder-actions .btn-ghost { border: 1px solid transparent; }
+.reminder-actions .btn-ghost:hover { border-color: var(--border); background: var(--card-hover); }
+
+.settings-list { display: flex; flex-direction: column; gap: 12px; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--border-soft); flex-wrap: wrap; }
+.setting-row .sr-info { flex: 1; min-width: 200px; }
+.setting-row .sr-title { font-size: .95rem; font-weight: 700; color: var(--ink-strong); margin-bottom: 3px; }
+.setting-row .sr-desc { font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.setting-row .sr-action { flex-shrink: 0; }
+.storage-bar-wrap { margin-top: 6px; }
+.storage-bar { height: 8px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.storage-bar-fill { height: 100%; background: var(--grad); border-radius: 4px; transition: width .3s ease; }
+.storage-info { display: flex; justify-content: space-between; margin-top: 6px; font-size: .8rem; color: var(--muted); }
+.version-badge { display: inline-block; padding: 3px 10px; background: var(--grad-soft); color: var(--accent); border: 1px solid rgba(192,78,136,.3); border-radius: 999px; font-size: .78rem; font-weight: 700; }
+.danger-zone { border: 1px solid rgba(248,113,113,.4); background: rgba(248,113,113,.04); border-radius: 12px; padding: 16px; margin-top: 12px; }
+.danger-zone .dz-title { color: var(--danger); font-weight: 750; font-size: .95rem; margin-bottom: 6px; }
+.danger-zone .dz-desc { color: var(--muted); font-size: .85rem; line-height: 1.5; margin-bottom: 12px; }
+
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 250; backdrop-filter: blur(8px); }
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lightbox-close { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #ffffff; color: #111; font-size: 1.5rem; line-height: 1; padding: 0; display: grid; place-items: center; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+
+.nav-mobile { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: var(--nav-bg); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-top: 1px solid var(--border-soft); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+.nav-mobile button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: 10px; color: var(--muted); font-size: .62rem; font-weight: 650; letter-spacing: .01em; transition: color .15s ease, background-color .15s ease; position: relative; min-width: 0; }
+.nav-mobile button .nm-ico { font-size: 1.15rem; line-height: 1; transition: transform .2s ease; }
+.nav-mobile button .nm-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.nav-mobile button.active { color: var(--accent); }
+.nav-mobile button.active .nm-ico { transform: scale(1.12); }
+.nav-mobile button.active::before { content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 22px; height: 3px; background: var(--grad); border-radius: 2px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(16px); background: var(--card); border: 1px solid var(--border); color: var(--ink); padding: 12px 18px; border-radius: 14px; box-shadow: var(--shadow-lg); font-size: .9rem; font-weight: 600; max-width: calc(100vw - 32px); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; z-index: 300; display: flex; align-items: center; gap: 14px; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.toast.error { color: var(--danger); }
+.toast .toast-action { background: var(--grad); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: .82rem; font-weight: 700; flex-shrink: 0; }
+.toast .toast-action:hover { filter: brightness(1.1); }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 768px) {
+  .nav-desktop { display: flex; }
+  .nav-mobile { display: none; }
+  .app-main { padding: 36px 28px 60px; }
+  .header-inner { padding: 14px 28px; }
+  .toast { bottom: 24px; }
+}
+@media (max-width: 620px) {
+  .cards-grid, .summary-grid, .form-grid, .stats-grid { grid-template-columns: 1fr; }
+  .appt-item { flex-wrap: wrap; }
+  .appt-actions { flex-direction: row; width: 100%; }
+  .appt-actions-row { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand" id="brand" role="button" tabindex="0" aria-label="Ir al inicio">
+      <span class="brand-icon" aria-hidden="true">✨</span>
+      <span class="brand-text">Mi espacio</span>
+    </div>
+    <nav class="nav-desktop" id="navDesktop" aria-label="Navegación principal"></nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<main class="app-main" id="view" tabindex="-1"></main>
+
+<nav class="nav-mobile" id="navMobile" aria-label="Navegación principal"></nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const THEME_KEY = 'hubThemeV1';
+  const DEFAULT_THEME = 'dark';
+  const KEY_UNAS = 'agendaUnasDemoV1';
+  const KEY_CICLO = 'miCicloV1';
+  const KEY_TURNOS = 'hubTurnosV1';
+  const KEY_RECORDATORIOS = 'hubRecordatoriosV1';
+  const HUB_VERSION = '1.0.0';
+
+  const VIEWS = {
+    inicio:        { label: 'Inicio',        icon: '🏠', title: 'Inicio' },
+    unas:          { label: 'Uñas',          icon: '💅', title: 'Agenda de uñas' },
+    ciclo:         { label: 'Ciclo',         icon: '🌸', title: 'Mi ciclo' },
+    turnos:        { label: 'Turnos',        icon: '📅', title: 'Turnos' },
+    recordatorios: { label: 'Recordatorios', icon: '🔔', title: 'Recordatorios' },
+    ajustes:       { label: 'Ajustes',       icon: '⚙️', title: 'Ajustes' },
+  };
+  const DEFAULT_VIEW = 'inicio';
+
+  const $ = id => document.getElementById(id);
+  const log = (...args) => { if (location.search.includes('debug')) console.log('[hub]', ...args); };
+  const logErr = (...args) => console.error('[hub]', ...args);
+
+  const toISODate = dt =>
+    `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+  const todayISO = () => toISODate(new Date());
+  const isValidISODate = s => {
+    if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    const [y, m, d] = s.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d;
+  };
+  const isValidTime = s => typeof s === 'string' && /^\d{2}:\d{2}$/.test(s) && (() => {
+    const [h, m] = s.split(':').map(Number);
+    return h >= 0 && h <= 23 && m >= 0 && m <= 59;
+  })();
+  const addDaysISO = (value, days) => {
+    const [y, m, d] = value.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    dt.setDate(dt.getDate() + days);
+    return toISODate(dt);
+  };
+  const dayDiff = (from, to) =>
+    Math.round((new Date(to + 'T00:00:00') - new Date(from + 'T00:00:00')) / 86400000);
+  const fmtDate = value => {
+    if (!isValidISODate(value)) return '—';
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+  };
+  const fmtDateLong = value => {
+    if (!isValidISODate(value)) return '—';
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+  };
+  const fmtDateFull = value => {
+    if (!isValidISODate(value)) return '—';
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' });
+  };
+  const escapeHtml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+
+  const systemPrefersLight = () =>
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  const loadTheme = () => {
+    try { const s = localStorage.getItem(THEME_KEY); if (s === 'light' || s === 'dark') return s; } catch (e) {}
+    return systemPrefersLight() ? 'light' : DEFAULT_THEME;
+  };
+  const saveTheme = theme => { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} };
+  const applyTheme = theme => {
+    document.documentElement.setAttribute('data-theme', theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#faf7fb' : '#0f0d13');
+    const icon = $('themeIcon');
+    if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
+    const btn = $('themeToggle');
+    if (btn) btn.setAttribute('aria-label', theme === 'light' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro');
+  };
+  let currentTheme = loadTheme();
+  applyTheme(currentTheme);
+  const toggleTheme = () => {
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(currentTheme); saveTheme(currentTheme);
+  };
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const onChange = e => {
+      try { const s = localStorage.getItem(THEME_KEY); if (s === 'light' || s === 'dark') return; } catch (err) {}
+      currentTheme = e.matches ? 'light' : 'dark';
+      applyTheme(currentTheme);
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }
+
+  const readLS = key => {
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
+  };
+
+  const normalizeApptStatus = a => {
+    if (!a || typeof a !== 'object') return 'pending';
+    if (a.status === 'pending' || a.status === 'attended' || a.status === 'no_show') return a.status;
+    if (a.done === true) return 'attended';
+    if (a.done === false) return 'pending';
+    return 'pending';
+  };
+
+  const computeUnas = () => {
+    const data = readLS(KEY_UNAS);
+    if (!data || !Array.isArray(data.visits)) return { state: 'empty' };
+    const settings = data.settings || {};
+    const iH = Number(settings.handsInterval) || 3;
+    const iF = Number(settings.feetInterval) || 5;
+    const latest = { manos: null, pies: null };
+    for (const v of data.visits) {
+      if (!v || !['manos','pies'].includes(v.kind)) continue;
+      if (!isValidISODate(v.date)) continue;
+      if (!latest[v.kind] || v.date > latest[v.kind].date) latest[v.kind] = v;
+    }
+    const due = { manos: null, pies: null };
+    if (latest.manos) due.manos = addDaysISO(latest.manos.date, iH * 7);
+    if (latest.pies) due.pies = addDaysISO(latest.pies.date, iF * 7);
+    let next = null;
+    for (const kind of ['manos','pies']) if (due[kind] && (!next || due[kind] < next.date)) next = { kind, date: due[kind] };
+    if (!next) return { state: 'empty' };
+    const days = dayDiff(todayISO(), next.date);
+    return { state: 'ok', kind: next.kind, date: next.date, days };
+  };
+  const computeCiclo = () => {
+    const data = readLS(KEY_CICLO);
+    if (!data || !Array.isArray(data.periods)) return { state: 'empty' };
+    const periods = data.periods
+      .filter(p => p && isValidISODate(p.startDate))
+      .sort((a, b) => a.startDate.localeCompare(b.startDate));
+    if (!periods.length) return { state: 'empty' };
+    const defCycle = Number((data.settings && data.settings.defaultCycleLength)) || 28;
+    const diffs = [];
+    for (let i = 1; i < periods.length; i++) {
+      const d = dayDiff(periods[i - 1].startDate, periods[i].startDate);
+      if (d >= 21 && d <= 45) diffs.push(d);
+    }
+    const avgCycle = diffs.length ? Math.round(diffs.reduce((a, b) => a + b, 0) / diffs.length) : defCycle;
+    const ongoing = periods.find(p => !p.endDate);
+    if (ongoing) return { state: 'ongoing', day: dayDiff(ongoing.startDate, todayISO()) + 1, date: ongoing.startDate };
+    const last = periods[periods.length - 1];
+    const nextStart = addDaysISO(last.startDate, avgCycle);
+    const days = dayDiff(todayISO(), nextStart);
+    if (days < 0) return { state: 'overdue', days: -days, date: nextStart };
+    if (days === 0) return { state: 'today', date: nextStart };
+    return { state: 'ok', days, date: nextStart };
+  };
+  const computeTurnos = () => {
+    const data = readLS(KEY_TURNOS);
+    if (!data || !Array.isArray(data.appointments)) return { state: 'empty' };
+    const up = data.appointments
+      .filter(a => a && isValidISODate(a.date) && normalizeApptStatus(a) === 'pending' && a.date >= todayISO())
+      .sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
+    if (!up.length) return { state: 'empty' };
+    const n = up[0];
+    return { state: 'ok', title: n.title || 'Turno', date: n.date, time: n.time, days: dayDiff(todayISO(), n.date) };
+  };
+  const computeRecordatorios = () => {
+    const data = readLS(KEY_RECORDATORIOS);
+    if (!data || !Array.isArray(data.reminders)) return { state: 'empty' };
+    const pending = data.reminders.filter(r => r && isValidISODate(r.date) && !r.done);
+    if (!pending.length) return { state: 'empty' };
+    const overdue = pending.filter(r => r.date < todayISO()).length;
+    const up = pending.filter(r => r.date >= todayISO()).sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
+    return { state: 'ok', count: pending.length, overdue, next: up[0] || null };
+  };
+  const computeEvents = () => {
+    const events = [];
+    const today = todayISO();
+    const u = computeUnas();
+    if (u.state === 'ok') events.push({ view: 'unas', icon: '💅', title: `Uñas de ${u.kind}`, date: u.date, meta: 'Próximo turno' });
+    const c = computeCiclo();
+    if (c.state === 'ok' || c.state === 'today' || c.state === 'overdue') {
+      events.push({ view: 'ciclo', icon: '🌸', title: c.state === 'overdue' ? 'Período (atrasado)' : 'Próximo período', date: c.date, meta: c.state === 'overdue' ? `Atraso de ${c.days} días` : 'Ciclo menstrual' });
+    }
+    const tD = readLS(KEY_TURNOS);
+    if (tD && Array.isArray(tD.appointments)) {
+      for (const a of tD.appointments) {
+        if (!a || !isValidISODate(a.date) || a.date < today) continue;
+        if (normalizeApptStatus(a) !== 'pending') continue;
+        events.push({ view: 'turnos', icon: '📅', title: a.title || 'Turno', date: a.date, time: a.time, meta: a.place || 'Turno agendado' });
+      }
+    }
+    const rD = readLS(KEY_RECORDATORIOS);
+    if (rD && Array.isArray(rD.reminders)) {
+      for (const r of rD.reminders) {
+        if (!r || !isValidISODate(r.date) || r.done || r.date < today) continue;
+        events.push({ view: 'recordatorios', icon: '🔔', title: r.title || 'Recordatorio', date: r.date, time: r.time, meta: 'Recordatorio' });
+      }
+    }
+    events.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : (a.time || '').localeCompare(b.time || ''));
+    return events;
+  };
+  const computeAlerts = () => {
+    const alerts = [];
+    const c = computeCiclo();
+    if (c.state === 'overdue' && c.days >= 3) alerts.push({ icon: '🌸', text: `Tu período está ${c.days} días atrasado.`, danger: c.days >= 7 });
+    const rD = readLS(KEY_RECORDATORIOS);
+    if (rD && Array.isArray(rD.reminders)) {
+      const v = rD.reminders.filter(r => r && isValidISODate(r.date) && !r.done && r.date < todayISO()).length;
+      if (v > 0) alerts.push({ icon: '🔔', text: `Tenés ${v} recordatorio${v === 1 ? '' : 's'} vencido${v === 1 ? '' : 's'}.` });
+    }
+    return alerts;
+  };
+
+  const parseHash = () => {
+    const raw = (location.hash || '').replace(/^#\/?/, '').trim();
+    return VIEWS[raw] ? raw : DEFAULT_VIEW;
+  };
+  const navigate = view => {
+    if (!VIEWS[view]) view = DEFAULT_VIEW;
+    const target = '#/' + view;
+    if (location.hash !== target) location.hash = target;
+    else renderView(view);
+  };
+  const onHashChange = () => renderView(parseHash());
+
+  const renderNav = () => {
+    const d = $('navDesktop'), m = $('navMobile');
+    d.textContent = ''; m.textContent = '';
+    for (const [key, v] of Object.entries(VIEWS)) {
+      const db = document.createElement('button');
+      db.type = 'button'; db.dataset.view = key;
+      db.innerHTML = `<span class="nav-ico" aria-hidden="true">${v.icon}</span><span>${v.label}</span>`;
+      db.addEventListener('click', () => navigate(key));
+      d.appendChild(db);
+      const mb = document.createElement('button');
+      mb.type = 'button'; mb.dataset.view = key;
+      mb.innerHTML = `<span class="nm-ico" aria-hidden="true">${v.icon}</span><span class="nm-label">${v.label}</span>`;
+      mb.addEventListener('click', () => navigate(key));
+      m.appendChild(mb);
+    }
+  };
+  const setActiveNav = view => {
+    document.querySelectorAll('[data-view]').forEach(el => {
+      if (el.tagName === 'BUTTON' && el.parentElement && (el.parentElement.id === 'navDesktop' || el.parentElement.id === 'navMobile')) {
+        el.classList.toggle('active', el.dataset.view === view);
+      }
+    });
+  };
+
+  const viewHeader = ({ tag, title, subtitle }) => `
+    <div class="page-head">
+      ${tag ? `<div class="tag">${escapeHtml(tag)}</div>` : ''}
+      <h1>${escapeHtml(title)}</h1>
+      ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ''}
+    </div>
+  `;
+  const placeholder = ({ icon, title, description }) => `
+    <div class="placeholder">
+      <div class="ph-icon" aria-hidden="true">${icon}</div>
+      <h2>${escapeHtml(title)}</h2>
+      <p>${escapeHtml(description)}</p>
+    </div>
+  `;
+  const renderSummaryCard = ({ view, icon, label, value, sub, state }) => {
+    const cls = state && state !== 'ok' ? `is-${state}` : '';
+    return `<div class="summary-card ${cls}" data-view="${escapeHtml(view)}" role="button" tabindex="0"><div class="sc-ico" aria-hidden="true">${icon}</div><div class="sc-label">${escapeHtml(label)}</div><div class="sc-value">${escapeHtml(value)}</div><div class="sc-sub">${escapeHtml(sub)}</div></div>`;
+  };
+  const whenLabel = date => {
+    const d = dayDiff(todayISO(), date);
+    if (d < 0) return `Hace ${-d} día${-d === 1 ? '' : 's'}`;
+    if (d === 0) return 'HOY';
+    if (d === 1) return 'MAÑANA';
+    return `En ${d} días`;
+  };
+
+  let toastTimer = null;
+  function showToast(msg, type = 'success', options = {}) {
+    const el = $('toast');
+    if (!el) return;
+    el.textContent = '';
+    const text = document.createElement('span');
+    text.textContent = msg;
+    el.appendChild(text);
+    el.classList.toggle('error', type === 'error');
+    if (options.action) {
+      const btn = document.createElement('button');
+      btn.className = 'toast-action';
+      btn.type = 'button';
+      btn.textContent = options.action.label;
+      btn.addEventListener('click', () => {
+        try { options.action.onClick && options.action.onClick(); } catch (e) { logErr(e); }
+        el.classList.remove('show');
+        clearTimeout(toastTimer);
+      });
+      el.appendChild(btn);
+    }
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), options.duration || 3500);
+  }
+  window.__hubToast = showToast;
+
+  const newId = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') { try { return crypto.randomUUID(); } catch (e) {} }
+    return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  };
+
+  /* ==================== UÑAS ==================== */
+  const unasModule = (() => {
+    const DB_NAME = 'agendaUnasDB'; const DB_VERSION = 1; const PHOTO_STORE = 'photos';
+    const MAX_PHOTOS_PER_KIND = 3; const PHOTO_MAX_DIM = 900; const PHOTO_QUALITY = 0.75;
+    const VALID_TIMES = ['09:00', '12:00', '18:00'];
+    const DEFAULTS = () => ({ settings: { handsInterval: 3, feetInterval: 5, leadDays: 3, reminderTime: '09:00' }, visits: [] });
+    let state = DEFAULTS();
+    const photoCache = new Map();
+    let pendingPhoto = null, pendingPhotoKind = null, saving = false;
+    let dbPromise = null, dbSupported = 'indexedDB' in window, lsAvailable = true;
+    let currentMountId = 0;
+    try { const k = '__t__' + Math.random(); localStorage.setItem(k, '1'); localStorage.removeItem(k); }
+    catch (e) { lsAvailable = false; }
+    const toast = (msg, type) => window.__hubToast ? window.__hubToast(msg, type) : console.log(msg);
+
+    const openDB = () => {
+      if (dbPromise) return dbPromise;
+      if (!dbSupported) return Promise.reject(new Error('no-idb'));
+      dbPromise = new Promise((resolve, reject) => {
+        let req;
+        try { req = indexedDB.open(DB_NAME, DB_VERSION); }
+        catch (e) { dbSupported = false; reject(e); return; }
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(PHOTO_STORE)) db.createObjectStore(PHOTO_STORE, { keyPath: 'visitId' });
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => { dbSupported = false; reject(req.error || new Error('idb')); };
+        req.onblocked = () => reject(new Error('idb-blocked'));
+      });
+      return dbPromise;
+    };
+    const idbOp = (mode, fn) => new Promise((resolve, reject) => {
+      openDB().then(db => {
+        let t; try { t = db.transaction(PHOTO_STORE, mode); } catch (e) { reject(e); return; }
+        let out; try { out = fn(t.objectStore(PHOTO_STORE)); } catch (e) { reject(e); return; }
+        t.oncomplete = () => resolve(out && 'result' in out ? out.result : out);
+        t.onerror = () => reject(t.error); t.onabort = () => reject(t.error);
+      }).catch(reject);
+    });
+    const putPhoto = p => idbOp('readwrite', s => s.put(p));
+    const deletePhoto = id => idbOp('readwrite', s => s.delete(id));
+    const getAllPhotos = () => idbOp('readonly', s => s.getAll());
+    const clearPhotos = () => idbOp('readwrite', s => s.clear());
+
+    const loadImgFromFile = file => new Promise((resolve, reject) => {
+      if (typeof FileReader === 'undefined') { reject(new Error('no-fr')); return; }
+      const r = new FileReader();
+      r.onload = () => { const img = new Image(); img.onload = () => resolve(img); img.onerror = () => reject(new Error('img')); img.src = r.result; };
+      r.onerror = () => reject(new Error('read'));
+      r.readAsDataURL(file);
+    });
+    const compressImage = async (file, maxDim = PHOTO_MAX_DIM, quality = PHOTO_QUALITY) => {
+      const img = await loadImgFromFile(file);
+      let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+      if (!w || !h) throw new Error('dim');
+      const ratio = Math.min(1, maxDim / Math.max(w, h));
+      w = Math.max(1, Math.round(w * ratio)); h = Math.max(1, Math.round(h * ratio));
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('canvas');
+      ctx.drawImage(img, 0, 0, w, h);
+      return canvas.toDataURL('image/jpeg', quality);
+    };
+
+    const sanitizeSettings = raw => {
+      const out = { ...DEFAULTS().settings };
+      if (!raw || typeof raw !== 'object') return out;
+      const hi = Number(raw.handsInterval), fi = Number(raw.feetInterval), ld = Number(raw.leadDays);
+      if (Number.isInteger(hi) && hi >= 1 && hi <= 52) out.handsInterval = hi;
+      if (Number.isInteger(fi) && fi >= 1 && fi <= 52) out.feetInterval = fi;
+      if (Number.isInteger(ld) && ld >= 0 && ld <= 30) out.leadDays = ld;
+      if (typeof raw.reminderTime === 'string' && VALID_TIMES.includes(raw.reminderTime)) out.reminderTime = raw.reminderTime;
+      return out;
+    };
+    const sanitizeVisit = v => {
+      if (!v || typeof v !== 'object') return null;
+      if (!['manos','pies'].includes(v.kind)) return null;
+      if (!isValidISODate(v.date)) return null;
+      return { id: (typeof v.id === 'string' && v.id) ? v.id : newId(), kind: v.kind, date: v.date };
+    };
+    const sanitizeState = raw => {
+      const out = { settings: sanitizeSettings(raw && raw.settings), visits: [] };
+      if (raw && Array.isArray(raw.visits)) {
+        const seen = new Set();
+        for (const v of raw.visits) {
+          const c = sanitizeVisit(v);
+          if (!c) continue;
+          if (seen.has(c.id)) c.id = newId();
+          seen.add(c.id); out.visits.push(c);
+        }
+      }
+      return out;
+    };
+    const save = () => {
+      if (!lsAvailable) { toast('Tu navegador bloquea el guardado.', 'error'); return false; }
+      try { localStorage.setItem(KEY_UNAS, JSON.stringify({ version: 2, settings: state.settings, visits: state.visits })); return true; }
+      catch (e) { toast('No se pudieron guardar los datos.', 'error'); return false; }
+    };
+    const load = () => {
+      if (!lsAvailable) { state = DEFAULTS(); return; }
+      try { const raw = localStorage.getItem(KEY_UNAS); if (raw) state = sanitizeState(JSON.parse(raw)); }
+      catch (e) { state = DEFAULTS(); }
+    };
+    const interval = kind => Number(kind === 'manos' ? state.settings.handsInterval : state.settings.feetInterval) * 7;
+    const latest = kind => state.visits.filter(v => v.kind === kind).sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))[0];
+    const dueDate = kind => { const v = latest(kind); return v ? addDaysISO(v.date, interval(kind)) : ''; };
+    const reminderText = kind => {
+      const due = dueDate(kind);
+      if (!due) return { text: 'Registrá la última visita', cls: '' };
+      const delta = dayDiff(todayISO(), due);
+      const lead = Number(state.settings.leadDays) || 0;
+      const time = state.settings.reminderTime || '09:00';
+      if (delta < 0) return { text: `Se pasó hace ${Math.abs(delta)} día${Math.abs(delta) === 1 ? '' : 's'}`, cls: 'overdue' };
+      if (delta <= lead) return { text: delta === 0 ? `¡Toca pedir turno! · aviso ${time}` : `Aviso: faltan ${delta} día${delta === 1 ? '' : 's'} · ${time}`, cls: delta === 0 ? 'today' : 'warn' };
+      return { text: `En ${delta} día${delta === 1 ? '' : 's'}`, cls: '' };
+    };
+    const loadPhotoCache = async () => {
+      photoCache.clear();
+      if (!dbSupported) return;
+      try { const all = await getAllPhotos(); for (const p of all || []) if (p && typeof p.visitId === 'string' && typeof p.dataUrl === 'string') photoCache.set(p.visitId, p.dataUrl); }
+      catch (e) { logErr('loadPhotoCache', e); }
+    };
+    const cleanupOrphans = async () => {
+      if (!dbSupported) return;
+      const valid = new Set(state.visits.map(v => v.id));
+      for (const id of Array.from(photoCache.keys())) {
+        if (!valid.has(id)) { photoCache.delete(id); try { await deletePhoto(id); } catch (e) {} }
+      }
+    };
+    const prunePhotos = async kind => {
+      if (!dbSupported) return;
+      const list = [];
+      for (const [id] of photoCache) { const v = state.visits.find(x => x.id === id); if (v && v.kind === kind) list.push({ id, date: v.date }); }
+      list.sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+      for (let i = MAX_PHOTOS_PER_KIND; i < list.length; i++) { photoCache.delete(list[i].id); try { await deletePhoto(list[i].id); } catch (e) {} }
+    };
+    const pruneAll = async () => { if (!dbSupported) return; for (const k of ['manos', 'pies']) await prunePhotos(k); };
+
+    const renderSections = () => {
+      const cardsEl = $('unasCards'), historyEl = $('unasHistory');
+      if (!cardsEl || !historyEl) return;
+      cardsEl.innerHTML = ['manos', 'pies'].map(kind => {
+        const v = latest(kind), due = dueDate(kind), photo = v ? photoCache.get(v.id) : null, rem = reminderText(kind);
+        return `<article class="nail-card" data-kind="${kind}"><div class="card-top"><div class="emoji" aria-hidden="true">${kind === 'manos' ? '💅' : '🦶'}</div><div><h3>Uñas de ${kind}</h3><small>${v ? 'Última visita: ' + escapeHtml(fmtDate(v.date)) : 'Todavía sin registrar'}</small></div></div>${photo ? `<div class="card-photo"><img src="${photo}" alt="Foto de la última visita de ${kind}" loading="lazy" data-visit="${escapeHtml(v.id)}"></div>` : ''}<div class="card-body"><div class="next-label">Próxima visita estimada</div><div class="next-date">${due ? escapeHtml(fmtDate(due)) : 'Añadí una fecha'}</div><span class="pill ${rem.cls}">${escapeHtml(rem.text)}</span><button class="btn btn-primary" type="button" data-done="${kind}">Uñas listas</button></div></article>`;
+      }).join('');
+      const sorted = [...state.visits].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+      if (!sorted.length) historyEl.innerHTML = '<div class="empty">Todavía no hay visitas. Cuando registres una, aparecerá acá.</div>';
+      else historyEl.innerHTML = sorted.map(v => {
+        const dataUrl = photoCache.get(v.id);
+        return `<div class="history-item"><div class="history-left">${dataUrl ? `<img class="history-thumb" src="${dataUrl}" alt="Foto de ${v.kind}" loading="lazy" data-visit="${escapeHtml(v.id)}">` : ''}<div><strong>${v.kind === 'manos' ? 'Manos' : 'Pies'}</strong><small>${escapeHtml(fmtDateLong(v.date))}</small></div></div><button class="btn btn-ghost btn-sm" type="button" data-delete="${escapeHtml(v.id)}">Eliminar</button></div>`;
+      }).join('');
+      bindSectionListeners();
+    };
+    const bindSectionListeners = () => {
+      const mountAtBind = currentMountId;
+      const cardsEl = $('unasCards');
+      if (cardsEl && !cardsEl._bound) {
+        cardsEl.addEventListener('click', async e => {
+          if (mountAtBind !== currentMountId) return;
+          const img = e.target.closest('img[data-visit]');
+          if (img) { openLightbox(photoCache.get(img.dataset.visit)); return; }
+          const btn = e.target.closest('[data-done]');
+          if (!btn || btn.disabled) return;
+          btn.disabled = true;
+          try { await registerVisit(btn.dataset.done, todayISO(), null); }
+          finally { if (btn.isConnected) btn.disabled = false; }
+        });
+        cardsEl._bound = true;
+      }
+      const histEl = $('unasHistory');
+      if (histEl && !histEl._bound) {
+        histEl.addEventListener('click', async e => {
+          if (mountAtBind !== currentMountId) return;
+          const img = e.target.closest('img[data-visit]');
+          if (img) { openLightbox(photoCache.get(img.dataset.visit)); return; }
+          const btn = e.target.closest('[data-delete]');
+          if (!btn || btn.disabled) return;
+          await deleteVisit(btn.dataset.delete);
+        });
+        histEl._bound = true;
+      }
+    };
+    const openLightbox = src => {
+      if (!src) return;
+      const lb = $('unasLightbox'), img = $('unasLightboxImg');
+      if (!lb || !img) return;
+      img.src = src; lb.hidden = false;
+      try { $('unasLightboxClose').focus(); } catch (e) {}
+    };
+    const closeLightbox = () => {
+      const lb = $('unasLightbox');
+      if (!lb) return;
+      lb.hidden = true; $('unasLightboxImg').src = '';
+    };
+    const clearPhotoSelection = () => {
+      pendingPhoto = null; pendingPhotoKind = null;
+      const inp = $('unasPhoto'); if (inp) inp.value = '';
+      const prev = $('unasPhotoPreview'); if (prev) prev.textContent = '';
+      const wrap = $('unasPhotoPreviewWrap'); if (wrap) wrap.hidden = true;
+    };
+    const registerVisit = async (kind, date, photoDataUrl) => {
+      if (!isValidISODate(date)) { toast('Elegí una fecha válida.', 'error'); return false; }
+      if (date > todayISO()) { toast('La fecha no puede ser futura.', 'error'); return false; }
+      const existing = state.visits.find(v => v.kind === kind && v.date === date);
+      if (existing) {
+        if (photoDataUrl && dbSupported) {
+          try {
+            await putPhoto({ visitId: existing.id, dataUrl: photoDataUrl });
+            photoCache.set(existing.id, photoDataUrl);
+            await prunePhotos(kind);
+            renderSections(); clearPhotoSelection();
+            toast(`Foto guardada para la visita de ${kind}.`);
+            return true;
+          } catch (e) { toast('No se pudo guardar la foto.', 'error'); return false; }
+        }
+        clearPhotoSelection();
+        toast(`La visita de ${kind} de ${fmtDate(date)} ya está registrada.`);
+        return true;
+      }
+      const visit = { id: newId(), kind, date };
+      state.visits.push(visit);
+      if (!save()) { state.visits = state.visits.filter(v => v.id !== visit.id); return false; }
+      if (photoDataUrl && dbSupported) {
+        try { await putPhoto({ visitId: visit.id, dataUrl: photoDataUrl }); photoCache.set(visit.id, photoDataUrl); await prunePhotos(kind); }
+        catch (e) { toast('La visita se guardó, pero la foto no.', 'error'); }
+      }
+      renderSections(); clearPhotoSelection();
+      toast(`Visita de ${kind} guardada.`);
+      return true;
+    };
+    const deleteVisit = async id => {
+      const v = state.visits.find(x => x.id === id);
+      if (!v) return;
+      if (!window.confirm(`¿Eliminar la visita de ${v.kind} del ${fmtDateLong(v.date)}?`)) return;
+      state.visits = state.visits.filter(x => x.id !== id);
+      if (!save()) { state.visits.push(v); return; }
+      if (photoCache.has(id)) { photoCache.delete(id); try { await deletePhoto(id); } catch (e) {} }
+      renderSections(); toast('Visita eliminada.');
+    };
+    const fillSettingsInputs = () => {
+      const hi = $('unasHandsInterval'); if (hi) hi.value = state.settings.handsInterval;
+      const fi = $('unasFeetInterval'); if (fi) fi.value = state.settings.feetInterval;
+      const ld = $('unasLeadDays'); if (ld) ld.value = state.settings.leadDays;
+      const rt = $('unasReminderTime');
+      if (rt) { const v = state.settings.reminderTime || '09:00'; rt.value = Array.from(rt.options).some(o => o.value === v) ? v : '09:00'; }
+    };
+    const setInputDate = val => {
+      const inp = $('unasDate'); if (!inp || !isValidISODate(val)) return;
+      inp.value = val; try { inp.valueAsDate = new Date(val + 'T00:00:00'); } catch (e) {}
+    };
+    const getInputDate = () => {
+      const inp = $('unasDate'); if (!inp) return todayISO();
+      const raw = inp.value; if (isValidISODate(raw)) return raw;
+      try { if (inp.valueAsDate instanceof Date && !isNaN(inp.valueAsDate.getTime())) return toISODate(inp.valueAsDate); } catch (e) {}
+      return todayISO();
+    };
+    const mount = async () => {
+      currentMountId++;
+      pendingPhoto = null; pendingPhotoKind = null;
+      load();
+      try { await loadPhotoCache(); await cleanupOrphans(); await pruneAll(); }
+      catch (e) { logErr('unas mount', e); }
+      fillSettingsInputs(); setInputDate(todayISO()); renderSections();
+      const photoInp = $('unasPhoto');
+      if (photoInp) photoInp.addEventListener('change', async e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) { clearPhotoSelection(); return; }
+        try {
+          const dataUrl = await compressImage(file);
+          pendingPhoto = dataUrl;
+          pendingPhotoKind = $('unasKind') ? $('unasKind').value : null;
+          const wrap = $('unasPhotoPreviewWrap'), prev = $('unasPhotoPreview');
+          if (prev) { prev.textContent = ''; const img = document.createElement('img'); img.src = dataUrl; img.alt = 'Vista previa'; prev.appendChild(img); }
+          if (wrap) wrap.hidden = false;
+        } catch (err) { clearPhotoSelection(); toast('No se pudo procesar la imagen.', 'error'); }
+      });
+      const clearBtn = $('unasClearPhoto'); if (clearBtn) clearBtn.addEventListener('click', clearPhotoSelection);
+      const kindSel = $('unasKind');
+      if (kindSel) kindSel.addEventListener('change', () => {
+        if (pendingPhoto && pendingPhotoKind && pendingPhotoKind !== kindSel.value) {
+          clearPhotoSelection(); toast('Cambiaste el tipo. Volvé a elegir la foto.', 'error');
+        }
+      });
+      const saveBtn = $('unasSaveVisit');
+      if (saveBtn) saveBtn.addEventListener('click', async () => {
+        if (saving) return;
+        saving = true; saveBtn.disabled = true;
+        try {
+          const ok = await registerVisit($('unasKind').value, getInputDate(), pendingPhoto);
+          if (ok) { setInputDate(todayISO()); clearPhotoSelection(); }
+        } catch (e) { toast('Error inesperado al guardar.', 'error'); }
+        finally { saving = false; if (saveBtn.isConnected) saveBtn.disabled = false; }
+      });
+      const saveSet = $('unasSaveSettings');
+      if (saveSet) saveSet.addEventListener('click', () => {
+        const parse = (v, mn, mx) => { const n = Number(v); return Number.isInteger(n) && n >= mn && n <= mx ? n : null; };
+        const hi = parse($('unasHandsInterval').value, 1, 52), fi = parse($('unasFeetInterval').value, 1, 52);
+        const ld = parse($('unasLeadDays').value, 0, 30), rt = $('unasReminderTime').value;
+        if (hi === null || fi === null || ld === null || !VALID_TIMES.includes(rt)) { toast('Revisá los valores.', 'error'); return; }
+        state.settings = { handsInterval: hi, feetInterval: fi, leadDays: ld, reminderTime: rt };
+        if (!save()) return;
+        renderSections(); toast('Configuración guardada.');
+      });
+      const exportBtn = $('unasExportData');
+      if (exportBtn) exportBtn.addEventListener('click', () => {
+        try {
+          const data = { app: 'agenda-unas', version: 2, exportedAt: new Date().toISOString(), settings: state.settings, visits: state.visits.map(v => ({ id: v.id, kind: v.kind, date: v.date, photo: photoCache.get(v.id) || null })) };
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob); const a = document.createElement('a');
+          a.href = url; a.download = `copia-agenda-unas-${todayISO()}.json`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast('Copia exportada.');
+        } catch (e) { toast('No se pudo exportar.', 'error'); }
+      });
+      const resetBtn = $('unasResetData');
+      if (resetBtn) resetBtn.addEventListener('click', async () => {
+        if (!window.confirm('¿Borrar todas las visitas, fotos y configuración de uñas?')) return;
+        state = DEFAULTS(); save(); photoCache.clear();
+        try { await clearPhotos(); } catch (e) {}
+        fillSettingsInputs(); renderSections(); setInputDate(todayISO()); clearPhotoSelection();
+        toast('Datos de uñas borrados.');
+      });
+      const importBtn = $('unasImportData'), importFile = $('unasImportFile');
+      if (importBtn && importFile) {
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', async e => {
+          const f = e.target.files && e.target.files[0]; e.target.value = '';
+          if (!f) return;
+          if (!window.confirm('Restaurar la copia reemplazará todos los datos de uñas. ¿Continuar?')) return;
+          try {
+            const raw = JSON.parse(await f.text());
+            if (!raw || typeof raw !== 'object' || !Array.isArray(raw.visits)) throw new Error('formato');
+            const sanitized = sanitizeState(raw);
+            const incoming = new Map();
+            for (const v of raw.visits) {
+              if (!v || typeof v !== 'object') continue;
+              if (typeof v.photo !== 'string' || v.photo.indexOf('data:image/') !== 0) continue;
+              const clean = sanitized.visits.find(x => x.id === v.id) || sanitized.visits.find(x => x.kind === v.kind && x.date === v.date);
+              if (clean) incoming.set(clean.id, v.photo);
+            }
+            state = sanitized; if (!save()) return;
+            photoCache.clear(); try { await clearPhotos(); } catch (e) {}
+            for (const [visitId, dataUrl] of incoming) { try { await putPhoto({ visitId, dataUrl }); photoCache.set(visitId, dataUrl); } catch (e) {} }
+            try { await pruneAll(); } catch (e) {}
+            fillSettingsInputs(); renderSections(); toast('Copia restaurada.');
+          } catch (err) { toast('No se pudo leer esa copia.', 'error'); }
+        });
+      }
+      const lbClose = $('unasLightboxClose'), lb = $('unasLightbox');
+      if (lbClose) lbClose.addEventListener('click', closeLightbox);
+      if (lb) lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+    };
+    return { mount };
+  })();
+
+  /* ==================== CICLO ==================== */
+  const cicloModule = (() => {
+    const DEFAULTS = () => ({ settings: { defaultCycleLength: 28, defaultPeriodLength: 5, lutealPhase: 14 }, periods: [] });
+    let state = DEFAULTS();
+    let lsAvailable = true;
+    try { const k = '__t__' + Math.random(); localStorage.setItem(k, '1'); localStorage.removeItem(k); }
+    catch (e) { lsAvailable = false; }
+    const toast = (msg, type) => window.__hubToast ? window.__hubToast(msg, type) : console.log(msg);
+    const sanitizeSettings = raw => {
+      const out = { ...DEFAULTS().settings };
+      if (!raw || typeof raw !== 'object') return out;
+      const dcl = Number(raw.defaultCycleLength), dpl = Number(raw.defaultPeriodLength), lp = Number(raw.lutealPhase);
+      if (Number.isInteger(dcl) && dcl >= 21 && dcl <= 45) out.defaultCycleLength = dcl;
+      if (Number.isInteger(dpl) && dpl >= 1 && dpl <= 15) out.defaultPeriodLength = dpl;
+      if (Number.isInteger(lp) && lp >= 9 && lp <= 17) out.lutealPhase = lp;
+      return out;
+    };
+    const sanitizePeriod = p => {
+      if (!p || typeof p !== 'object') return null;
+      if (!isValidISODate(p.startDate)) return null;
+      if (p.startDate > todayISO()) return null;
+      const end = isValidISODate(p.endDate) ? p.endDate : null;
+      if (end && end < p.startDate) return null;
+      if (end && end > todayISO()) return null;
+      return { id: (typeof p.id === 'string' && p.id) ? p.id : newId(), startDate: p.startDate, endDate: end };
+    };
+    const sanitizeState = raw => {
+      const out = { settings: sanitizeSettings(raw && raw.settings), periods: [] };
+      if (raw && Array.isArray(raw.periods)) {
+        const clean = raw.periods.map(sanitizePeriod).filter(Boolean);
+        clean.sort((a, b) => a.startDate.localeCompare(b.startDate));
+        for (const p of clean) {
+          const last = out.periods[out.periods.length - 1];
+          if (last) { if (!last.endDate) continue; if (p.startDate <= last.endDate) continue; }
+          out.periods.push(p);
+        }
+      }
+      return out;
+    };
+    const save = () => {
+      if (!lsAvailable) { toast('Tu navegador bloquea el guardado.', 'error'); return false; }
+      try { localStorage.setItem(KEY_CICLO, JSON.stringify(state)); return true; }
+      catch (e) { toast('No se pudieron guardar los datos.', 'error'); return false; }
+    };
+    const load = () => {
+      if (!lsAvailable) return;
+      try { const raw = localStorage.getItem(KEY_CICLO); if (raw) state = sanitizeState(JSON.parse(raw)); }
+      catch (e) { state = DEFAULTS(); }
+    };
+    const sortedPeriods = () => [...state.periods].sort((a, b) => a.startDate.localeCompare(b.startDate));
+    const latestPeriod = () => { const s = sortedPeriods(); return s[s.length - 1] || null; };
+    const ongoingPeriod = () => state.periods.find(p => !p.endDate) || null;
+    const avgCycleLength = () => {
+      const arr = sortedPeriods();
+      if (arr.length < 2) return null;
+      const diffs = [];
+      for (let i = 1; i < arr.length; i++) {
+        const diff = dayDiff(arr[i - 1].startDate, arr[i].startDate);
+        if (diff >= 21 && diff <= 45) diffs.push(diff);
+      }
+      if (!diffs.length) return null;
+      return Math.round(diffs.reduce((a, b) => a + b, 0) / diffs.length);
+    };
+    const avgPeriodLength = () => {
+      const arr = state.periods.filter(p => p.endDate);
+      if (!arr.length) return null;
+      const durs = arr.map(p => dayDiff(p.startDate, p.endDate) + 1).filter(d => d >= 1 && d <= 15);
+      if (!durs.length) return null;
+      return Math.round(durs.reduce((a, b) => a + b, 0) / durs.length);
+    };
+    const effectiveCycleLength = () => avgCycleLength() ?? state.settings.defaultCycleLength;
+    const effectivePeriodLength = () => avgPeriodLength() ?? state.settings.defaultPeriodLength;
+    const nextPeriodStart = () => { const l = latestPeriod(); return l ? addDaysISO(l.startDate, effectiveCycleLength()) : null; };
+    const ovulationDay = () => effectiveCycleLength() - state.settings.lutealPhase;
+    const fertileStart = () => ovulationDay() - 5;
+    const fertileEnd = () => ovulationDay() + 1;
+    const currentCycleDay = () => { const l = latestPeriod(); return l ? dayDiff(l.startDate, todayISO()) + 1 : null; };
+    const cycleStatus = () => {
+      const last = latestPeriod();
+      if (!last) return { type: 'none' };
+      const day = currentCycleDay();
+      const cycleLen = effectiveCycleLength();
+      const next = nextPeriodStart();
+      const daysToNext = dayDiff(todayISO(), next);
+      const ongoing = ongoingPeriod();
+      if (ongoing) return { type: 'ongoing', day, dur: dayDiff(ongoing.startDate, todayISO()) + 1, expected: effectivePeriodLength(), last: ongoing };
+      if (daysToNext < 0) return { type: 'overdue', days: -daysToNext, day, cycleLen, next, last };
+      if (daysToNext === 0) return { type: 'today', day, cycleLen, next, last };
+      return { type: 'upcoming', days: daysToNext, day, cycleLen, next, last };
+    };
+    const phaseForDay = d => {
+      if (d === null || d < 1) return null;
+      const periodLen = effectivePeriodLength(), ovu = ovulationDay();
+      const fStart = Math.max(1, ovu - 5), fEnd = ovu + 1;
+      if (d <= periodLen) return 'menstrual';
+      if (d < fStart) return 'follicular';
+      if (d <= fEnd) return 'fertile';
+      return 'luteal';
+    };
+    const phaseLabel = p => ({ menstrual: 'Menstrual', follicular: 'Folicular', fertile: 'Fértil', luteal: 'Lútea' }[p] || '—');
+    const phaseSegments = () => {
+      const cycleLen = effectiveCycleLength(), periodLen = effectivePeriodLength();
+      const ovu = ovulationDay(), fStart = Math.max(1, ovu - 5), fEnd = Math.min(cycleLen, ovu + 1);
+      const segs = []; let cursor = 1;
+      const mEnd = Math.min(periodLen, cycleLen);
+      if (mEnd >= cursor) { segs.push({ cls: 'menstrual', from: cursor, to: mEnd }); cursor = mEnd + 1; }
+      if (fStart > cursor) {
+        const follEnd = Math.min(fStart - 1, cycleLen);
+        if (follEnd >= cursor) { segs.push({ cls: 'follicular', from: cursor, to: follEnd }); cursor = follEnd + 1; }
+      }
+      const fertStart = Math.max(cursor, fStart), fertEnd = Math.min(fEnd, cycleLen);
+      if (fertEnd >= fertStart) { segs.push({ cls: 'fertile', from: fertStart, to: fertEnd }); cursor = fertEnd + 1; }
+      if (cycleLen >= cursor) segs.push({ cls: 'luteal', from: cursor, to: cycleLen });
+      return segs;
+    };
+    const renderSummary = () => {
+      const el = $('cicloSummary'); if (!el) return;
+      const st = cycleStatus();
+      if (st.type === 'none') {
+        el.innerHTML = `
+          ${renderSummaryCard({ view: 'ciclo', icon: '🌸', label: 'Próximo período', value: 'Sin datos', sub: 'Registrá tu primer período', state: 'empty' })}
+          ${renderSummaryCard({ view: 'ciclo', icon: '📅', label: 'Día del ciclo', value: '—', sub: 'Empezá registrando el inicio', state: 'empty' })}
+          ${renderSummaryCard({ view: 'ciclo', icon: '🌡️', label: 'Fase actual', value: '—', sub: '—', state: 'empty' })}
+          ${renderSummaryCard({ view: 'ciclo', icon: '💚', label: 'Ventana fértil', value: '—', sub: '—', state: 'empty' })}
+        `;
+        return;
+      }
+      let nextValue, nextSub, nextState = 'ok';
+      if (st.type === 'ongoing') { nextValue = 'En curso'; nextSub = `Día ${st.dur} del período`; nextState = 'today'; }
+      else if (st.type === 'overdue') { nextValue = `${st.days} día${st.days === 1 ? '' : 's'} de atraso`; nextSub = `Esperado: ${fmtDate(st.next)}`; nextState = 'overdue'; }
+      else if (st.type === 'today') { nextValue = '¡Hoy!'; nextSub = 'Esperado para hoy'; nextState = 'today'; }
+      else { nextValue = `En ${st.days} día${st.days === 1 ? '' : 's'}`; nextSub = fmtDateLong(st.next); }
+      const phase = phaseForDay(st.day);
+      let phaseSub = '';
+      if (phase === 'menstrual') phaseSub = `Día ${st.day} de sangrado`;
+      else if (phase === 'fertile') phaseSub = 'Alta probabilidad';
+      else if (phase === 'follicular') phaseSub = 'Preparando ovulación';
+      else if (phase === 'luteal') phaseSub = 'Post-ovulación';
+      const fs = fertileStart(), fe = fertileEnd();
+      const currentFs = addDaysISO(st.last.startDate, fs - 1), currentFe = addDaysISO(st.last.startDate, fe - 1);
+      const todayStr = todayISO();
+      let fertValue, fertSub, fertState = 'ok';
+      if (todayStr >= currentFs && todayStr <= currentFe) { fertValue = 'Hoy estás en ventana fértil'; fertSub = `Del ${fmtDate(currentFs)} al ${fmtDate(currentFe)}`; fertState = 'today'; }
+      else if (todayStr < currentFs) { fertValue = `Del ${fmtDate(currentFs)} al ${fmtDate(currentFe)}`; fertSub = `Empieza en ${dayDiff(todayStr, currentFs)} días`; }
+      else {
+        const next = nextPeriodStart();
+        if (next) { const nFs = addDaysISO(next, fs - 1), nFe = addDaysISO(next, fe - 1); fertValue = `Del ${fmtDate(nFs)} al ${fmtDate(nFe)}`; fertSub = 'Próxima ventana'; }
+        else { fertValue = '—'; fertSub = '—'; }
+      }
+      el.innerHTML = `
+        ${renderSummaryCard({ view: 'ciclo', icon: '🌸', label: 'Próximo período', value: nextValue, sub: nextSub, state: nextState })}
+        ${renderSummaryCard({ view: 'ciclo', icon: '📅', label: 'Día del ciclo', value: `Día ${st.day}`, sub: `Ciclo de ~${effectiveCycleLength()} días`, state: 'ok' })}
+        ${renderSummaryCard({ view: 'ciclo', icon: '🌡️', label: 'Fase actual', value: phaseLabel(phase), sub: phaseSub, state: 'ok' })}
+        ${renderSummaryCard({ view: 'ciclo', icon: '💚', label: 'Ventana fértil', value: fertValue, sub: fertSub, state: fertState })}
+      `;
+    };
+    const renderPhaseBar = () => {
+      const bar = $('cicloPhaseBar'), label = $('cicloPhaseTodayLabel');
+      if (!bar || !label) return;
+      bar.textContent = ''; label.textContent = '';
+      const segs = phaseSegments();
+      if (!segs.length) return;
+      const cycleLen = effectiveCycleLength();
+      const total = segs.reduce((s, seg) => s + (seg.to - seg.from + 1), 0);
+      for (const seg of segs) {
+        const el = document.createElement('div');
+        el.className = 'phase-segment ' + seg.cls;
+        el.style.flexGrow = String((seg.to - seg.from + 1) / total);
+        el.title = `${seg.from}-${seg.to}`;
+        bar.appendChild(el);
+      }
+      const day = currentCycleDay();
+      if (day !== null && day >= 1) {
+        const clamped = Math.min(day, cycleLen);
+        const pct = ((clamped - 0.5) / cycleLen) * 100;
+        const marker = document.createElement('div');
+        marker.className = 'phase-marker';
+        if (day > cycleLen) marker.classList.add('overdue');
+        marker.textContent = '▼';
+        marker.style.left = pct + '%';
+        bar.appendChild(marker);
+      }
+      const st = cycleStatus();
+      if (st.type === 'none') label.innerHTML = '';
+      else if (st.type === 'overdue') label.innerHTML = `Hoy estás en <strong>día ${st.day}</strong> · ciclo esperado de ${cycleLen} días · <strong>${st.days} día${st.days === 1 ? '' : 's'} de atraso</strong>`;
+      else label.innerHTML = `Hoy estás en <strong>día ${st.day}</strong> de ~${cycleLen} · fase <strong>${phaseLabel(phaseForDay(st.day))}</strong>`;
+    };
+    const renderQuickActions = () => {
+      const wrap = $('cicloQuickActions'); if (!wrap) return;
+      wrap.textContent = '';
+      const ongoing = ongoingPeriod();
+      if (!ongoing) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary'; btn.type = 'button'; btn.textContent = '🩸 Me vino hoy';
+        btn.addEventListener('click', () => {
+          const err = addPeriod(todayISO(), null);
+          if (!err) { renderAll(); toast('Inicio registrado.'); }
+          else toast(err, 'error');
+        });
+        wrap.appendChild(btn);
+      } else {
+        const btnEnd = document.createElement('button');
+        btnEnd.className = 'btn btn-primary'; btnEnd.type = 'button'; btnEnd.textContent = '✅ Terminó hoy';
+        btnEnd.addEventListener('click', () => {
+          setEndDate(ongoing.id, todayISO()); renderAll(); toast('Período marcado como terminado.');
+        });
+        wrap.appendChild(btnEnd);
+      }
+    };
+    const renderHistory = () => {
+      const el = $('cicloHistory'); if (!el) return;
+      el.textContent = '';
+      const sorted = sortedPeriods().reverse();
+      if (!sorted.length) { el.innerHTML = '<div class="empty">Todavía no hay períodos registrados.</div>'; return; }
+      const orig = sortedPeriods();
+      const cycleToPrev = new Map();
+      for (let i = 1; i < orig.length; i++) cycleToPrev.set(orig[i].id, dayDiff(orig[i - 1].startDate, orig[i].startDate));
+      el.innerHTML = sorted.map(p => {
+        const dur = p.endDate ? dayDiff(p.startDate, p.endDate) + 1 : dayDiff(p.startDate, todayISO()) + 1;
+        const cycleVal = cycleToPrev.get(p.id);
+        const isLong = !p.endDate && dur > effectivePeriodLength() + 3;
+        const badge = !p.endDate ? `<span class="badge-ongoing ${isLong ? 'badge-long' : ''}">${isLong ? 'Período largo' : 'En curso'}</span>` : '';
+        const endForm = !p.endDate ? `<div class="end-form"><input type="date" value="${todayISO()}" min="${p.startDate}" max="${todayISO()}" data-end-input="${escapeHtml(p.id)}"><button class="btn btn-secondary btn-sm" type="button" data-end-btn="${escapeHtml(p.id)}">Marcar fin</button></div>` : '';
+        return `<div class="history-item"><div style="min-width:0;flex:1;"><div><strong>Inicio: ${escapeHtml(fmtDate(p.startDate))}</strong> ${badge}</div><small>${p.endDate ? `Fin: ${escapeHtml(fmtDate(p.endDate))} · ${dur} día${dur === 1 ? '' : 's'} de sangrado` : `En curso · día ${dur}`}</small>${cycleVal ? `<small>Ciclo: ${cycleVal} días desde el anterior</small>` : ''}${endForm}</div><button class="btn btn-ghost btn-sm" type="button" data-del="${escapeHtml(p.id)}">Eliminar</button></div>`;
+      }).join('');
+      el.querySelectorAll('[data-end-btn]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.endBtn;
+          const input = el.querySelector(`[data-end-input="${CSS.escape(id)}"]`);
+          if (!input) return;
+          setEndDate(id, input.value); renderAll(); toast('Fin registrado.');
+        });
+      });
+      el.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = state.periods.find(x => x.id === btn.dataset.del);
+          if (!p) return;
+          if (!window.confirm(`¿Eliminar el período del ${fmtDate(p.startDate)}?`)) return;
+          state.periods = state.periods.filter(x => x.id !== p.id);
+          if (!save()) return;
+          renderAll(); toast('Período eliminado.');
+        });
+      });
+    };
+    const renderStats = () => {
+      const el = $('cicloStats'); if (!el) return;
+      const avg = avgCycleLength(), avgP = avgPeriodLength();
+      const arr = sortedPeriods();
+      const cycleDiffs = [];
+      for (let i = 1; i < arr.length; i++) {
+        const d = dayDiff(arr[i - 1].startDate, arr[i].startDate);
+        if (d >= 21 && d <= 45) cycleDiffs.push(d);
+      }
+      const minC = cycleDiffs.length ? Math.min(...cycleDiffs) : null;
+      const maxC = cycleDiffs.length ? Math.max(...cycleDiffs) : null;
+      const variability = cycleDiffs.length >= 2 ? Math.round(Math.sqrt(cycleDiffs.reduce((s, d) => s + Math.pow(d - avg, 2), 0) / cycleDiffs.length)) : null;
+      let reg = 'Sin datos suficientes';
+      if (variability !== null) {
+        if (variability <= 2) reg = 'Muy regular';
+        else if (variability <= 4) reg = 'Regular';
+        else if (variability <= 7) reg = 'Algo irregular';
+        else reg = 'Irregular';
+      }
+      const items = [
+        ['Períodos registrados', String(state.periods.length)],
+        ['Ciclos registrados', String(Math.max(0, state.periods.length - 1))],
+        ['Duración media del ciclo', avg ? `${avg} días` : '—'],
+        ['Rango del ciclo', (minC !== null && maxC !== null) ? `${minC}-${maxC} días` : '—'],
+        ['Duración media del período', avgP ? `${avgP} días` : '—'],
+        ['Regularidad', reg],
+      ];
+      el.innerHTML = items.map(([k, v]) => `<div class="stat"><span>${escapeHtml(k)}</span><strong>${escapeHtml(v)}</strong></div>`).join('');
+    };
+    const fillSettingsInputs = () => {
+      const dcl = $('cicloDefaultCycleLength'); if (dcl) dcl.value = state.settings.defaultCycleLength;
+      const dpl = $('cicloDefaultPeriodLength'); if (dpl) dpl.value = state.settings.defaultPeriodLength;
+      const lp = $('cicloLutealPhase'); if (lp) lp.value = state.settings.lutealPhase;
+    };
+    const renderAll = () => { renderSummary(); renderPhaseBar(); renderQuickActions(); renderHistory(); renderStats(); };
+    const validatePeriod = (startDate, endDate) => {
+      if (!isValidISODate(startDate)) return 'Fecha de inicio inválida.';
+      if (startDate > todayISO()) return 'La fecha de inicio no puede ser futura.';
+      if (endDate) {
+        if (!isValidISODate(endDate)) return 'Fecha de fin inválida.';
+        if (endDate < startDate) return 'La fecha de fin debe ser igual o posterior al inicio.';
+        if (endDate > todayISO()) return 'La fecha de fin no puede ser futura.';
+      }
+      if (!endDate && state.periods.some(p => !p.endDate)) return 'Ya hay un período en curso. Marcalo como terminado primero.';
+      for (const p of state.periods) {
+        const pEnd = p.endDate || '9999-12-31';
+        const newEnd = endDate || '9999-12-31';
+        if (startDate <= pEnd && newEnd >= p.startDate) return 'Se superpone con otro período.';
+      }
+      return null;
+    };
+    const addPeriod = (startDate, endDate) => {
+      const err = validatePeriod(startDate, endDate);
+      if (err) return err;
+      state.periods.push({ id: newId(), startDate, endDate: endDate || null });
+      state.periods.sort((a, b) => a.startDate.localeCompare(b.startDate));
+      if (!save()) { state.periods.pop(); return 'No se pudo guardar.'; }
+      return null;
+    };
+    const setEndDate = (id, endDate) => {
+      const p = state.periods.find(x => x.id === id);
+      if (!p) return;
+      if (!isValidISODate(endDate)) { toast('Fecha inválida.', 'error'); return; }
+      if (endDate < p.startDate) { toast('El fin no puede ser anterior al inicio.', 'error'); return; }
+      if (endDate > todayISO()) { toast('El fin no puede ser futuro.', 'error'); return; }
+      for (const o of state.periods.filter(x => x.id !== id)) {
+        const oEnd = o.endDate || '9999-12-31';
+        if (p.startDate <= oEnd && endDate >= o.startDate) { toast('Se superpone con otro período.', 'error'); return; }
+      }
+      p.endDate = endDate;
+      if (!save()) { p.endDate = null; return; }
+    };
+    const setInputDates = () => {
+      const s = $('cicloStartDate'), e = $('cicloEndDate');
+      if (s) { s.value = todayISO(); s.max = todayISO(); }
+      if (e) { e.max = todayISO(); e.value = ''; }
+    };
+    const mount = () => {
+      load(); fillSettingsInputs(); setInputDates(); renderAll();
+      const addPeriodBtn = $('cicloAddPeriod');
+      if (addPeriodBtn) addPeriodBtn.addEventListener('click', () => {
+        const s = $('cicloStartDate').value, e = $('cicloEndDate').value;
+        const err = addPeriod(s, e || null);
+        if (err) { toast(err, 'error'); return; }
+        renderAll(); setInputDates(); toast('Período guardado.');
+      });
+      const saveSet = $('cicloSaveSettings');
+      if (saveSet) saveSet.addEventListener('click', () => {
+        const parse = (v, mn, mx) => { const n = Number(v); return Number.isInteger(n) && n >= mn && n <= mx ? n : null; };
+        const dcl = parse($('cicloDefaultCycleLength').value, 21, 45);
+        const dpl = parse($('cicloDefaultPeriodLength').value, 1, 15);
+        const lp = parse($('cicloLutealPhase').value, 9, 17);
+        if (dcl === null || dpl === null || lp === null) { toast('Revisá los valores.', 'error'); return; }
+        state.settings = { defaultCycleLength: dcl, defaultPeriodLength: dpl, lutealPhase: lp };
+        if (!save()) return;
+        renderAll(); toast('Configuración guardada.');
+      });
+      const exportBtn = $('cicloExportData');
+      if (exportBtn) exportBtn.addEventListener('click', () => {
+        try {
+          const data = { app: 'mi-ciclo', version: 1, exportedAt: new Date().toISOString(), ...state };
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob); const a = document.createElement('a');
+          a.href = url; a.download = `mi-ciclo-${todayISO()}.json`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast('Copia exportada.');
+        } catch (e) { toast('No se pudo exportar.', 'error'); }
+      });
+      const resetBtn = $('cicloResetData');
+      if (resetBtn) resetBtn.addEventListener('click', () => {
+        if (!window.confirm('¿Borrar todos los datos del ciclo?')) return;
+        state = DEFAULTS(); save(); fillSettingsInputs(); setInputDates(); renderAll();
+        toast('Datos del ciclo borrados.');
+      });
+      const importBtn = $('cicloImportData'), importFile = $('cicloImportFile');
+      if (importBtn && importFile) {
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', async e => {
+          const f = e.target.files && e.target.files[0]; e.target.value = '';
+          if (!f) return;
+          if (!window.confirm('Restaurar la copia reemplazará todos los datos del ciclo. ¿Continuar?')) return;
+          try {
+            const raw = JSON.parse(await f.text());
+            if (!raw || typeof raw !== 'object' || !Array.isArray(raw.periods)) throw new Error('formato');
+            state = sanitizeState(raw); if (!save()) return;
+            fillSettingsInputs(); setInputDates(); renderAll(); toast('Copia restaurada.');
+          } catch (err) { toast('No se pudo leer esa copia.', 'error'); }
+        });
+      }
+    };
+    return { mount };
+  })();
+
+  /* ==================== TURNOS ==================== */
+  const turnosModule = (() => {
+    const DEFAULTS = () => ({ appointments: [] });
+    let state = DEFAULTS();
+    let lsAvailable = true;
+    try { const k = '__t__' + Math.random(); localStorage.setItem(k, '1'); localStorage.removeItem(k); }
+    catch (e) { lsAvailable = false; }
+    const toast = (msg, type) => window.__hubToast ? window.__hubToast(msg, type) : console.log(msg);
+    let currentFilter = 'proximos', editingId = null, currentMountId = 0;
+
+    const sanitizeAppointment = a => {
+      if (!a || typeof a !== 'object') return null;
+      if (!isValidISODate(a.date)) return null;
+      const title = (typeof a.title === 'string' ? a.title : '').trim();
+      if (!title) return null;
+      const time = isValidTime(a.time) ? a.time : '';
+      const place = (typeof a.place === 'string' ? a.place : '').trim();
+      const notes = (typeof a.notes === 'string' ? a.notes : '').trim();
+      return { id: (typeof a.id === 'string' && a.id) ? a.id : newId(), title, date: a.date, time, place, notes, status: normalizeApptStatus(a) };
+    };
+    const sanitizeState = raw => {
+      const out = { appointments: [] };
+      if (raw && Array.isArray(raw.appointments)) {
+        const seen = new Set();
+        for (const a of raw.appointments) {
+          const c = sanitizeAppointment(a);
+          if (!c) continue;
+          if (seen.has(c.id)) c.id = newId();
+          seen.add(c.id); out.appointments.push(c);
+        }
+      }
+      return out;
+    };
+    const save = () => {
+      if (!lsAvailable) { toast('Tu navegador bloquea el guardado.', 'error'); return false; }
+      try { localStorage.setItem(KEY_TURNOS, JSON.stringify(state)); return true; }
+      catch (e) { toast('No se pudieron guardar los datos.', 'error'); return false; }
+    };
+    const load = () => {
+      if (!lsAvailable) return;
+      try { const raw = localStorage.getItem(KEY_TURNOS); if (raw) state = sanitizeState(JSON.parse(raw)); }
+      catch (e) { state = DEFAULTS(); }
+    };
+    const sortByDateTime = (a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : (a.time || '99:99').localeCompare(b.time || '99:99');
+    const upcoming = () => state.appointments.filter(a => a.status === 'pending' && a.date >= todayISO()).sort(sortByDateTime);
+    const closed = () => state.appointments.filter(a => a.status !== 'pending' || a.date < todayISO()).sort((a, b) => sortByDateTime(b, a));
+    const stats = () => ({
+      total: state.appointments.length,
+      upcoming: upcoming().length,
+      attended: state.appointments.filter(a => a.status === 'attended').length,
+      no_show: state.appointments.filter(a => a.status === 'no_show').length,
+      overdue: state.appointments.filter(a => a.status === 'pending' && a.date < todayISO()).length,
+    });
+    const formatMonthShort = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-AR', { month: 'short' }).replace('.', ''); };
+    const formatDay = iso => Number(iso.split('-')[2]);
+
+    const updateTabCounts = () => {
+      const s = stats();
+      const prox = document.querySelector('[data-filter="proximos"]');
+      const cerrados = document.querySelector('[data-filter="cerrados"]');
+      if (prox) prox.innerHTML = `Próximos <span class="tab-count">${s.upcoming}</span>`;
+      if (cerrados) {
+        const total = state.appointments.length - s.upcoming;
+        cerrados.innerHTML = `Cerrados <span class="tab-count">${total}</span>`;
+      }
+    };
+
+    const renderStatsCards = () => {
+      const el = $('turnosStats'); if (!el) return;
+      const s = stats();
+      el.innerHTML = `
+        ${renderSummaryCard({ view: 'turnos', icon: '📅', label: 'Próximos', value: String(s.upcoming), sub: s.upcoming === 1 ? 'Turno pendiente' : 'Turnos pendientes', state: s.upcoming === 0 ? 'empty' : 'ok' })}
+        ${renderSummaryCard({ view: 'turnos', icon: '✅', label: 'Asistidos', value: String(s.attended), sub: 'Turnos a los que fuiste', state: s.attended === 0 ? 'empty' : 'ok' })}
+        ${renderSummaryCard({ view: 'turnos', icon: '🚫', label: 'No asistidos', value: String(s.no_show), sub: 'Turnos que no concretaste', state: s.no_show === 0 ? 'empty' : 'ok' })}
+        ${renderSummaryCard({ view: 'turnos', icon: '⚠️', label: 'Sin cerrar', value: String(s.overdue), sub: 'Ya pasaron, falta cerrarlos', state: s.overdue > 0 ? 'warn' : 'ok' })}
+      `;
+    };
+
+    const renderApptItem = a => {
+      const isAttended = a.status === 'attended';
+      const isNoShow = a.status === 'no_show';
+      const isClosed = isAttended || isNoShow;
+      const isPast = a.date < todayISO();
+      const isToday = a.date === todayISO();
+      const isOverdue = a.status === 'pending' && isPast;
+      const isEditing = editingId === a.id;
+      const classes = ['appt-item'];
+      if (isAttended) classes.push('attended');
+      else if (isNoShow) classes.push('no_show');
+      else if (isOverdue) classes.push('overdue');
+      else if (isToday) classes.push('today');
+      if (isEditing) classes.push('is-editing');
+      let badge = '';
+      if (isAttended) badge = '<span class="appt-badge attended">Asistí</span>';
+      else if (isNoShow) badge = '<span class="appt-badge no_show">No fui</span>';
+      else if (isOverdue) badge = '<span class="appt-badge overdue">Sin cerrar</span>';
+      else if (isToday) badge = '<span class="appt-badge today">Hoy</span>';
+      const metaParts = [];
+      if (a.time) metaParts.push(`<span class="meta-item meta-time">${escapeHtml(a.time)}</span>`);
+      if (a.place) metaParts.push(`<span class="meta-item meta-place">${escapeHtml(a.place)}</span>`);
+      const notesHtml = a.notes ? `<div class="appt-notes">${escapeHtml(a.notes)}</div>` : '';
+      const editFormHtml = isEditing ? `
+        <div class="edit-form" data-edit-form="${escapeHtml(a.id)}">
+          <div class="form-grid">
+            <div class="full"><label>Título</label><input type="text" data-edit-title value="${escapeHtml(a.title)}" maxlength="80"></div>
+            <div><label>Fecha</label><input type="date" data-edit-date value="${escapeHtml(a.date)}"></div>
+            <div><label>Hora (opcional)</label><input type="time" data-edit-time value="${escapeHtml(a.time || '')}"></div>
+            <div class="full"><label>Lugar (opcional)</label><input type="text" data-edit-place value="${escapeHtml(a.place || '')}" maxlength="100"></div>
+            <div class="full"><label>Notas (opcional)</label><textarea data-edit-notes maxlength="500">${escapeHtml(a.notes || '')}</textarea></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm" type="button" data-save-edit="${escapeHtml(a.id)}">Guardar cambios</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-cancel-edit="${escapeHtml(a.id)}">Cancelar</button>
+            ${isClosed ? `<button class="btn btn-ghost btn-sm" type="button" data-reopen="${escapeHtml(a.id)}">Volver a pendiente</button>` : ''}
+          </div>
+        </div>` : '';
+      const actionsHtml = !isEditing ? (a.status === 'pending' ? `
+        <div class="appt-actions"><div class="appt-actions-row">
+          <button class="btn btn-close attended" type="button" data-close-attended="${escapeHtml(a.id)}" aria-label="Marcar como asistido" title="Marcar como asistido">✓ Asistí</button>
+          <button class="btn btn-close no_show" type="button" data-close-noshow="${escapeHtml(a.id)}" aria-label="Marcar como no asistido" title="Marcar como no asistido">✗ No fui</button>
+          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">✏️</button>
+          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">🗑</button>
+        </div></div>
+      ` : `
+        <div class="appt-actions"><div class="appt-actions-row">
+          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">✏️</button>
+          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">🗑</button>
+        </div></div>
+      `) : '';
+      return `
+        <div class="${classes.join(' ')}" data-appt="${escapeHtml(a.id)}">
+          <div class="appt-date-badge">
+            <span class="db-day">${formatDay(a.date)}</span>
+            <span class="db-month">${escapeHtml(formatMonthShort(a.date))}</span>
+          </div>
+          <div class="appt-body">
+            <div class="appt-title-row"><div class="appt-title">${escapeHtml(a.title)}</div>${badge}</div>
+            ${metaParts.length ? `<div class="appt-meta">${metaParts.join('')}</div>` : ''}
+            ${notesHtml}
+            ${editFormHtml}
+          </div>
+          ${actionsHtml}
+        </div>
+      `;
+    };
+
+    const renderList = () => {
+      const el = $('turnosList'); if (!el) return;
+      updateTabCounts();
+      const list = currentFilter === 'proximos' ? upcoming() : closed();
+      if (!list.length) {
+        el.innerHTML = `<div class="empty">${currentFilter === 'proximos' ? 'No tenés turnos próximos. Agregá uno abajo.' : 'Todavía no hay turnos cerrados o pasados.'}</div>`;
+        return;
+      }
+      el.innerHTML = list.map(renderApptItem).join('');
+      bindListListeners();
+    };
+
+    const bindListListeners = () => {
+      const el = $('turnosList'); if (!el) return;
+      const mountAtBind = currentMountId;
+      el.addEventListener('click', e => {
+        if (mountAtBind !== currentMountId) return;
+        const a = e.target.closest('[data-close-attended]');
+        if (a) { closeAppt(a.dataset.closeAttended, 'attended'); return; }
+        const n = e.target.closest('[data-close-noshow]');
+        if (n) { closeAppt(n.dataset.closeNoshow, 'no_show'); return; }
+        const editBtn = e.target.closest('[data-edit]');
+        if (editBtn) { editingId = editBtn.dataset.edit; renderList(); return; }
+        const delBtn = e.target.closest('[data-delete]');
+        if (delBtn) { deleteAppt(delBtn.dataset.delete); return; }
+        const saveEdit = e.target.closest('[data-save-edit]');
+        if (saveEdit) { saveEditAppt(saveEdit.dataset.saveEdit); return; }
+        const cancelEdit = e.target.closest('[data-cancel-edit]');
+        if (cancelEdit) { editingId = null; renderList(); return; }
+        const reopen = e.target.closest('[data-reopen]');
+        if (reopen) { reopenAppt(reopen.dataset.reopen); return; }
+      });
+    };
+
+    const closeAppt = (id, status) => {
+      const a = state.appointments.find(x => x.id === id); if (!a) return;
+      const prev = a.status;
+      a.status = status;
+      if (!save()) { a.status = prev; return; }
+      renderStatsCards(); renderList();
+      toast(status === 'attended' ? 'Turno cerrado como asistido.' : 'Turno cerrado como no asistido.');
+    };
+    const reopenAppt = id => {
+      const a = state.appointments.find(x => x.id === id); if (!a) return;
+      if (!window.confirm(`¿Volver a marcar "${a.title}" como pendiente? Esta acción no es habitual.`)) return;
+      const prev = a.status;
+      a.status = 'pending';
+      if (!save()) { a.status = prev; return; }
+      editingId = null;
+      renderStatsCards(); renderList();
+      toast('Turno vuelto a pendiente.');
+    };
+    const deleteAppt = id => {
+      const a = state.appointments.find(x => x.id === id); if (!a) return;
+      if (!window.confirm(`¿Eliminar el turno "${a.title}"?`)) return;
+      state.appointments = state.appointments.filter(x => x.id !== id);
+      if (!save()) return;
+      renderStatsCards(); renderList(); toast('Turno eliminado.');
+    };
+    const saveEditAppt = id => {
+      const form = document.querySelector(`[data-edit-form="${CSS.escape(id)}"]`); if (!form) return;
+      const title = form.querySelector('[data-edit-title]').value.trim();
+      const date = form.querySelector('[data-edit-date]').value;
+      const time = form.querySelector('[data-edit-time]').value;
+      const place = form.querySelector('[data-edit-place]').value.trim();
+      const notes = form.querySelector('[data-edit-notes]').value.trim();
+      if (!title) { toast('El título es obligatorio.', 'error'); return; }
+      if (!isValidISODate(date)) { toast('Fecha inválida.', 'error'); return; }
+      if (time && !isValidTime(time)) { toast('Hora inválida.', 'error'); return; }
+      const a = state.appointments.find(x => x.id === id); if (!a) return;
+      a.title = title; a.date = date; a.time = time; a.place = place; a.notes = notes;
+      if (!save()) return;
+      editingId = null; renderStatsCards(); renderList(); toast('Turno actualizado.');
+    };
+    const addAppointment = () => {
+      const title = $('turnosTitle').value.trim();
+      const date = $('turnosDate').value;
+      const time = $('turnosTime').value;
+      const place = $('turnosPlace').value.trim();
+      const notes = $('turnosNotes').value.trim();
+      if (!title) { toast('Poné un título.', 'error'); return false; }
+      if (!isValidISODate(date)) { toast('Elegí una fecha válida.', 'error'); return false; }
+      if (time && !isValidTime(time)) { toast('Hora inválida.', 'error'); return false; }
+      state.appointments.push({ id: newId(), title, date, time, place, notes, status: 'pending' });
+      if (!save()) { state.appointments.pop(); return false; }
+      renderStatsCards(); renderList(); toast('Turno agregado.');
+      return true;
+    };
+    const resetForm = () => {
+      const t = $('turnosTitle'); if (t) t.value = '';
+      const d = $('turnosDate'); if (d) { d.value = todayISO(); d.min = todayISO(); }
+      const ti = $('turnosTime'); if (ti) ti.value = '';
+      const p = $('turnosPlace'); if (p) p.value = '';
+      const n = $('turnosNotes'); if (n) n.value = '';
+    };
+    const setFilter = f => {
+      currentFilter = f;
+      document.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+      renderList();
+    };
+
+    const mount = () => {
+      currentMountId++; editingId = null;
+      load(); resetForm(); renderStatsCards(); setFilter('proximos');
+      document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filter)));
+      const addBtn = $('turnosAdd');
+      if (addBtn) addBtn.addEventListener('click', () => { if (addAppointment()) resetForm(); });
+      const exportBtn = $('turnosExportData');
+      if (exportBtn) exportBtn.addEventListener('click', () => {
+        try {
+          const data = { app: 'hub-turnos', version: 2, exportedAt: new Date().toISOString(), appointments: state.appointments };
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob); const a = document.createElement('a');
+          a.href = url; a.download = `turnos-${todayISO()}.json`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast('Copia exportada.');
+        } catch (e) { toast('No se pudo exportar.', 'error'); }
+      });
+      const resetAllBtn = $('turnosResetData');
+      if (resetAllBtn) resetAllBtn.addEventListener('click', () => {
+        if (!window.confirm('¿Borrar todos los turnos?')) return;
+        state = DEFAULTS(); save(); renderStatsCards(); renderList(); resetForm(); toast('Turnos borrados.');
+      });
+      const importBtn = $('turnosImportData'), importFile = $('turnosImportFile');
+      if (importBtn && importFile) {
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', async e => {
+          const f = e.target.files && e.target.files[0]; e.target.value = '';
+          if (!f) return;
+          if (!window.confirm('Restaurar la copia reemplazará todos los turnos. ¿Continuar?')) return;
+          try {
+            const raw = JSON.parse(await f.text());
+            if (!raw || typeof raw !== 'object' || !Array.isArray(raw.appointments)) throw new Error('formato');
+            state = sanitizeState(raw); if (!save()) return;
+            renderStatsCards(); renderList(); toast('Copia restaurada.');
+          } catch (err) { toast('No se pudo leer esa copia.', 'error'); }
+        });
+      }
+    };
+    return { mount };
+  })();
+
+  /* ==================== RECORDATORIOS ==================== */
+  const recordatoriosModule = (() => {
+    const DEFAULTS = () => ({ reminders: [] });
+    let state = DEFAULTS();
+    let lsAvailable = true;
+    try { const k = '__t__' + Math.random(); localStorage.setItem(k, '1'); localStorage.removeItem(k); }
+    catch (e) { lsAvailable = false; }
+    const toast = (msg, type, opts) => window.__hubToast ? window.__hubToast(msg, type, opts) : console.log(msg);
+    let currentFilter = 'pendientes', editingId = null, currentMountId = 0;
+
+    const sanitizeReminder = r => {
+      if (!r || typeof r !== 'object') return null;
+      if (!isValidISODate(r.date)) return null;
+      const title = (typeof r.title === 'string' ? r.title : '').trim();
+      if (!title) return null;
+      const time = isValidTime(r.time) ? r.time : '';
+      const notes = (typeof r.notes === 'string' ? r.notes : '').trim();
+      return { id: (typeof r.id === 'string' && r.id) ? r.id : newId(), title, date: r.date, time, notes, done: !!r.done };
+    };
+    const sanitizeState = raw => {
+      const out = { reminders: [] };
+      if (raw && Array.isArray(raw.reminders)) {
+        const seen = new Set();
+        for (const r of raw.reminders) {
+          const c = sanitizeReminder(r);
+          if (!c) continue;
+          if (seen.has(c.id)) c.id = newId();
+          seen.add(c.id); out.reminders.push(c);
+        }
+      }
+      return out;
+    };
+    const save = () => {
+      if (!lsAvailable) { toast('Tu navegador bloquea el guardado.', 'error'); return false; }
+      try { localStorage.setItem(KEY_RECORDATORIOS, JSON.stringify(state)); return true; }
+      catch (e) { toast('No se pudieron guardar los datos.', 'error'); return false; }
+    };
+    const load = () => {
+      if (!lsAvailable) return;
+      try { const raw = localStorage.getItem(KEY_RECORDATORIOS); if (raw) state = sanitizeState(JSON.parse(raw)); }
+      catch (e) { state = DEFAULTS(); }
+    };
+    const sortByDate = (a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : (a.time || '99:99').localeCompare(b.time || '99:99');
+    const pendientes = () => state.reminders.filter(r => !r.done).sort(sortByDate);
+    const cumplidos = () => state.reminders.filter(r => r.done).sort((a, b) => sortByDate(b, a));
+    const stats = () => ({
+      total: state.reminders.length,
+      pending: state.reminders.filter(r => !r.done).length,
+      today: state.reminders.filter(r => !r.done && r.date === todayISO()).length,
+      overdue: state.reminders.filter(r => !r.done && r.date < todayISO()).length,
+    });
+
+    const updateTabCounts = () => {
+      const s = stats();
+      const pend = document.querySelector('[data-rec-filter="pendientes"]');
+      const cumpl = document.querySelector('[data-rec-filter="cumplidos"]');
+      if (pend) pend.innerHTML = `Pendientes <span class="tab-count">${s.pending}</span>`;
+      if (cumpl) cumpl.innerHTML = `Cumplidos <span class="tab-count">${state.reminders.length - s.pending}</span>`;
+    };
+
+    const renderStatsCards = () => {
+      const el = $('recStats'); if (!el) return;
+      const s = stats();
+      el.innerHTML = `
+        ${renderSummaryCard({ view: 'recordatorios', icon: '⏳', label: 'Pendientes', value: String(s.pending), sub: s.pending === 1 ? 'Recordatorio pendiente' : 'Recordatorios pendientes', state: s.pending === 0 ? 'empty' : 'ok' })}
+        ${renderSummaryCard({ view: 'recordatorios', icon: '📅', label: 'Para hoy', value: String(s.today), sub: s.today === 0 ? 'Nada para hoy' : (s.today === 1 ? 'Uno para hoy' : 'Varios para hoy'), state: s.today > 0 ? 'today' : 'empty' })}
+        ${renderSummaryCard({ view: 'recordatorios', icon: '⚠️', label: 'Vencidos', value: String(s.overdue), sub: s.overdue === 0 ? 'Todo al día' : (s.overdue === 1 ? 'Uno vencido' : 'Varios vencidos'), state: s.overdue > 0 ? 'overdue' : 'ok' })}
+        ${renderSummaryCard({ view: 'recordatorios', icon: '📋', label: 'Total', value: String(s.total), sub: 'Recordatorios registrados', state: s.total === 0 ? 'empty' : 'ok' })}
+      `;
+    };
+
+    const renderReminderItem = r => {
+      const isDone = r.done, isPast = r.date < todayISO(), isToday = r.date === todayISO();
+      const isOverdue = !isDone && isPast;
+      const isEditing = editingId === r.id;
+      const classes = ['reminder-item'];
+      if (isDone) classes.push('done');
+      else if (isOverdue) classes.push('overdue');
+      else if (isToday) classes.push('today');
+      if (isEditing) classes.push('is-editing');
+      const dateCls = isOverdue ? 'overdue' : (isToday ? 'today' : '');
+      const metaParts = [`<span class="rm-date ${dateCls}">📅 ${escapeHtml(fmtDateFull(r.date))}</span>`];
+      if (r.time) metaParts.push(`<span class="rm-time">🕐 ${escapeHtml(r.time)}</span>`);
+      const notesHtml = r.notes ? `<div class="reminder-notes">${escapeHtml(r.notes)}</div>` : '';
+      const editFormHtml = isEditing ? `
+        <div class="edit-form" data-edit-form="${escapeHtml(r.id)}">
+          <div class="form-grid">
+            <div class="full"><label>Título</label><input type="text" data-edit-title value="${escapeHtml(r.title)}" maxlength="100"></div>
+            <div><label>Fecha</label><input type="date" data-edit-date value="${escapeHtml(r.date)}"></div>
+            <div><label>Hora (opcional)</label><input type="time" data-edit-time value="${escapeHtml(r.time || '')}"></div>
+            <div class="full"><label>Notas (opcional)</label><textarea data-edit-notes maxlength="500">${escapeHtml(r.notes || '')}</textarea></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm" type="button" data-save-edit="${escapeHtml(r.id)}">Guardar cambios</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-cancel-edit="${escapeHtml(r.id)}">Cancelar</button>
+            ${isDone ? `<button class="btn btn-ghost btn-sm" type="button" data-reopen="${escapeHtml(r.id)}">Volver a pendiente</button>` : ''}
+          </div>
+        </div>` : '';
+      return `
+        <div class="${classes.join(' ')}" data-reminder="${escapeHtml(r.id)}">
+          <button class="reminder-check" type="button" ${isDone ? 'disabled aria-disabled="true"' : `data-mark-done="${escapeHtml(r.id)}"`} aria-label="${isDone ? 'Cumplido' : 'Marcar como cumplido'}">
+            <span class="check-icon" aria-hidden="true">✓</span>
+          </button>
+          <div class="reminder-body">
+            <div class="reminder-title">${escapeHtml(r.title)}</div>
+            <div class="reminder-meta">${metaParts.join('')}</div>
+            ${notesHtml}
+            ${editFormHtml}
+          </div>
+          ${!isEditing ? `
+            <div class="reminder-actions">
+              <button class="btn btn-ghost btn-icon" type="button" data-edit="${escapeHtml(r.id)}" aria-label="Editar" title="Editar">✏️</button>
+              <button class="btn btn-ghost btn-icon" type="button" data-delete="${escapeHtml(r.id)}" aria-label="Eliminar" title="Eliminar">🗑</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    };
+
+    const renderList = () => {
+      const el = $('recList'); if (!el) return;
+      updateTabCounts();
+      const list = currentFilter === 'pendientes' ? pendientes() : cumplidos();
+      if (!list.length) {
+        el.innerHTML = `<div class="empty">${currentFilter === 'pendientes' ? 'No tenés recordatorios pendientes.' : 'Todavía no marcaste ninguno como cumplido.'}</div>`;
+        return;
+      }
+      el.innerHTML = list.map(renderReminderItem).join('');
+      bindListListeners();
+    };
+
+    const bindListListeners = () => {
+      const el = $('recList'); if (!el) return;
+      const mountAtBind = currentMountId;
+      el.addEventListener('click', e => {
+        if (mountAtBind !== currentMountId) return;
+        const markBtn = e.target.closest('[data-mark-done]');
+        if (markBtn) { markDone(markBtn.dataset.markDone); return; }
+        const editBtn = e.target.closest('[data-edit]');
+        if (editBtn) { editingId = editBtn.dataset.edit; renderList(); return; }
+        const delBtn = e.target.closest('[data-delete]');
+        if (delBtn) { deleteReminder(delBtn.dataset.delete); return; }
+        const saveEdit = e.target.closest('[data-save-edit]');
+        if (saveEdit) { saveEditReminder(saveEdit.dataset.saveEdit); return; }
+        const cancelEdit = e.target.closest('[data-cancel-edit]');
+        if (cancelEdit) { editingId = null; renderList(); return; }
+        const reopen = e.target.closest('[data-reopen]');
+        if (reopen) { reopenReminder(reopen.dataset.reopen); return; }
+      });
+    };
+
+    const markDone = id => {
+      const r = state.reminders.find(x => x.id === id); if (!r) return;
+      r.done = true;
+      if (!save()) { r.done = false; return; }
+      renderStatsCards(); renderList();
+      toast('Recordatorio cumplido.', 'success', {
+        duration: 6000,
+        action: {
+          label: 'Deshacer',
+          onClick: () => {
+            const rr = state.reminders.find(x => x.id === id);
+            if (!rr) return;
+            rr.done = false;
+            if (!save()) return;
+            if ($('recList')) { renderStatsCards(); renderList(); }
+            toast('Recordatorio vuelto a pendiente.');
+          }
+        }
+      });
+    };
+    const reopenReminder = id => {
+      const r = state.reminders.find(x => x.id === id); if (!r) return;
+      if (!window.confirm(`¿Volver "${r.title}" a pendiente?`)) return;
+      r.done = false;
+      if (!save()) return;
+      editingId = null;
+      renderStatsCards(); renderList(); toast('Recordatorio vuelto a pendiente.');
+    };
+    const deleteReminder = id => {
+      const r = state.reminders.find(x => x.id === id); if (!r) return;
+      if (!window.confirm(`¿Eliminar el recordatorio "${r.title}"?`)) return;
+      state.reminders = state.reminders.filter(x => x.id !== id);
+      if (!save()) return;
+      renderStatsCards(); renderList(); toast('Recordatorio eliminado.');
+    };
+    const saveEditReminder = id => {
+      const form = document.querySelector(`[data-edit-form="${CSS.escape(id)}"]`); if (!form) return;
+      const title = form.querySelector('[data-edit-title]').value.trim();
+      const date = form.querySelector('[data-edit-date]').value;
+      const time = form.querySelector('[data-edit-time]').value;
+      const notes = form.querySelector('[data-edit-notes]').value.trim();
+      if (!title) { toast('El título es obligatorio.', 'error'); return; }
+      if (!isValidISODate(date)) { toast('Fecha inválida.', 'error'); return; }
+      if (time && !isValidTime(time)) { toast('Hora inválida.', 'error'); return; }
+      const r = state.reminders.find(x => x.id === id); if (!r) return;
+      r.title = title; r.date = date; r.time = time; r.notes = notes;
+      if (!save()) return;
+      editingId = null; renderStatsCards(); renderList(); toast('Recordatorio actualizado.');
+    };
+    const addReminder = () => {
+      const title = $('recTitle').value.trim();
+      const date = $('recDate').value;
+      const time = $('recTime').value;
+      const notes = $('recNotes').value.trim();
+      if (!title) { toast('Poné un título.', 'error'); return false; }
+      if (!isValidISODate(date)) { toast('Elegí una fecha válida.', 'error'); return false; }
+      if (time && !isValidTime(time)) { toast('Hora inválida.', 'error'); return false; }
+      state.reminders.push({ id: newId(), title, date, time, notes, done: false });
+      if (!save()) { state.reminders.pop(); return false; }
+      renderStatsCards(); renderList(); toast('Recordatorio agregado.');
+      return true;
+    };
+    const resetForm = () => {
+      const t = $('recTitle'); if (t) t.value = '';
+      const d = $('recDate'); if (d) d.value = todayISO();
+      const ti = $('recTime'); if (ti) ti.value = '';
+      const n = $('recNotes'); if (n) n.value = '';
+    };
+    const setFilter = f => {
+      currentFilter = f;
+      document.querySelectorAll('[data-rec-filter]').forEach(b => b.classList.toggle('active', b.dataset.recFilter === f));
+      renderList();
+    };
+
+    const mount = () => {
+      currentMountId++; editingId = null;
+      load(); resetForm(); renderStatsCards(); setFilter('pendientes');
+      document.querySelectorAll('[data-rec-filter]').forEach(b => b.addEventListener('click', () => setFilter(b.dataset.recFilter)));
+      const addBtn = $('recAdd');
+      if (addBtn) addBtn.addEventListener('click', () => { if (addReminder()) resetForm(); });
+      const exportBtn = $('recExportData');
+      if (exportBtn) exportBtn.addEventListener('click', () => {
+        try {
+          const data = { app: 'hub-recordatorios', version: 1, exportedAt: new Date().toISOString(), reminders: state.reminders };
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob); const a = document.createElement('a');
+          a.href = url; a.download = `recordatorios-${todayISO()}.json`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast('Copia exportada.');
+        } catch (e) { toast('No se pudo exportar.', 'error'); }
+      });
+      const resetAllBtn = $('recResetData');
+      if (resetAllBtn) resetAllBtn.addEventListener('click', () => {
+        if (!window.confirm('¿Borrar todos los recordatorios?')) return;
+        state = DEFAULTS(); save(); renderStatsCards(); renderList(); resetForm(); toast('Recordatorios borrados.');
+      });
+      const importBtn = $('recImportData'), importFile = $('recImportFile');
+      if (importBtn && importFile) {
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', async e => {
+          const f = e.target.files && e.target.files[0]; e.target.value = '';
+          if (!f) return;
+          if (!window.confirm('Restaurar la copia reemplazará todos los recordatorios. ¿Continuar?')) return;
+          try {
+            const raw = JSON.parse(await f.text());
+            if (!raw || typeof raw !== 'object' || !Array.isArray(raw.reminders)) throw new Error('formato');
+            state = sanitizeState(raw); if (!save()) return;
+            renderStatsCards(); renderList(); toast('Copia restaurada.');
+          } catch (err) { toast('No se pudo leer esa copia.', 'error'); }
+        });
+      }
+    };
+    return { mount };
+  })();
+
+  /* ==================== AJUSTES ==================== */
+  const ajustesModule = (() => {
+    const toast = (msg, type) => window.__hubToast ? window.__hubToast(msg, type) : console.log(msg);
+    const readRaw = key => { try { return localStorage.getItem(key); } catch (e) { return null; } };
+    const estimateBytes = s => (s ? new Blob([s]).size : 0);
+    const fmtBytes = bytes => {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    };
+    const computeCounts = () => {
+      const unas = readLS(KEY_UNAS) || {};
+      const ciclo = readLS(KEY_CICLO) || {};
+      const turnos = readLS(KEY_TURNOS) || {};
+      const recs = readLS(KEY_RECORDATORIOS) || {};
+      return {
+        unas: (unas.visits || []).length,
+        ciclo: (ciclo.periods || []).length,
+        turnos: (turnos.appointments || []).length,
+        recs: (recs.reminders || []).length,
+      };
+    };
+    const computeStorage = () => {
+      const keys = [KEY_UNAS, KEY_CICLO, KEY_TURNOS, KEY_RECORDATORIOS, THEME_KEY];
+      let total = 0;
+      for (const k of keys) total += estimateBytes(readRaw(k));
+      return total;
+    };
+
+    const renderOverview = () => {
+      const el = $('ajustesOverview'); if (!el) return;
+      const c = computeCounts();
+      const totalBytes = computeStorage();
+      const maxBytes = 5 * 1024 * 1024;
+      const pct = Math.min(100, (totalBytes / maxBytes) * 100);
+      el.innerHTML = `
+        <div class="setting-row">
+          <div class="sr-info">
+            <div class="sr-title">Contenido actual</div>
+            <div class="sr-desc">${c.unas} visitas de uñas · ${c.ciclo} períodos · ${c.turnos} turnos · ${c.recs} recordatorios</div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info" style="width:100%;">
+            <div class="sr-title">Uso de almacenamiento</div>
+            <div class="sr-desc">Los datos viven en este navegador. Estimado de localStorage.</div>
+            <div class="storage-bar-wrap">
+              <div class="storage-bar"><div class="storage-bar-fill" style="width:${pct}%"></div></div>
+              <div class="storage-info"><span>${fmtBytes(totalBytes)} usados</span><span>límite típico ~5 MB</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info">
+            <div class="sr-title">Versión</div>
+            <div class="sr-desc">Compilación actual del hub</div>
+          </div>
+          <span class="version-badge">v${HUB_VERSION}</span>
+        </div>
+      `;
+    };
+
+    const doExportAll = () => {
+      try {
+        const bundle = {
+          app: 'mi-espacio-hub',
+          version: HUB_VERSION,
+          exportedAt: new Date().toISOString(),
+          theme: currentTheme,
+          data: {
+            unas: readLS(KEY_UNAS),
+            ciclo: readLS(KEY_CICLO),
+            turnos: readLS(KEY_TURNOS),
+            recordatorios: readLS(KEY_RECORDATORIOS),
+          },
+        };
+        const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `mi-espacio-backup-${todayISO()}.json`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast('Copia completa exportada.');
+      } catch (e) { toast('No se pudo exportar.', 'error'); }
+    };
+
+    const doImportAll = async file => {
+      try {
+        const raw = JSON.parse(await file.text());
+        if (!raw || typeof raw !== 'object') throw new Error('formato');
+        const data = raw.data || raw;
+        const hasAny = ['unas', 'ciclo', 'turnos', 'recordatorios'].some(k => data[k]);
+        if (!hasAny) throw new Error('sin-secciones');
+        const backup = {
+          [KEY_UNAS]: readRaw(KEY_UNAS),
+          [KEY_CICLO]: readRaw(KEY_CICLO),
+          [KEY_TURNOS]: readRaw(KEY_TURNOS),
+          [KEY_RECORDATORIOS]: readRaw(KEY_RECORDATORIOS),
+        };
+        let restoredCount = 0;
+        for (const [key, val] of Object.entries({
+          [KEY_UNAS]: data.unas,
+          [KEY_CICLO]: data.ciclo,
+          [KEY_TURNOS]: data.turnos,
+          [KEY_RECORDATORIOS]: data.recordatorios,
+        })) {
+          if (val && typeof val === 'object') {
+            try { localStorage.setItem(key, JSON.stringify(val)); restoredCount++; }
+            catch (e) { logErr('import write', key, e); }
+          }
+        }
+        if (restoredCount === 0) {
+          for (const [k, v] of Object.entries(backup)) {
+            if (v !== null) try { localStorage.setItem(k, v); } catch (e) {}
+          }
+          throw new Error('nada-restaurado');
+        }
+        if (typeof raw.theme === 'string' && (raw.theme === 'light' || raw.theme === 'dark')) {
+          currentTheme = raw.theme;
+          applyTheme(currentTheme); saveTheme(currentTheme);
+        }
+        renderOverview();
+        toast(`Copia restaurada (${restoredCount} sección${restoredCount === 1 ? '' : 'es'}).`);
+      } catch (err) {
+        logErr('import-all', err);
+        toast('No se pudo restaurar esa copia.', 'error');
+      }
+    };
+
+    const doResetAll = () => {
+      const answer = window.prompt('Esta acción borrará TODOS los datos de las 4 secciones. Escribí BORRAR para confirmar.');
+      if (answer !== 'BORRAR') { toast('Borrado cancelado.', 'error'); return; }
+      try {
+        localStorage.removeItem(KEY_UNAS);
+        localStorage.removeItem(KEY_CICLO);
+        localStorage.removeItem(KEY_TURNOS);
+        localStorage.removeItem(KEY_RECORDATORIOS);
+        if ('indexedDB' in window) {
+          try {
+            const req = indexedDB.deleteDatabase('agendaUnasDB');
+            req.onsuccess = () => log('IDB eliminada');
+          } catch (e) { logErr('idb delete', e); }
+        }
+        renderOverview();
+        toast('Todos los datos borrados.');
+      } catch (e) { toast('No se pudo completar el borrado.', 'error'); }
+    };
+
+    const mount = () => {
+      renderOverview();
+      const exportBtn = $('ajustesExportAll');
+      if (exportBtn) exportBtn.addEventListener('click', doExportAll);
+      const importBtn = $('ajustesImportAll'), importFile = $('ajustesImportFile');
+      if (importBtn && importFile) {
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', async e => {
+          const f = e.target.files && e.target.files[0]; e.target.value = '';
+          if (!f) return;
+          if (!window.confirm('Restaurar la copia completa reemplazará los datos de las secciones incluidas. ¿Continuar?')) return;
+          await doImportAll(f);
+        });
+      }
+      const resetBtn = $('ajustesResetAll');
+      if (resetBtn) resetBtn.addEventListener('click', doResetAll);
+      const themeBtn = $('ajustesThemeToggle');
+      if (themeBtn) themeBtn.addEventListener('click', () => { toggleTheme(); renderOverview(); toast('Tema cambiado.'); });
+    };
+    return { mount };
+  })();
+
+  /* VISTAS */
+  const views = {
+    inicio: () => {
+      const unas = computeUnas(), ciclo = computeCiclo(), turnos = computeTurnos(), recs = computeRecordatorios();
+      const events = computeEvents(), alerts = computeAlerts();
+      const hasAny = [unas, ciclo, turnos, recs].some(s => s.state !== 'empty');
+      const h = new Date().getHours();
+      const gw = h >= 5 && h < 12 ? 'Buenos días' : h >= 12 && h < 19 ? 'Buenas tardes' : 'Buenas noches';
+      const ge = h >= 5 && h < 12 ? '☀️' : h >= 12 && h < 19 ? '🌤️' : '🌙';
+      const now = new Date();
+      const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+      const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      let subtitle = `${days[now.getDay()]} ${now.getDate()} de ${months[now.getMonth()]}`;
+      if (alerts.length) subtitle += ' · Necesitás atención en algo';
+      else if (events.some(e => e.date === todayISO())) subtitle += ' · Tenés cosas para hoy';
+      else if (events.length) subtitle += ` · ${events.length} evento${events.length === 1 ? '' : 's'} próximo${events.length === 1 ? '' : 's'}`;
+      else if (!hasAny) subtitle += ' · Empezá registrando algo';
+      else subtitle += ' · Todo tranqui por acá';
+      let unasCard;
+      if (unas.state === 'empty') unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: 'Sin datos', sub: 'Registrá tu primer turno', state: 'empty' };
+      else if (unas.days < 0) unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: `Pasado hace ${-unas.days} día${-unas.days === 1 ? '' : 's'}`, sub: fmtDate(unas.date), state: 'warn' };
+      else if (unas.days === 0) unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: '¡Hoy!', sub: unas.kind, state: 'today' };
+      else unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: `En ${unas.days} día${unas.days === 1 ? '' : 's'}`, sub: `${unas.kind} · ${fmtDate(unas.date)}`, state: 'ok' };
+      let cicloCard;
+      if (ciclo.state === 'empty') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: 'Sin datos', sub: 'Cargá tu primer período', state: 'empty' };
+      else if (ciclo.state === 'ongoing') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `En curso · día ${ciclo.day}`, sub: `Desde ${fmtDate(ciclo.date)}`, state: 'today' };
+      else if (ciclo.state === 'overdue') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `${ciclo.days} día${ciclo.days === 1 ? '' : 's'} de atraso`, sub: `Esperado ${fmtDate(ciclo.date)}`, state: 'overdue' };
+      else if (ciclo.state === 'today') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: '¡Hoy!', sub: 'Período esperado', state: 'today' };
+      else cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `En ${ciclo.days} día${ciclo.days === 1 ? '' : 's'}`, sub: fmtDate(ciclo.date), state: 'ok' };
+      let turnosCard;
+      if (turnos.state === 'empty') turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: 'Sin datos', sub: 'Agregá un turno', state: 'empty' };
+      else if (turnos.days === 0) turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: '¡Hoy!', sub: turnos.title, state: 'today' };
+      else turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: `En ${turnos.days} día${turnos.days === 1 ? '' : 's'}`, sub: turnos.title, state: 'ok' };
+      let recsCard;
+      if (recs.state === 'empty') recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: 'Sin datos', sub: 'Creá un recordatorio', state: 'empty' };
+      else if (recs.overdue > 0) recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: `${recs.overdue} vencido${recs.overdue === 1 ? '' : 's'}`, sub: `${recs.count} pendiente${recs.count === 1 ? '' : 's'} en total`, state: 'overdue' };
+      else recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: `${recs.count} pendiente${recs.count === 1 ? '' : 's'}`, sub: recs.next ? `Próximo: ${fmtDate(recs.next.date)}` : '', state: 'ok' };
+      const alertsHtml = alerts.length
+        ? alerts.map(a => `<div class="alert-banner ${a.danger ? 'danger' : ''}"><span class="ab-icon" aria-hidden="true">${a.icon}</span><span>${escapeHtml(a.text)}</span></div>`).join('')
+        : '';
+      let eventsHtml = '';
+      if (events.length) {
+        eventsHtml = `<h2 class="section-title">Próximos eventos</h2><div class="event-list">${events.slice(0, 6).map(e => {
+          const isToday = e.date === todayISO();
+          const timeStr = e.time ? ` · ${e.time}` : '';
+          return `<div class="event-item ${isToday ? 'is-today' : ''}" data-view="${escapeHtml(e.view)}" role="button" tabindex="0"><div class="ei-ico" aria-hidden="true">${e.icon}</div><div class="ei-body"><div class="ei-title">${escapeHtml(e.title)}</div><div class="ei-meta">${escapeHtml(e.meta)}${timeStr}</div></div><div class="ei-when">${whenLabel(e.date)}<span class="ei-when-sub">${fmtDate(e.date)}</span></div></div>`;
+        }).join('')}</div>`;
+      }
+      let emptyHtml = '';
+      if (!hasAny) {
+        emptyHtml = `<div class="empty-dashboard"><h2>Tu espacio está vacío</h2><p>Empezá por donde quieras. Todo queda guardado en tu dispositivo.</p><div class="empty-shortcuts"><button type="button" data-view="unas"><span class="es-ico">💅</span><span>Registrar uñas</span></button><button type="button" data-view="ciclo"><span class="es-ico">🌸</span><span>Mi ciclo</span></button><button type="button" data-view="turnos"><span class="es-ico">📅</span><span>Agregar turno</span></button><button type="button" data-view="recordatorios"><span class="es-ico">🔔</span><span>Recordatorio</span></button></div></div>`;
+      }
+      return `
+        <div class="page-head"><h1>${gw} ${ge}</h1><p>${escapeHtml(subtitle)}</p></div>
+        ${alertsHtml}
+        <div class="summary-grid">
+          ${renderSummaryCard(unasCard)}
+          ${renderSummaryCard(cicloCard)}
+          ${renderSummaryCard(turnosCard)}
+          ${renderSummaryCard(recsCard)}
+        </div>
+        ${eventsHtml}
+        ${emptyHtml}
+      `;
+    },
+
+    unas: () => `
+      ${viewHeader({ tag: 'Sección', title: '💅 Agenda de uñas', subtitle: 'Registrá cuándo te hiciste las uñas y calculá el próximo turno. Se guardan las últimas 3 fotos de cada tipo.' })}
+      <div id="unasCards" class="cards-grid"></div>
+      <div class="panel">
+        <h2>Registrar una visita</h2>
+        <p>Elegí manos o pies, cargá la fecha de la última vez y, si querés, sacale una foto.</p>
+        <div class="form-grid">
+          <div><label for="unasKind">Tipo de visita</label><select id="unasKind"><option value="manos">Manos</option><option value="pies">Pies</option></select></div>
+          <div><label for="unasDate">Fecha de la visita</label><input id="unasDate" type="date"></div>
+          <div class="full">
+            <label for="unasPhoto">Foto (opcional)</label>
+            <input id="unasPhoto" type="file" accept="image/*" capture="environment">
+            <div class="field-hint">Se comprime automáticamente (máx. 900 px).</div>
+            <div id="unasPhotoPreviewWrap" class="photo-preview-wrap" hidden>
+              <div id="unasPhotoPreview" class="photo-preview"></div>
+              <button type="button" class="btn btn-ghost btn-sm" id="unasClearPhoto" style="margin-top:8px;">Quitar foto</button>
+            </div>
+          </div>
+        </div>
+        <div class="actions"><button class="btn btn-primary" id="unasSaveVisit" type="button">Guardar última visita</button></div>
+      </div>
+      <div class="panel">
+        <h2>Configurar recordatorios</h2>
+        <p>Indicá cada cuántas semanas solés hacerte las uñas y cuántos días antes querés que te avise.</p>
+        <div class="form-grid">
+          <div><label for="unasHandsInterval">Manos: cada cuántas semanas</label><input id="unasHandsInterval" type="number" min="1" max="52" step="1" value="3"></div>
+          <div><label for="unasFeetInterval">Pies: cada cuántas semanas</label><input id="unasFeetInterval" type="number" min="1" max="52" step="1" value="5"></div>
+          <div><label for="unasLeadDays">Avisar con anticipación (días)</label><input id="unasLeadDays" type="number" min="0" max="30" step="1" value="3"></div>
+          <div><label for="unasReminderTime">Hora orientativa del aviso</label><select id="unasReminderTime"><option value="09:00">09:00</option><option value="12:00">12:00</option><option value="18:00">18:00</option></select></div>
+        </div>
+        <div class="actions"><button class="btn btn-secondary" id="unasSaveSettings" type="button">Guardar configuración</button></div>
+      </div>
+      <div class="panel">
+        <h2>Historial de visitas</h2>
+        <p>Las visitas registradas, de la más reciente a la más antigua.</p>
+        <div id="unasHistory"></div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="unasExportData" type="button">Exportar copia</button>
+          <button class="btn btn-ghost" id="unasImportData" type="button">Restaurar copia</button>
+          <button class="btn btn-ghost" id="unasResetData" type="button">Borrar todo</button>
+        </div>
+        <input id="unasImportFile" type="file" accept="application/json" hidden>
+      </div>
+      <div id="unasLightbox" class="lightbox" hidden><button type="button" class="lightbox-close" id="unasLightboxClose" aria-label="Cerrar">×</button><img id="unasLightboxImg" alt=""></div>
+    `,
+
+    ciclo: () => `
+      ${viewHeader({ tag: 'Sección', title: '🌸 Mi ciclo', subtitle: 'Registrá tu período y llevá el control de tus ciclos.' })}
+      <div id="cicloSummary" class="summary-grid"></div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Tu ciclo</h2>
+        <div class="phase-wrap">
+          <div id="cicloPhaseBar" class="phase-bar"></div>
+          <div class="phase-legend">
+            <span><span class="dot menstrual"></span> Menstrual</span>
+            <span><span class="dot follicular"></span> Folicular</span>
+            <span><span class="dot fertile"></span> Fértil</span>
+            <span><span class="dot luteal"></span> Lútea</span>
+          </div>
+          <div id="cicloPhaseTodayLabel" class="phase-today-label"></div>
+        </div>
+      </div>
+      <div class="panel"><h2>Acciones rápidas</h2><div id="cicloQuickActions" class="quick-actions"></div></div>
+      <div class="panel">
+        <h2>Registrar un período</h2>
+        <p>Para el día a día usá las acciones rápidas. Este formulario es para cargar un período pasado o corregir fechas.</p>
+        <div class="form-grid">
+          <div><label for="cicloStartDate">Inicio</label><input id="cicloStartDate" type="date"></div>
+          <div><label for="cicloEndDate">Fin (opcional)</label><input id="cicloEndDate" type="date"><div class="field-hint">Dejalo vacío si sigue en curso.</div></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary" id="cicloAddPeriod" type="button">Guardar período</button></div>
+      </div>
+      <div class="panel"><h2>Historial</h2><p>Del más reciente al más antiguo.</p><div id="cicloHistory"></div></div>
+      <div class="panel"><h2>Estadísticas</h2><div id="cicloStats" class="stats-grid"></div></div>
+      <div class="panel">
+        <h2>Configuración</h2>
+        <p>Estos valores se usan cuando no hay suficientes ciclos registrados para calcular un promedio.</p>
+        <div class="form-grid">
+          <div><label for="cicloDefaultCycleLength">Duración del ciclo (días)</label><input id="cicloDefaultCycleLength" type="number" min="21" max="45" step="1" value="28"></div>
+          <div><label for="cicloDefaultPeriodLength">Duración del período (días)</label><input id="cicloDefaultPeriodLength" type="number" min="1" max="15" step="1" value="5"></div>
+          <div><label for="cicloLutealPhase">Fase lútea (días)</label><input id="cicloLutealPhase" type="number" min="9" max="17" step="1" value="14"></div>
+        </div>
+        <div class="actions"><button class="btn btn-secondary" id="cicloSaveSettings" type="button">Guardar configuración</button></div>
+      </div>
+      <div class="panel">
+        <h2>Datos</h2>
+        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
+        <div class="actions">
+          <button class="btn btn-ghost" id="cicloExportData" type="button">Exportar copia</button>
+          <button class="btn btn-ghost" id="cicloImportData" type="button">Restaurar copia</button>
+          <button class="btn btn-ghost" id="cicloResetData" type="button">Borrar todo</button>
+        </div>
+        <input id="cicloImportFile" type="file" accept="application/json" hidden>
+        <div class="field-hint" style="margin-top:12px;">Esta app no reemplaza la consulta médica. Las estimaciones de ovulación y ventana fértil son aproximadas y no deben usarse como método anticonceptivo.</div>
+      </div>
+    `,
+
+    turnos: () => `
+      ${viewHeader({ tag: 'Sección', title: '📅 Turnos', subtitle: 'Médicos, dentista, peluquería: todo lo que tenga fecha.' })}
+      <div id="turnosStats" class="summary-grid"></div>
+      <div class="panel">
+        <h2>Agregar un turno</h2>
+        <p>Completá los datos. El título y la fecha son obligatorios.</p>
+        <div class="form-grid">
+          <div class="full"><label for="turnosTitle">Título <span class="required">*</span></label><input id="turnosTitle" type="text" placeholder="Ej: Dentista" maxlength="80"></div>
+          <div><label for="turnosDate">Fecha <span class="required">*</span></label><input id="turnosDate" type="date"></div>
+          <div><label for="turnosTime">Hora (opcional)</label><input id="turnosTime" type="time"></div>
+          <div class="full"><label for="turnosPlace">Lugar (opcional)</label><input id="turnosPlace" type="text" placeholder="Ej: Clínica del Sol" maxlength="100"></div>
+          <div class="full"><label for="turnosNotes">Notas (opcional)</label><textarea id="turnosNotes" placeholder="Cosas para recordar: llevar estudios, ayuno, etc." maxlength="500"></textarea></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary" id="turnosAdd" type="button">Agregar turno</button></div>
+      </div>
+      <div class="panel">
+        <h2>Lista de turnos</h2>
+        <div class="filter-tabs">
+          <button type="button" data-filter="proximos" class="active">Próximos</button>
+          <button type="button" data-filter="cerrados">Cerrados</button>
+        </div>
+        <div id="turnosList" class="appt-list"></div>
+      </div>
+      <div class="panel">
+        <h2>Datos</h2>
+        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
+        <div class="actions">
+          <button class="btn btn-ghost" id="turnosExportData" type="button">Exportar copia</button>
+          <button class="btn btn-ghost" id="turnosImportData" type="button">Restaurar copia</button>
+          <button class="btn btn-ghost" id="turnosResetData" type="button">Borrar todo</button>
+        </div>
+        <input id="turnosImportFile" type="file" accept="application/json" hidden>
+      </div>
+    `,
+
+    recordatorios: () => `
+      ${viewHeader({ tag: 'Sección', title: '🔔 Recordatorios', subtitle: 'Tareas con fecha para no olvidarte de nada. Cuando las cumplís, quedan cerradas.' })}
+      <div id="recStats" class="summary-grid"></div>
+      <div class="panel">
+        <h2>Agregar un recordatorio</h2>
+        <p>El título y la fecha son obligatorios. La hora y las notas son opcionales.</p>
+        <div class="form-grid">
+          <div class="full"><label for="recTitle">Título <span class="required">*</span></label><input id="recTitle" type="text" placeholder="Ej: Llamar al plomero" maxlength="100"></div>
+          <div><label for="recDate">Fecha <span class="required">*</span></label><input id="recDate" type="date"></div>
+          <div><label for="recTime">Hora (opcional)</label><input id="recTime" type="time"></div>
+          <div class="full"><label for="recNotes">Notas (opcional)</label><textarea id="recNotes" placeholder="Detalles para no olvidar" maxlength="500"></textarea></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary" id="recAdd" type="button">Agregar recordatorio</button></div>
+      </div>
+      <div class="panel">
+        <h2>Lista de recordatorios</h2>
+        <div class="filter-tabs">
+          <button type="button" data-rec-filter="pendientes" class="active">Pendientes</button>
+          <button type="button" data-rec-filter="cumplidos">Cumplidos</button>
+        </div>
+        <div id="recList" class="reminder-list"></div>
+      </div>
+      <div class="panel">
+        <h2>Datos</h2>
+        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
+        <div class="actions">
+          <button class="btn btn-ghost" id="recExportData" type="button">Exportar copia</button>
+          <button class="btn btn-ghost" id="recImportData" type="button">Restaurar copia</button>
+          <button class="btn btn-ghost" id="recResetData" type="button">Borrar todo</button>
+        </div>
+        <input id="recImportFile" type="file" accept="application/json" hidden>
+      </div>
+    `,
+
+    ajustes: () => `
+      ${viewHeader({ tag: 'Sección', title: '⚙️ Ajustes', subtitle: 'Configuración general, gestión de datos y respaldo completo.' })}
+      <div class="panel">
+        <h2>Resumen</h2>
+        <div id="ajustesOverview" class="settings-list"></div>
+      </div>
+      <div class="panel">
+        <h2>Apariencia</h2>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="sr-info">
+              <div class="sr-title">Tema</div>
+              <div class="sr-desc">Alterná entre oscuro y claro. También podés hacerlo desde el ícono del header.</div>
+            </div>
+            <div class="sr-action"><button class="btn btn-secondary btn-sm" id="ajustesThemeToggle" type="button">Cambiar tema</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Respaldo completo</h2>
+        <p>Exportá todo el hub (uñas, ciclo, turnos, recordatorios) en un solo archivo. Restaurar reemplaza las secciones incluidas en la copia.</p>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="sr-info"><div class="sr-title">Exportar todo</div><div class="sr-desc">Un único JSON con todas las secciones. Ideal para llevar a otro dispositivo.</div></div>
+            <div class="sr-action"><button class="btn btn-primary btn-sm" id="ajustesExportAll" type="button">Exportar</button></div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-info"><div class="sr-title">Restaurar todo</div><div class="sr-desc">Cargá una copia completa. Se conserva el tema si viene en el archivo.</div></div>
+            <div class="sr-action"><button class="btn btn-secondary btn-sm" id="ajustesImportAll" type="button">Restaurar</button></div>
+          </div>
+        </div>
+        <input id="ajustesImportFile" type="file" accept="application/json" hidden>
+      </div>
+      <div class="panel">
+        <h2>Zona de peligro</h2>
+        <div class="danger-zone">
+          <div class="dz-title">Borrar todos los datos</div>
+          <div class="dz-desc">Se eliminan las 4 secciones y las fotos asociadas en este dispositivo. El tema se conserva. Esta acción no se puede deshacer.</div>
+          <button class="btn btn-danger btn-sm" id="ajustesResetAll" type="button">Borrar todo</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Acerca de</h2>
+        <p>Mi espacio es un hub local sin servidores. Todo queda guardado en este navegador. El respaldo completo es tu seguro contra cualquier pérdida.</p>
+      </div>
+    `,
+  };
+
+  const viewMounts = {
+    unas: () => unasModule.mount(),
+    ciclo: () => cicloModule.mount(),
+    turnos: () => turnosModule.mount(),
+    recordatorios: () => recordatoriosModule.mount(),
+    ajustes: () => ajustesModule.mount(),
+  };
+
+  const renderView = view => {
+    if (!VIEWS[view]) view = DEFAULT_VIEW;
+    const main = $('view');
+    try {
+      main.innerHTML = `<div class="view-enter">${views[view]()}</div>`;
+    } catch (e) {
+      logErr('renderView', e);
+      main.innerHTML = `<div class="view-enter"><div class="placeholder"><h2>Algo se rompió</h2><p>${escapeHtml(e.message || '')}</p></div></div>`;
+    }
+    setActiveNav(view);
+    document.title = VIEWS[view].title + ' · Mi espacio';
+    main.querySelectorAll('[data-view]').forEach(el => {
+      if (el.tagName !== 'BUTTON') {
+        el.addEventListener('click', () => navigate(el.dataset.view));
+        el.addEventListener('keydown', ev => {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); navigate(el.dataset.view); }
+        });
+      } else if (el.parentElement && el.parentElement.classList.contains('empty-shortcuts')) {
+        el.addEventListener('click', () => navigate(el.dataset.view));
+      }
+    });
+    main.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const act = btn.dataset.action;
+        if (act.startsWith('go:')) navigate(act.slice(3));
+      });
+    });
+    if (typeof viewMounts[view] === 'function') {
+      try { viewMounts[view](); } catch (e) { logErr('mount ' + view, e); }
+    }
+    try { main.focus({ preventScroll: true }); } catch (e) {}
+    window.scrollTo(0, 0);
+  };
+
+  const init = () => {
+    renderNav();
+    $('themeToggle').addEventListener('click', toggleTheme);
+    $('brand').addEventListener('click', () => navigate('inicio'));
+    $('brand').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('inicio'); }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        const editingForm = document.querySelector('.edit-form');
+        if (editingForm) {
+          const cancelBtn = editingForm.querySelector('[data-cancel-edit]');
+          if (cancelBtn) { e.preventDefault(); cancelBtn.click(); }
+        }
+      }
+    });
+    window.addEventListener('hashchange', onHashChange);
+    onHashChange();
+  };
+
+    init();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW reg failed', e));
+    });
+  }
+})();
+})();
+</script>
+</body>
+</html>

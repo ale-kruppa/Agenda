@@ -1,0 +1,27 @@
+{
+  "name": "Mi espacio",
+  "short_name": "Mi espacio",
+  "description": "Agenda de uñas, ciclo menstrual, turnos y recordatorios. Todo en un solo lugar.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0d13",
+  "theme_color": "#0f0d13",
+  "lang": "es-AR",
+  "categories": ["lifestyle", "health", "productivity"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
