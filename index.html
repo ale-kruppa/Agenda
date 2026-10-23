@@ -2490,14 +2490,13 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     onHashChange();
   };
 
-    init();
+  init();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW reg failed', e));
     });
   }
-})();
 })();
 </script>
 </body>
