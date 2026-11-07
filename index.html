@@ -1,355 +1,400 @@
 <!doctype html>
-<html lang="es" data-theme="dark">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f0d13">
-<meta name="description" content="Mi espacio: agenda de uñas, ciclo menstrual, turnos y recordatorios. Todo en un solo lugar, guardado en tu dispositivo.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF5F3">
+<meta name="description" content="Mi espacio: agenda de uñas, ciclo menstrual, turnos y avisos. Todo en un solo lugar, guardado en tu dispositivo.">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mi espacio">
 <link rel="manifest" href="./manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <title>Mi espacio</title>
 <style>
 :root {
-  --radius: 20px; --radius-sm: 14px; --radius-xs: 10px;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --accent: #c04e88; --accent-2: #7c5cff;
-  --good: #4ade80; --warn: #fbbf24; --danger: #f87171;
-  --grad: linear-gradient(135deg, #c04e88 0%, #7c5cff 100%);
-  --grad-soft: linear-gradient(135deg, rgba(192,78,136,.15) 0%, rgba(124,92,255,.15) 100%);
-}
-[data-theme="dark"] {
-  --bg: #0f0d13; --bg-soft: #1a1720;
-  --card: #211d29; --card-hover: #2a2534;
-  --border: #322c3e; --border-soft: #262130;
-  --ink: #f2eef8; --ink-strong: #ffffff;
-  --muted: #9b93aa; --muted-soft: #6e687a;
-  --header-bg: rgba(15,13,19,.72); --nav-bg: rgba(26,23,32,.92);
-  --shadow-lg: 0 20px 50px -12px rgba(0,0,0,.6);
-  --phase-menstrual: #e64980; --phase-follicular: #4dabf7;
-  --phase-fertile: #37b24d; --phase-luteal: #f59f00;
+  --radius: 22px; --radius-sm: 18px; --radius-xs: 12px;
+  --font: 'Nunito Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Fraunces', Georgia, "Times New Roman", serif;
 }
 [data-theme="light"] {
-  --bg: #faf7fb; --bg-soft: #f2ecf5;
-  --card: #ffffff; --card-hover: #faf5fc;
-  --border: #ebe3f0; --border-soft: #f2ecf5;
-  --ink: #1a1720; --ink-strong: #0f0d13;
-  --muted: #6b6279; --muted-soft: #9b93aa;
-  --header-bg: rgba(250,247,251,.78); --nav-bg: rgba(255,255,255,.92);
-  --shadow-lg: 0 20px 50px -12px rgba(60,30,80,.15);
-  --phase-menstrual: #e64980; --phase-follicular: #4dabf7;
-  --phase-fertile: #37b24d; --phase-luteal: #f59f00;
+  color-scheme: light;
+  --bg: #FBF5F3; --bg-soft: #F6ECEE;
+  --card: #FFFFFF; --card-hover: #FDF7F8;
+  --border: #EFE1E3; --border-soft: #F3E7EA; --border-strong: #E3C9D2;
+  --ink: #2B1F24; --ink-strong: #2B1F24;
+  --muted: #75636A; --muted-soft: #A8979D;
+  --accent: #B0446E; --accent-strong: #8E3358; --accent-soft: #F6E3E8; --accent-tint: #FBF0F3; --on-accent: #FFFFFF;
+  --hero-sub: #FBE3EC;
+  --good: #2C6B49; --good-soft: #E3F1E9;
+  --warn: #8A4A0E; --warn-soft: #FBEEDD;
+  --danger: #A12C2C; --danger-soft: #FBE6E6;
+  --info: #3F6694; --info-soft: #E7EEF8;
+  --nav-bg: rgba(255,255,255,.96);
+  --shadow: 0 10px 30px -14px rgba(43,31,36,.28);
+  --shadow-accent: 0 14px 30px -14px rgba(176,68,110,.55);
+  --phase-menstrual: #C2456F; --phase-follicular: #9DB8DC;
+  --phase-fertile: #6FB08C; --phase-luteal: #E9C48A;
 }
-html { scroll-behavior: smooth; }
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1A1416; --bg-soft: #241C1F;
+  --card: #261D21; --card-hover: #2E2428;
+  --border: #3A2D32; --border-soft: #30252A; --border-strong: #4A3940;
+  --ink: #F5ECEF; --ink-strong: #FFF7FA;
+  --muted: #BBA8AF; --muted-soft: #8C7A81;
+  --accent: #E58AAE; --accent-strong: #F2A9C5; --accent-soft: #3D2530; --accent-tint: #33222A; --on-accent: #2B1018;
+  --hero-sub: #4A1F31;
+  --good: #8FD3AE; --good-soft: #1F3328;
+  --warn: #F2C08A; --warn-soft: #3A2A18;
+  --danger: #F2A0A0; --danger-soft: #3A1E1E;
+  --info: #A9C4EA; --info-soft: #1F2A3A;
+  --nav-bg: rgba(38,29,33,.96);
+  --shadow: 0 10px 30px -14px rgba(0,0,0,.7);
+  --shadow-accent: 0 14px 30px -14px rgba(229,138,174,.35);
+  --phase-menstrual: #D9668F; --phase-follicular: #8FAFD9;
+  --phase-fertile: #6FB08C; --phase-luteal: #E0B86F;
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body {
-  font-family: var(--font); background: var(--bg); color: var(--ink);
-  min-height: 100vh; -webkit-font-smoothing: antialiased;
-  transition: background-color .3s ease, color .3s ease;
-  background-image:
-    radial-gradient(ellipse at top left, rgba(192,78,136,.10), transparent 50%),
-    radial-gradient(ellipse at top right, rgba(124,92,255,.10), transparent 50%);
-}
-[data-theme="light"] body {
-  background-image:
-    radial-gradient(ellipse at top left, rgba(192,78,136,.06), transparent 50%),
-    radial-gradient(ellipse at top right, rgba(124,92,255,.06), transparent 50%);
-}
+body { font-family: var(--font); background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.4; }
 button { font: inherit; border: 0; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 8px;
-}
+a { color: var(--accent); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, [role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button:disabled { opacity: .55; cursor: not-allowed; }
-a { color: inherit; text-decoration: none; }
+svg.ico { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-.app-header { position: sticky; top: 0; z-index: 50; background: var(--header-bg); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border-soft); }
-.header-inner { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
-.brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; cursor: pointer; padding: 4px 8px; border-radius: 10px; transition: background-color .2s ease; }
-.brand:hover { background: var(--card-hover); }
-.brand-icon { width: 36px; height: 36px; border-radius: 11px; background: var(--grad); display: grid; place-items: center; font-size: 1.1rem; box-shadow: 0 8px 20px -6px rgba(192,78,136,.55); }
-.brand-text { font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--ink-strong); }
-.nav-desktop { display: none; flex: 1; align-items: center; gap: 4px; margin-left: 8px; }
-.nav-desktop button { padding: 9px 14px; border-radius: 10px; font-size: .88rem; font-weight: 600; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; position: relative; transition: color .2s ease, background-color .2s ease; }
+/* Encabezado (solo pantallas grandes) */
+.app-header { display: none; position: sticky; top: 0; z-index: 50; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+.header-inner { max-width: 760px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 6px; border-radius: 12px; }
+.brand-icon { width: 34px; height: 34px; border-radius: 11px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; }
+.brand-text { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; color: var(--ink-strong); }
+.nav-desktop { display: flex; flex: 1; gap: 2px; margin-left: 8px; }
+.nav-desktop button { padding: 9px 12px; border-radius: 12px; font-size: .9rem; font-weight: 700; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; }
 .nav-desktop button:hover { color: var(--ink); background: var(--card-hover); }
-.nav-desktop button.active { color: var(--ink-strong); }
-.nav-desktop button.active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: var(--grad); border-radius: 2px; }
-.theme-toggle { width: 40px; height: 40px; border-radius: 11px; background: var(--card); border: 1px solid var(--border); display: grid; place-items: center; font-size: 1.05rem; margin-left: auto; transition: all .2s ease; }
-.theme-toggle:hover { background: var(--card-hover); transform: rotate(15deg); }
+.nav-desktop button.active { color: var(--accent); background: var(--accent-soft); }
 
-.app-main { max-width: 1200px; margin: 0 auto; padding: 28px 20px calc(96px + env(safe-area-inset-bottom)); min-height: calc(100vh - 65px); }
-.view-enter { animation: viewIn .35s cubic-bezier(.2,.8,.2,1); }
-@keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.app-main { max-width: 640px; margin: 0 auto; padding: calc(24px + env(safe-area-inset-top)) 18px calc(112px + env(safe-area-inset-bottom)); min-height: 100vh; }
+.view-enter { animation: viewIn .3s cubic-bezier(.2,.8,.2,1); }
+@keyframes viewIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-.page-head { margin-bottom: 24px; }
-.page-head .tag { display: inline-block; padding: 5px 12px; background: var(--grad-soft); border: 1px solid rgba(192,78,136,.28); border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
-.page-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; color: var(--ink-strong); margin-bottom: 8px; }
-.page-head p { color: var(--muted); font-size: .98rem; line-height: 1.55; max-width: 620px; }
+/* Títulos */
+.page-head { margin-bottom: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.page-head .ph-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.page-head .tag { font-size: .82rem; font-weight: 700; color: var(--muted); }
+.page-head .tag.cap::first-letter { text-transform: uppercase; }
+.page-head h1 { font-family: var(--font-display); font-weight: 600; font-size: 1.9rem; line-height: 1.15; color: var(--ink-strong); letter-spacing: -.01em; }
+.page-head p { color: var(--muted); font-size: .95rem; line-height: 1.5; }
+.icon-btn { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--border); background: var(--card); color: var(--muted); display: grid; place-items: center; flex-shrink: 0; }
+.icon-btn:hover { color: var(--accent); }
+.back-row { display: flex; align-items: center; gap: 10px; }
 
-.panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-top: 16px; }
-.panel h2 { font-size: 1.12rem; font-weight: 750; margin-bottom: 6px; color: var(--ink-strong); }
-.panel > p { color: var(--muted); margin-bottom: 16px; font-size: .91rem; line-height: 1.5; }
-.section-title { font-size: 1.1rem; font-weight: 750; color: var(--ink-strong); margin: 28px 0 14px; }
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 14px; }
+.panel h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: var(--ink-strong); }
+.panel > p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.5; }
+.section-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink-strong); margin: 24px 0 10px; }
 
-.alert-banner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.35); color: var(--ink); font-size: .9rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; }
-[data-theme="light"] .alert-banner { background: rgba(251,191,36,.12); }
-.alert-banner .ab-icon { font-size: 1.15rem; flex-shrink: 0; }
-.alert-banner.danger { background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.35); }
+/* Secciones plegables */
+details.fold { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 14px; }
+details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 56px; padding: 0 18px; font-weight: 800; font-size: 1rem; color: var(--ink-strong); }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary .chev { color: var(--muted); transition: transform .2s ease; }
+details.fold[open] > summary .chev { transform: rotate(90deg); }
+details.fold > summary .sum-left { display: inline-flex; align-items: center; gap: 10px; }
+details.fold > summary .sum-left .ico { color: var(--accent); }
+details.fold > .fold-body { padding: 0 18px 18px; }
+details.fold > .fold-body > p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.5; }
 
-.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 8px; }
-.summary-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
-.summary-card:hover { transform: translateY(-3px); border-color: rgba(192,78,136,.4); box-shadow: 0 20px 50px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(192,78,136,.15); }
-.summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); opacity: 0; transition: opacity .2s ease; }
-.summary-card:hover::before { opacity: 1; }
-.summary-card.is-empty { border-style: dashed; }
-.summary-card.is-empty .sc-ico { opacity: .55; }
-.summary-card.is-empty .sc-value { color: var(--muted); }
-.summary-card.is-warn::before { background: var(--warn); opacity: 1; }
-.summary-card.is-warn .sc-value { color: var(--warn); }
-.summary-card.is-overdue::before { background: var(--danger); opacity: 1; }
+.alert-banner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); background: var(--warn-soft); color: var(--warn); font-size: .92rem; font-weight: 700; margin-bottom: 12px; line-height: 1.4; }
+.alert-banner.danger { background: var(--danger-soft); color: var(--danger); }
+.alert-banner .ab-icon { display: grid; place-items: center; flex-shrink: 0; }
+
+/* Tarjeta destacada */
+.hero { background: var(--accent); color: var(--on-accent); border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow-accent); margin-bottom: 14px; }
+.hero .hero-kicker { display: flex; align-items: center; gap: 8px; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .9; }
+.hero .hero-title { font-family: var(--font-display); font-size: 1.65rem; font-weight: 600; line-height: 1.2; }
+.hero .hero-sub { font-size: .95rem; opacity: .9; margin-top: 2px; }
+.hero .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero .btn-light { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: var(--card); color: var(--accent-strong); font-weight: 800; font-size: .9rem; }
+.hero .btn-outline-light { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid currentColor; color: var(--on-accent); font-weight: 800; font-size: .9rem; }
+
+/* Mini tarjetas resumen */
+.summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 4px; }
+.summary-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform .15s ease, border-color .15s ease; min-width: 0; }
+.summary-card:hover { border-color: var(--border-strong); }
+.summary-card:active { transform: scale(.98); }
+.summary-card .sc-ico { width: 36px; height: 36px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; margin-bottom: 2px; }
+.summary-card .sc-ico .ico { width: 18px; height: 18px; }
+.summary-card[data-tone="ciclo"] .sc-ico { background: var(--accent-soft); color: var(--phase-menstrual); }
+.summary-card[data-tone="turnos"] .sc-ico { background: var(--info-soft); color: var(--info); }
+.summary-card[data-tone="avisos"] .sc-ico { background: var(--warn-soft); color: var(--warn); }
+.summary-card[data-tone="good"] .sc-ico { background: var(--good-soft); color: var(--good); }
+.summary-card[data-tone="muted"] .sc-ico { background: var(--bg-soft); color: var(--muted); }
+.summary-card .sc-label { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.summary-card .sc-value { font-size: 1.05rem; font-weight: 800; color: var(--ink-strong); line-height: 1.25; overflow-wrap: anywhere; }
+.summary-card .sc-sub { font-size: .8rem; color: var(--muted); line-height: 1.35; }
+.summary-card.is-empty .sc-value { color: var(--muted); font-weight: 700; }
+.summary-card.is-warn .sc-sub, .summary-card.is-warn .sc-value { color: var(--warn); }
 .summary-card.is-overdue .sc-value { color: var(--danger); }
-.summary-card.is-today::before { background: var(--accent); opacity: 1; }
 .summary-card.is-today .sc-value { color: var(--accent); }
-.summary-card .sc-ico { width: 42px; height: 42px; border-radius: 12px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.2rem; border: 1px solid rgba(192,78,136,.15); }
-.summary-card .sc-label { font-size: .74rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-.summary-card .sc-value { font-size: 1.08rem; font-weight: 750; color: var(--ink-strong); line-height: 1.3; }
-.summary-card .sc-sub { font-size: .82rem; color: var(--muted); margin-top: -2px; line-height: 1.4; }
 
-.event-list { display: flex; flex-direction: column; gap: 10px; }
-.event-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: transform .2s ease, border-color .2s ease, background-color .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
-.event-item:hover { transform: translateX(3px); border-color: rgba(192,78,136,.35); background: var(--card-hover); }
-.event-item .ei-ico { width: 42px; height: 42px; border-radius: 12px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.15rem; flex-shrink: 0; border: 1px solid rgba(192,78,136,.15); }
+/* Lista de eventos */
+.event-list { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2px 14px; }
+.event-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
+.event-item:last-child { border-bottom: 0; }
+.event-item .ei-date { width: 46px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.event-item .ei-day { font-size: 1.15rem; font-weight: 800; line-height: 1; color: var(--ink-strong); }
+.event-item .ei-dow { font-size: .7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
+.event-item.is-today .ei-dow { color: var(--warn); }
 .event-item .ei-body { flex: 1; min-width: 0; }
-.event-item .ei-title { font-weight: 700; font-size: .95rem; color: var(--ink-strong); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.event-item .ei-meta { font-size: .82rem; color: var(--muted); }
-.event-item .ei-when { font-size: .82rem; font-weight: 750; color: var(--accent); flex-shrink: 0; text-align: right; line-height: 1.3; }
-.event-item .ei-when .ei-when-sub { display: block; font-size: .72rem; font-weight: 500; color: var(--muted); margin-top: 2px; }
-.event-item.is-today .ei-when { color: var(--warn); }
-.event-item.is-today .ei-ico { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.3); }
+.event-item .ei-title { font-weight: 700; font-size: .93rem; color: var(--ink-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-item .ei-meta { font-size: .8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-item .ei-when { font-size: .78rem; font-weight: 800; color: var(--muted); flex-shrink: 0; }
 
-.empty-dashboard { text-align: center; padding: 36px 24px; background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); margin-top: 24px; }
-.empty-dashboard h2 { font-size: 1.1rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 6px; }
-.empty-dashboard p { color: var(--muted); font-size: .9rem; margin-bottom: 22px; line-height: 1.5; }
-.empty-shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; max-width: 480px; margin: 0 auto; }
-.empty-shortcuts button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; background: var(--grad-soft); border: 1px solid rgba(192,78,136,.2); border-radius: 14px; font-size: .85rem; font-weight: 650; color: var(--ink); transition: all .2s ease; }
-.empty-shortcuts button:hover { transform: translateY(-2px); border-color: rgba(192,78,136,.45); background: var(--card-hover); }
-.empty-shortcuts button .es-ico { font-size: 1.4rem; }
+.empty-dashboard { text-align: center; padding: 28px 20px; background: var(--card); border: 1px dashed var(--border-strong); border-radius: var(--radius); margin-top: 14px; }
+.empty-dashboard h2 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink-strong); margin-bottom: 6px; }
+.empty-dashboard p { color: var(--muted); font-size: .9rem; margin-bottom: 18px; line-height: 1.5; }
+.empty-shortcuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.empty-shortcuts button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: var(--accent-tint); border: 1px solid var(--border); border-radius: 16px; font-size: .88rem; font-weight: 700; color: var(--ink); }
+.empty-shortcuts button .es-ico { color: var(--accent); display: grid; place-items: center; }
 
-.placeholder { background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); padding: 44px 28px; text-align: center; margin-top: 20px; }
-.placeholder .ph-icon { width: 64px; height: 64px; border-radius: 20px; background: var(--grad-soft); display: grid; place-items: center; font-size: 1.8rem; margin: 0 auto 18px; border: 1px solid rgba(192,78,136,.2); }
-.placeholder h2 { font-size: 1.15rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 8px; }
-.placeholder p { color: var(--muted); font-size: .92rem; line-height: 1.55; max-width: 420px; margin: 0 auto 20px; }
+.placeholder { background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); padding: 40px 24px; text-align: center; margin-top: 20px; }
+.placeholder h2 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 8px; }
+.placeholder p { color: var(--muted); }
 
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 12px; font-weight: 700; font-size: .9rem; transition: all .2s ease; }
+/* Botones */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 23px; font-weight: 800; font-size: .92rem; transition: filter .15s ease, transform .1s ease, background-color .15s ease; text-align: center; }
 .btn:active:not(:disabled) { transform: scale(.97); }
-.btn-primary { background: var(--grad); color: #fff; box-shadow: 0 10px 26px -8px rgba(192,78,136,.6); }
-.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.08); }
-.btn-secondary { background: var(--grad-soft); color: var(--ink); border: 1px solid rgba(192,78,136,.25); }
-.btn-secondary:hover { border-color: rgba(192,78,136,.5); background: var(--card-hover); }
-.btn-ghost { border: 1px solid var(--border); color: var(--ink); background: transparent; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-secondary { background: var(--accent-tint); color: var(--accent-strong); border: 1px solid var(--border-strong); }
+.btn-secondary:hover { background: var(--accent-soft); }
+.btn-ghost { border: 1px solid var(--border); color: var(--ink); background: var(--card); }
 .btn-ghost:hover { background: var(--card-hover); }
-.btn-danger { background: rgba(248,113,113,.15); color: var(--danger); border: 1px solid rgba(248,113,113,.35); }
-.btn-danger:hover { background: rgba(248,113,113,.25); }
-.btn-sm { padding: 7px 12px; font-size: .82rem; }
-.btn-icon { padding: 8px; width: 34px; height: 34px; display: grid; place-items: center; }
-.actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
+.btn-danger { background: var(--danger-soft); color: var(--danger); }
+.btn-text-danger { color: var(--danger); font-weight: 800; min-height: 44px; padding: 0 8px; }
+.btn-sm { min-height: 38px; padding: 0 14px; font-size: .84rem; }
+.btn-icon { width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 22px; }
+.btn-block { width: 100%; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
 
-.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+/* Formularios */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .form-grid .full { grid-column: 1 / -1; }
-label { display: block; font-size: .88rem; font-weight: 650; margin-bottom: 6px; color: var(--ink); }
-input, select, textarea { width: 100%; font: inherit; padding: 11px 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--bg-soft); color: var(--ink); transition: border-color .2s ease, background-color .2s ease; }
+label { display: block; font-size: .88rem; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
+input, select, textarea { width: 100%; font: inherit; font-size: 16px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--bg); color: var(--ink); }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--card); }
-textarea { resize: vertical; min-height: 70px; font-family: inherit; }
-input[type="file"] { padding: 8px; cursor: pointer; }
-.field-hint { font-size: .78rem; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+textarea { resize: vertical; min-height: 80px; }
+input[type="file"] { padding: 10px; cursor: pointer; }
+.field-hint { font-size: .8rem; color: var(--muted); margin-top: 6px; line-height: 1.4; }
 .required { color: var(--danger); }
 
-.cards-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
-.nail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; position: relative; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
-.nail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); }
-.card-top { display: flex; gap: 12px; align-items: center; padding: 18px 18px 10px; }
-.emoji { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--grad-soft); font-size: 1.5rem; border: 1px solid rgba(192,78,136,.15); flex-shrink: 0; }
-.card-top h3 { font-size: 1.06rem; font-weight: 750; color: var(--ink-strong); margin-bottom: 3px; }
-.card-top small { color: var(--muted); font-size: .82rem; }
-.card-photo { padding: 0 18px 10px; }
-.card-photo img { width: 100%; max-height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); cursor: zoom-in; display: block; transition: filter .2s ease; }
-.card-photo img:hover { filter: brightness(1.08); }
-.card-body { padding: 4px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
-.next-label { color: var(--muted); font-size: .82rem; }
-.next-date { font-size: 1.16rem; font-weight: 750; color: var(--ink-strong); margin-top: -6px; }
-.pill { display: inline-block; align-self: flex-start; font-size: .78rem; font-weight: 650; background: var(--grad-soft); color: var(--ink); padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(192,78,136,.2); }
-.pill.warn { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.35); color: var(--warn); }
-.pill.overdue { background: rgba(248,113,113,.15); border-color: rgba(248,113,113,.35); color: var(--danger); }
-.pill.today { background: rgba(192,78,136,.2); border-color: rgba(192,78,136,.5); color: var(--accent); }
-.card-body button { width: 100%; margin-top: auto; }
+/* Uñas */
+.cards-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.nail-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.card-top { display: flex; gap: 14px; align-items: center; }
+.nail-thumb { width: 64px; height: 64px; border-radius: 18px; background: var(--accent-soft); color: var(--muted); display: grid; place-items: center; flex-shrink: 0; overflow: hidden; border: 0; padding: 0; }
+.nail-thumb img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; display: block; }
+.card-top .ct-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.card-top h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--ink-strong); }
+.card-top small { color: var(--muted); font-size: .84rem; }
+.nail-due { display: flex; flex-direction: column; gap: 6px; }
+.nail-due .nd-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.nail-due .nd-big { font-size: 1.6rem; font-weight: 800; letter-spacing: -.01em; color: var(--ink-strong); }
+.nail-due .nd-big.warn { color: var(--warn); } .nail-due .nd-big.overdue { color: var(--danger); } .nail-due .nd-big.today { color: var(--accent); }
+.nail-due .nd-date { font-size: .84rem; color: var(--muted); font-weight: 700; }
+.nail-due .nd-hint { font-size: .78rem; color: var(--muted); }
+.progress { height: 10px; border-radius: 5px; background: var(--border-soft); overflow: hidden; }
+.progress > span { display: block; height: 100%; border-radius: 5px; background: var(--accent); }
+.progress.soft > span { background: var(--muted-soft); }
+.nail-actions { display: flex; gap: 10px; }
+.nail-actions .btn-primary, .nail-actions .btn-secondary { flex: 1; }
+.pill { display: inline-block; align-self: center; font-size: .76rem; font-weight: 800; background: var(--good-soft); color: var(--good); padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.overdue { background: var(--danger-soft); color: var(--danger); }
+.pill.today { background: var(--accent-soft); color: var(--accent-strong); }
+.pill.none { background: var(--bg-soft); color: var(--muted); }
+.photo-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.photo-strip button { position: relative; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: var(--accent-soft); padding: 0; }
+.photo-strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-strip .ps-tag { position: absolute; left: 6px; bottom: 6px; font-size: .7rem; font-weight: 800; color: #3B2430; background: rgba(255,255,255,.85); padding: 2px 7px; border-radius: 999px; }
 .photo-preview-wrap { margin-top: 10px; }
-.photo-preview img { max-width: 100%; max-height: 180px; border-radius: 10px; border: 1px solid var(--border); display: block; }
-.history-item { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
+.photo-preview img { max-width: 100%; max-height: 180px; border-radius: 14px; display: block; }
+
+.history-item { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-soft); align-items: center; }
 .history-item:last-child { border-bottom: 0; }
 .history-left { display: flex; gap: 12px; align-items: center; min-width: 0; }
-.history-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); cursor: zoom-in; flex-shrink: 0; transition: filter .2s ease; }
-.history-thumb:hover { filter: brightness(1.1); }
+.history-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 12px; cursor: zoom-in; flex-shrink: 0; }
 .history-item strong { display: block; font-size: .95rem; color: var(--ink-strong); }
 .history-item small { color: var(--muted); font-size: .82rem; display: block; margin-top: 2px; }
-.history-item button { padding: 7px 12px; font-size: .8rem; flex-shrink: 0; }
-.empty { color: var(--muted); padding: 16px 0; font-size: .9rem; text-align: center; }
+.history-item .btn { flex-shrink: 0; }
+.empty { color: var(--muted); padding: 14px 0; font-size: .9rem; text-align: center; }
 
-.phase-wrap { padding-top: 26px; }
-.phase-bar { display: flex; height: 40px; border-radius: 20px; overflow: visible; position: relative; background: var(--bg-soft); border: 1px solid var(--border); }
+/* Ciclo */
+.cycle-hero { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.cycle-ring { width: 156px; height: 156px; border-radius: 50%; display: grid; place-items: center; }
+.cycle-ring .cr-inner { width: 128px; height: 128px; border-radius: 50%; background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.cycle-ring .cr-label { font-size: .82rem; font-weight: 700; color: var(--muted); }
+.cycle-ring .cr-num { font-family: var(--font-display); font-size: 2.9rem; font-weight: 600; line-height: 1; color: var(--ink-strong); }
+.cycle-hero .ch-title { font-size: 1.15rem; font-weight: 800; color: var(--ink-strong); }
+.cycle-hero .ch-title.overdue { color: var(--danger); }
+.cycle-hero .ch-sub { font-size: .9rem; color: var(--muted); }
+.cycle-hero .quick-actions { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.cycle-hero .quick-actions .btn { width: 100%; }
+.phase-wrap { padding-top: 22px; position: relative; }
+.phase-bar { display: flex; gap: 2px; height: 14px; border-radius: 7px; position: relative; }
 .phase-segment { height: 100%; }
-.phase-segment:first-child { border-top-left-radius: 20px; border-bottom-left-radius: 20px; }
-.phase-segment:last-child { border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+.phase-segment:first-child { border-radius: 7px 0 0 7px; }
+.phase-segment:last-child { border-radius: 0 7px 7px 0; }
 .phase-segment.menstrual { background: var(--phase-menstrual); }
 .phase-segment.follicular { background: var(--phase-follicular); }
 .phase-segment.fertile { background: var(--phase-fertile); }
 .phase-segment.luteal { background: var(--phase-luteal); }
-.phase-marker { position: absolute; top: -24px; transform: translateX(-50%); color: var(--accent); font-size: 1.15rem; line-height: 1; text-shadow: 0 0 3px var(--card); pointer-events: none; }
+.phase-marker { position: absolute; top: -20px; transform: translateX(-50%); color: var(--ink-strong); font-size: .85rem; line-height: 1; pointer-events: none; }
 .phase-marker.overdue { color: var(--danger); }
-.phase-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; font-size: .82rem; color: var(--muted); }
+.phase-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 14px; font-size: .8rem; color: var(--muted); font-weight: 700; }
 .phase-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .phase-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
 .phase-legend .dot.menstrual { background: var(--phase-menstrual); }
 .phase-legend .dot.follicular { background: var(--phase-follicular); }
 .phase-legend .dot.fertile { background: var(--phase-fertile); }
 .phase-legend .dot.luteal { background: var(--phase-luteal); }
-.phase-today-label { margin-top: 14px; font-size: .9rem; color: var(--muted); line-height: 1.5; }
-.phase-today-label strong { color: var(--ink); }
-.quick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.quick-actions button { flex: 1 1 200px; padding: 15px 16px; font-size: 1rem; }
-.badge-ongoing { display: inline-block; font-size: .72rem; font-weight: 700; background: var(--grad-soft); color: var(--ink); padding: 3px 8px; border-radius: 999px; margin-left: 6px; border: 1px solid rgba(192,78,136,.2); }
-.badge-long { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.35); color: var(--warn); }
-.end-form { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 8px; padding: 8px; background: var(--bg-soft); border-radius: 10px; }
-.end-form input { width: 150px; padding: 6px 8px; font-size: .85rem; }
-.end-form button { padding: 6px 10px; font-size: .82rem; }
-.stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-.stat { padding: 14px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--border-soft); }
-.stat span { display: block; color: var(--muted); font-size: .78rem; margin-bottom: 4px; font-weight: 650; }
+.phase-today-label { margin-top: 12px; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+.phase-today-label strong { color: var(--ink-strong); }
+.badge-ongoing { display: inline-block; font-size: .72rem; font-weight: 800; background: var(--accent-soft); color: var(--accent-strong); padding: 3px 8px; border-radius: 999px; margin-left: 6px; }
+.badge-long { background: var(--warn-soft); color: var(--warn); }
+.end-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.end-form input { width: 170px; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stat { padding: 12px 14px; background: var(--bg); border-radius: 14px; }
+.stat span { display: block; color: var(--muted); font-size: .78rem; margin-bottom: 4px; font-weight: 700; }
 .stat strong { font-size: 1rem; color: var(--ink-strong); }
 
-.appt-list { display: flex; flex-direction: column; gap: 10px; }
-.appt-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; display: flex; gap: 14px; align-items: flex-start; position: relative; overflow: hidden; transition: border-color .2s ease, background-color .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
-.appt-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grad); }
-.appt-item.attended::before { background: var(--good); }
-.appt-item.no_show::before { background: var(--muted-soft); }
-.appt-item.overdue::before { background: var(--danger); }
-.appt-item.today::before { background: var(--warn); }
+/* Turnos */
+.appt-list, .reminder-list { display: flex; flex-direction: column; gap: 10px; }
+.appt-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 14px; display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
 .appt-item.is-editing { border-color: var(--accent); }
-.appt-date-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 58px; padding: 8px 6px; background: var(--bg-soft); border-radius: 12px; flex-shrink: 0; border: 1px solid var(--border-soft); }
-.appt-date-badge .db-day { font-size: 1.35rem; font-weight: 800; color: var(--ink-strong); line-height: 1; }
-.appt-date-badge .db-month { font-size: .68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
-.appt-item.attended .appt-date-badge, .appt-item.no_show .appt-date-badge { opacity: .6; }
-.appt-item.attended .db-day, .appt-item.no_show .db-day { text-decoration: line-through; }
-.appt-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.appt-date-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 54px; padding: 8px 4px; background: var(--info-soft); color: var(--info); border-radius: 14px; flex-shrink: 0; }
+.appt-item.today .appt-date-badge { background: var(--warn-soft); color: var(--warn); }
+.appt-item.overdue .appt-date-badge { background: var(--danger-soft); color: var(--danger); }
+.appt-date-badge .db-day { font-size: 1.35rem; font-weight: 800; line-height: 1; }
+.appt-date-badge .db-month { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
+.appt-item.attended .appt-date-badge, .appt-item.no_show .appt-date-badge { background: var(--bg-soft); color: var(--muted); }
+.appt-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .appt-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.appt-title { font-size: 1.02rem; font-weight: 750; color: var(--ink-strong); line-height: 1.3; }
+.appt-title { font-size: 1rem; font-weight: 800; color: var(--ink-strong); line-height: 1.3; }
 .appt-item.attended .appt-title, .appt-item.no_show .appt-title { color: var(--muted); text-decoration: line-through; }
-.appt-badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .05em; }
-.appt-badge.attended { background: rgba(74,222,128,.15); color: var(--good); border: 1px solid rgba(74,222,128,.3); }
-.appt-badge.no_show { background: rgba(155,147,170,.15); color: var(--muted); border: 1px solid rgba(155,147,170,.3); }
-.appt-badge.overdue { background: rgba(248,113,113,.15); color: var(--danger); border: 1px solid rgba(248,113,113,.3); }
-.appt-badge.today { background: rgba(251,191,36,.15); color: var(--warn); border: 1px solid rgba(251,191,36,.3); }
-.appt-meta { font-size: .84rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.appt-badge { display: inline-block; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; }
+.appt-badge.attended { background: var(--good-soft); color: var(--good); }
+.appt-badge.no_show { background: var(--bg-soft); color: var(--muted); }
+.appt-badge.overdue { background: var(--danger-soft); color: var(--danger); }
+.appt-badge.today { background: var(--warn-soft); color: var(--warn); }
+.appt-meta { font-size: .84rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
 .appt-meta .meta-item { display: inline-flex; align-items: center; gap: 4px; }
-.appt-meta .meta-item.meta-place::before { content: '📍'; }
-.appt-meta .meta-item.meta-time::before { content: '🕐'; }
-.appt-notes { font-size: .84rem; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid var(--border); margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
-.appt-actions { display: flex; gap: 6px; flex-direction: column; flex-shrink: 0; align-self: flex-start; }
-.appt-actions-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
-.appt-actions-row .btn-close { padding: 6px 10px; font-size: .78rem; font-weight: 700; }
-.appt-actions-row .btn-close.attended { background: rgba(74,222,128,.15); color: var(--good); border: 1px solid rgba(74,222,128,.35); }
-.appt-actions-row .btn-close.attended:hover { background: rgba(74,222,128,.25); }
-.appt-actions-row .btn-close.no_show { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-.appt-actions-row .btn-close.no_show:hover { background: var(--card-hover); color: var(--ink); }
-.edit-form { margin-top: 8px; padding: 12px; background: var(--bg-soft); border-radius: 10px; border: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 10px; animation: fadeInUp .2s ease; }
+.appt-meta .meta-item .ico { width: 15px; height: 15px; }
+.appt-notes, .reminder-notes { font-size: .84rem; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--bg); border-radius: 10px; margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
+.appt-actions { width: 100%; }
+.appt-actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.appt-actions-row .btn-close { flex: 1 1 0; min-width: 0; white-space: nowrap; gap: 4px; min-height: 40px; padding: 0 8px; border-radius: 20px; font-size: .84rem; font-weight: 800; }
+.appt-actions-row .btn-close.attended { background: var(--good-soft); color: var(--good); }
+.appt-actions-row .btn-close.no_show { background: var(--bg-soft); color: var(--muted); }
+.appt-actions-row .btn-icon { width: 40px; height: 40px; min-height: 40px; }
+.edit-form { width: 100%; margin-top: 8px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; flex-direction: column; gap: 10px; }
 .edit-form .form-grid { gap: 10px; }
 .edit-form .actions { margin-top: 4px; }
-.filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-.filter-tabs button { padding: 7px 14px; border-radius: 999px; font-size: .82rem; font-weight: 650; color: var(--muted); border: 1px solid var(--border); background: transparent; transition: all .2s ease; display: inline-flex; align-items: center; }
-.filter-tabs button:hover { background: var(--card-hover); color: var(--ink); }
-.filter-tabs button.active { background: var(--grad); color: #fff; border-color: transparent; }
-.filter-tabs button .tab-count { display: inline-block; margin-left: 6px; padding: 1px 7px; background: rgba(0,0,0,.08); color: var(--muted); border-radius: 999px; font-size: .72rem; font-weight: 700; }
-[data-theme="dark"] .filter-tabs button .tab-count { background: rgba(255,255,255,.1); color: var(--ink); }
-.filter-tabs button.active .tab-count { background: rgba(255,255,255,.28); color: #fff; }
+.list-block { margin-top: 18px; }
+.filter-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: var(--bg-soft); margin-bottom: 14px; }
+.filter-tabs button { min-height: 40px; border-radius: 12px; font-size: .88rem; font-weight: 700; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; }
+.filter-tabs button.active { background: var(--card); color: var(--accent-strong); font-weight: 800; box-shadow: 0 2px 8px -3px rgba(43,31,36,.25); }
+.filter-tabs button .tab-count { margin-left: 6px; padding: 1px 7px; background: var(--border-soft); color: var(--muted); border-radius: 999px; font-size: .72rem; font-weight: 800; }
+.filter-tabs button.active .tab-count { background: var(--accent-soft); color: var(--accent-strong); }
 
-.reminder-list { display: flex; flex-direction: column; gap: 8px; }
-.reminder-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); position: relative; transition: border-color .2s ease, background-color .2s ease, opacity .2s ease; animation: fadeInUp .28s cubic-bezier(.2,.8,.2,1); }
-.reminder-item.overdue { border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.04); }
-.reminder-item.today { border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.04); }
-.reminder-item.done { opacity: .55; }
+/* Avisos */
+.reminder-item { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; }
+.reminder-item.overdue { border-color: var(--danger); }
+.reminder-item.today { border-color: var(--warn); }
+.reminder-item.done { opacity: .6; }
 .reminder-item.is-editing { border-color: var(--accent); }
-.reminder-check { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: transparent; display: grid; place-items: center; flex-shrink: 0; cursor: pointer; transition: all .2s ease; margin-top: 1px; }
-.reminder-check:hover:not(:disabled) { border-color: var(--accent); background: var(--grad-soft); }
-.reminder-check .check-icon { opacity: 0; font-size: 1rem; font-weight: 800; color: #fff; transform: scale(.5); transition: all .2s ease; }
-.reminder-item.done .reminder-check { background: var(--grad); border-color: transparent; cursor: default; }
-.reminder-item.done .reminder-check .check-icon { opacity: 1; transform: scale(1); }
-.reminder-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.reminder-title { font-size: 1rem; font-weight: 700; color: var(--ink-strong); line-height: 1.35; word-break: break-word; }
+.reminder-check { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-strong); background: transparent; display: grid; place-items: center; flex-shrink: 0; color: var(--on-accent); }
+.reminder-check:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.reminder-check .check-icon { opacity: 0; }
+.reminder-item.done .reminder-check { background: var(--accent); border-color: transparent; cursor: default; }
+.reminder-item.done .reminder-check .check-icon { opacity: 1; }
+.reminder-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.reminder-title { font-size: 1rem; font-weight: 800; color: var(--ink-strong); line-height: 1.35; word-break: break-word; }
 .reminder-item.done .reminder-title { text-decoration: line-through; color: var(--muted); }
-.reminder-meta { font-size: .82rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.reminder-meta { font-size: .82rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
 .reminder-meta .rm-date, .reminder-meta .rm-time { display: inline-flex; align-items: center; gap: 4px; }
-.reminder-meta .rm-date.overdue { color: var(--danger); font-weight: 700; }
-.reminder-meta .rm-date.today { color: var(--warn); font-weight: 700; }
-.reminder-notes { font-size: .84rem; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid var(--border); margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
-.reminder-actions { display: flex; gap: 4px; flex-shrink: 0; align-self: flex-start; }
-.reminder-actions button { width: 32px; height: 32px; padding: 0; display: grid; place-items: center; border-radius: 8px; font-size: .9rem; }
-.reminder-actions .btn-ghost { border: 1px solid transparent; }
-.reminder-actions .btn-ghost:hover { border-color: var(--border); background: var(--card-hover); }
+.reminder-meta .ico { width: 15px; height: 15px; }
+.reminder-meta .rm-date.overdue { color: var(--danger); font-weight: 800; }
+.reminder-meta .rm-date.today { color: var(--warn); font-weight: 800; }
+.reminder-actions { display: flex; gap: 4px; width: 100%; justify-content: flex-end; margin-top: -6px; }
+.reminder-actions .btn-icon { width: 40px; height: 40px; min-height: 40px; border-color: transparent; background: transparent; color: var(--muted); }
 
-.settings-list { display: flex; flex-direction: column; gap: 12px; }
-.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--border-soft); flex-wrap: wrap; }
-.setting-row .sr-info { flex: 1; min-width: 200px; }
-.setting-row .sr-title { font-size: .95rem; font-weight: 700; color: var(--ink-strong); margin-bottom: 3px; }
-.setting-row .sr-desc { font-size: .82rem; color: var(--muted); line-height: 1.4; }
-.setting-row .sr-action { flex-shrink: 0; }
-.storage-bar-wrap { margin-top: 6px; }
-.storage-bar { height: 8px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-top: 8px; }
-.storage-bar-fill { height: 100%; background: var(--grad); border-radius: 4px; transition: width .3s ease; }
+/* Ajustes */
+.settings-list { display: flex; flex-direction: column; gap: 10px; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-soft); flex-wrap: wrap; }
+.setting-row:last-child { border-bottom: 0; }
+.setting-row .sr-info { flex: 1; min-width: 180px; }
+.setting-row .sr-title { font-size: .95rem; font-weight: 800; color: var(--ink-strong); margin-bottom: 2px; }
+.setting-row .sr-desc { font-size: .84rem; color: var(--muted); line-height: 1.4; }
+.storage-bar { height: 8px; background: var(--border-soft); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.storage-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
 .storage-info { display: flex; justify-content: space-between; margin-top: 6px; font-size: .8rem; color: var(--muted); }
-.version-badge { display: inline-block; padding: 3px 10px; background: var(--grad-soft); color: var(--accent); border: 1px solid rgba(192,78,136,.3); border-radius: 999px; font-size: .78rem; font-weight: 700; }
-.danger-zone { border: 1px solid rgba(248,113,113,.4); background: rgba(248,113,113,.04); border-radius: 12px; padding: 16px; margin-top: 12px; }
-.danger-zone .dz-title { color: var(--danger); font-weight: 750; font-size: .95rem; margin-bottom: 6px; }
-.danger-zone .dz-desc { color: var(--muted); font-size: .85rem; line-height: 1.5; margin-bottom: 12px; }
+.version-badge { display: inline-block; padding: 3px 10px; background: var(--accent-soft); color: var(--accent-strong); border-radius: 999px; font-size: .78rem; font-weight: 800; }
+.segmented { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: var(--bg-soft); }
+.segmented button { min-height: 42px; border-radius: 12px; font-weight: 700; font-size: .9rem; color: var(--muted); }
+.segmented button.active { background: var(--card); color: var(--accent-strong); font-weight: 800; box-shadow: 0 2px 8px -3px rgba(43,31,36,.25); }
+.greet-preview { font-size: .85rem; color: var(--muted); margin-top: 8px; }
+.greet-preview strong { color: var(--ink-strong); }
+.danger-zone { text-align: center; margin-top: 18px; }
+.danger-zone .dz-desc { color: var(--muted); font-size: .82rem; line-height: 1.5; margin-top: 4px; }
 
-.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 250; backdrop-filter: blur(8px); }
+/* Bienvenida */
+.welcome { max-width: 460px; margin: 0 auto; padding-top: 32px; display: flex; flex-direction: column; gap: 26px; }
+.welcome .w-logo { width: 84px; height: 84px; border-radius: 28px; background: var(--accent); display: grid; place-items: center; box-shadow: var(--shadow-accent); overflow: hidden; }
+.welcome .w-logo img { width: 100%; height: 100%; }
+.welcome h1 { font-family: var(--font-display); font-weight: 600; font-size: 2.1rem; line-height: 1.15; color: var(--ink-strong); }
+.welcome .w-lead { font-size: 1rem; line-height: 1.5; color: var(--muted); margin-top: 10px; }
+.welcome .w-preview { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px; }
+.welcome .w-preview span { display: block; font-size: .8rem; font-weight: 700; color: var(--muted); }
+.welcome .w-preview strong { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink-strong); }
+.welcome .w-actions { display: flex; flex-direction: column; gap: 8px; }
+.welcome .w-actions .btn { width: 100%; min-height: 52px; font-size: 1rem; }
+
+.lightbox { position: fixed; inset: 0; background: rgba(20,12,16,.92); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 250; }
 .lightbox[hidden] { display: none; }
-.lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-.lightbox-close { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #ffffff; color: #111; font-size: 1.5rem; line-height: 1; padding: 0; display: grid; place-items: center; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: 14px; }
+.lightbox-close { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; color: #2B1F24; font-size: 1.5rem; line-height: 1; display: grid; place-items: center; }
 
-.nav-mobile { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: var(--nav-bg); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-top: 1px solid var(--border-soft); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
-.nav-mobile button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: 10px; color: var(--muted); font-size: .62rem; font-weight: 650; letter-spacing: .01em; transition: color .15s ease, background-color .15s ease; position: relative; min-width: 0; }
-.nav-mobile button .nm-ico { font-size: 1.15rem; line-height: 1; transition: transform .2s ease; }
+/* Barra de abajo */
+.nav-mobile { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 60; height: 66px; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 26px; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; max-width: 560px; margin: 0 auto; }
+.nav-mobile button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; color: var(--muted); font-size: .74rem; font-weight: 700; min-width: 0; min-height: 56px; justify-content: center; }
 .nav-mobile button .nm-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
-.nav-mobile button.active { color: var(--accent); }
-.nav-mobile button.active .nm-ico { transform: scale(1.12); }
-.nav-mobile button.active::before { content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 22px; height: 3px; background: var(--grad); border-radius: 2px; }
+.nav-mobile button.active { color: var(--accent); font-weight: 800; }
+.nav-mobile button .ico { width: 22px; height: 22px; }
+body.no-nav .nav-mobile { display: none; }
 
-.toast { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(16px); background: var(--card); border: 1px solid var(--border); color: var(--ink); padding: 12px 18px; border-radius: 14px; box-shadow: var(--shadow-lg); font-size: .9rem; font-weight: 600; max-width: calc(100vw - 32px); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; z-index: 300; display: flex; align-items: center; gap: 14px; }
+.toast { position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(16px); background: var(--ink-strong); color: var(--bg); padding: 12px 16px; border-radius: 16px; box-shadow: var(--shadow); font-size: .9rem; font-weight: 700; max-width: calc(100vw - 32px); width: max-content; opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; z-index: 300; display: flex; align-items: center; gap: 14px; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-.toast.error { color: var(--danger); }
-.toast .toast-action { background: var(--grad); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: .82rem; font-weight: 700; flex-shrink: 0; }
-.toast .toast-action:hover { filter: brightness(1.1); }
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.toast.error { background: var(--danger); color: #fff; }
+.toast .toast-action { background: var(--accent); color: var(--on-accent); padding: 6px 12px; border-radius: 10px; font-size: .82rem; font-weight: 800; flex-shrink: 0; }
 
 @media (min-width: 768px) {
-  .nav-desktop { display: flex; }
+  .app-header { display: block; }
   .nav-mobile { display: none; }
-  .app-main { padding: 36px 28px 60px; }
-  .header-inner { padding: 14px 28px; }
+  .app-main { padding: 32px 24px 60px; }
   .toast { bottom: 24px; }
+  .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 620px) {
-  .cards-grid, .summary-grid, .form-grid, .stats-grid { grid-template-columns: 1fr; }
-  .appt-item { flex-wrap: wrap; }
-  .appt-actions { flex-direction: row; width: 100%; }
-  .appt-actions-row { flex: 1; }
+@media (max-width: 380px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .page-head h1 { font-size: 1.7rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -362,13 +407,11 @@ input[type="file"] { padding: 8px; cursor: pointer; }
 <header class="app-header">
   <div class="header-inner">
     <div class="brand" id="brand" role="button" tabindex="0" aria-label="Ir al inicio">
-      <span class="brand-icon" aria-hidden="true">✨</span>
+      <span class="brand-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span>
       <span class="brand-text">Mi espacio</span>
     </div>
     <nav class="nav-desktop" id="navDesktop" aria-label="Navegación principal"></nav>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
-      <span id="themeIcon">🌙</span>
-    </button>
+    <button class="icon-btn" id="headerSettings" type="button" aria-label="Ajustes"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></button>
   </div>
 </header>
 
@@ -383,22 +426,94 @@ input[type="file"] { padding: 8px; cursor: pointer; }
   'use strict';
 
   const THEME_KEY = 'hubThemeV1';
-  const DEFAULT_THEME = 'dark';
+  const DEFAULT_THEME = 'light';
   const KEY_UNAS = 'agendaUnasDemoV1';
   const KEY_CICLO = 'miCicloV1';
   const KEY_TURNOS = 'hubTurnosV1';
   const KEY_RECORDATORIOS = 'hubRecordatoriosV1';
-  const HUB_VERSION = '1.0.0';
+  const KEY_PERFIL = 'hubPerfilV1';
+  const HUB_VERSION = '2.0.0';
+
+  /* Íconos de línea (SVG) */
+  const ICON_PATHS = {
+    home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+    nails: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+    drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    calPlus: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    camera: '<rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.5" r="3.5"/><path d="M9 7l1.5-3h3L15 7"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    x: '<path d="M6 6l12 12M18 6 6 18"/>',
+    edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+    trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+    back: '<path d="M15 6l-6 6 6 6"/>',
+    chevron: '<path d="M9 6l6 6-6 6"/>',
+    alert: '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17.5v.01"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    pin: '<path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    list: '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+    hourglass: '<path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9"/>',
+    sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+    download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+    upload: '<path d="M12 20V9M7 14l5-5 5 5M5 4h14"/>',
+  };
+  const icon = (name, extra = '') => `<svg class="ico ${extra}" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`;
 
   const VIEWS = {
-    inicio:        { label: 'Inicio',        icon: '🏠', title: 'Inicio' },
-    unas:          { label: 'Uñas',          icon: '💅', title: 'Agenda de uñas' },
-    ciclo:         { label: 'Ciclo',         icon: '🌸', title: 'Mi ciclo' },
-    turnos:        { label: 'Turnos',        icon: '📅', title: 'Turnos' },
-    recordatorios: { label: 'Recordatorios', icon: '🔔', title: 'Recordatorios' },
-    ajustes:       { label: 'Ajustes',       icon: '⚙️', title: 'Ajustes' },
+    inicio:        { label: 'Inicio',  icon: 'home',     title: 'Inicio',         nav: true },
+    unas:          { label: 'Uñas',    icon: 'nails',    title: 'Mis uñas',       nav: true },
+    ciclo:         { label: 'Ciclo',   icon: 'drop',     title: 'Mi ciclo',       nav: true },
+    turnos:        { label: 'Turnos',  icon: 'calendar', title: 'Turnos',         nav: true },
+    recordatorios: { label: 'Avisos',  icon: 'bell',     title: 'Avisos',         nav: true },
+    ajustes:       { label: 'Ajustes', icon: 'gear',     title: 'Ajustes',        nav: false },
+    bienvenida:    { label: 'Bienvenida', icon: 'sparkle', title: 'Bienvenida',   nav: false },
   };
   const DEFAULT_VIEW = 'inicio';
+
+  /* Perfil (nombre) */
+  const loadProfile = () => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEY_PERFIL) || 'null');
+      if (raw && typeof raw === 'object') return { name: typeof raw.name === 'string' ? raw.name.slice(0, 30) : '', welcomed: !!raw.welcomed };
+    } catch (e) {}
+    return { name: '', welcomed: false };
+  };
+  const saveProfile = p => {
+    try { localStorage.setItem(KEY_PERFIL, JSON.stringify({ name: (p.name || '').trim().slice(0, 30), welcomed: !!p.welcomed })); return true; }
+    catch (e) { return false; }
+  };
+  const greetingFor = name => { const n = (name || '').trim(); return n ? `Hola, ${n}` : 'Hola'; };
+
+  /* Google Calendar: arma el link para crear un evento ya completado */
+  const gcalUrl = ({ title, date, time, details, location }) => {
+    if (!date) return '';
+    const d = date.replace(/-/g, '');
+    let dates;
+    if (time && /^\d{2}:\d{2}$/.test(time)) {
+      const [h, m] = time.split(':').map(Number);
+      const start = new Date(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10), h, m);
+      const end = new Date(start.getTime() + 60 * 60000);
+      const f = dt => `${dt.getFullYear()}${String(dt.getMonth() + 1).padStart(2, '0')}${String(dt.getDate()).padStart(2, '0')}T${String(dt.getHours()).padStart(2, '0')}${String(dt.getMinutes()).padStart(2, '0')}00`;
+      dates = `${f(start)}/${f(end)}`;
+    } else {
+      dates = `${d}/${addDaysISO(date, 1).replace(/-/g, '')}`;
+    }
+    const p = new URLSearchParams({ action: 'TEMPLATE', text: title || 'Evento', dates });
+    if (details) p.set('details', details);
+    if (location) p.set('location', location);
+    try { const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; if (tz) p.set('ctz', tz); } catch (e) {}
+    return 'https://calendar.google.com/calendar/render?' + p.toString();
+  };
+  const gcalLink = (opts, { label = 'Agregar a Google Calendar', cls = 'btn btn-secondary', iconOnly = false } = {}) => {
+    const url = gcalUrl(opts);
+    if (!url) return '';
+    return iconOnly
+      ? `<a class="${cls}" href="${escapeHtml(url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}">${icon('calPlus')}</a>`
+      : `<a class="${cls}" href="${escapeHtml(url)}" target="_blank" rel="noopener">${icon('calPlus')}<span>${escapeHtml(label)}</span></a>`;
+  };
 
   const $ = id => document.getElementById(id);
   const log = (...args) => { if (location.search.includes('debug')) console.log('[hub]', ...args); };
@@ -444,33 +559,29 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 
-  const systemPrefersLight = () =>
-    window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  const systemPrefersDark = () =>
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   const loadTheme = () => {
     try { const s = localStorage.getItem(THEME_KEY); if (s === 'light' || s === 'dark') return s; } catch (e) {}
-    return systemPrefersLight() ? 'light' : DEFAULT_THEME;
+    return systemPrefersDark() ? 'dark' : DEFAULT_THEME;
   };
   const saveTheme = theme => { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} };
   const applyTheme = theme => {
     document.documentElement.setAttribute('data-theme', theme);
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'light' ? '#faf7fb' : '#0f0d13');
-    const icon = $('themeIcon');
-    if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
-    const btn = $('themeToggle');
-    if (btn) btn.setAttribute('aria-label', theme === 'light' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#FBF5F3' : '#1A1416');
   };
   let currentTheme = loadTheme();
   applyTheme(currentTheme);
-  const toggleTheme = () => {
-    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  const setTheme = theme => {
+    currentTheme = theme === 'dark' ? 'dark' : 'light';
     applyTheme(currentTheme); saveTheme(currentTheme);
   };
   if (window.matchMedia) {
-    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = e => {
       try { const s = localStorage.getItem(THEME_KEY); if (s === 'light' || s === 'dark') return; } catch (err) {}
-      currentTheme = e.matches ? 'light' : 'dark';
+      currentTheme = e.matches ? 'dark' : 'light';
       applyTheme(currentTheme);
     };
     if (mq.addEventListener) mq.addEventListener('change', onChange);
@@ -509,7 +620,16 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     for (const kind of ['manos','pies']) if (due[kind] && (!next || due[kind] < next.date)) next = { kind, date: due[kind] };
     if (!next) return { state: 'empty' };
     const days = dayDiff(todayISO(), next.date);
-    return { state: 'ok', kind: next.kind, date: next.date, days };
+    const total = (next.kind === 'manos' ? iH : iF) * 7;
+    const lead = Number.isInteger(Number(settings.leadDays)) ? Number(settings.leadDays) : 3;
+    const time = typeof settings.reminderTime === 'string' ? settings.reminderTime : '09:00';
+    return { state: 'ok', kind: next.kind, date: next.date, days, total, lead, time };
+  };
+  /* Evento de calendario para pedir turno de uñas (unos días antes de la fecha estimada) */
+  const unasCalEvent = (kind, dueDate, lead, time) => {
+    let when = addDaysISO(dueDate, -(Number(lead) || 0));
+    if (when < todayISO()) when = todayISO();
+    return { title: `Pedir turno: uñas de ${kind}`, date: when, time: time || '09:00', details: `Fecha estimada para hacerte las uñas de ${kind}: ${fmtDateLong(dueDate)}. (Mi espacio)` };
   };
   const computeCiclo = () => {
     const data = readLS(KEY_CICLO);
@@ -530,9 +650,10 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     const last = periods[periods.length - 1];
     const nextStart = addDaysISO(last.startDate, avgCycle);
     const days = dayDiff(todayISO(), nextStart);
-    if (days < 0) return { state: 'overdue', days: -days, date: nextStart };
-    if (days === 0) return { state: 'today', date: nextStart };
-    return { state: 'ok', days, date: nextStart };
+    const cycleDay = dayDiff(last.startDate, todayISO()) + 1;
+    if (days < 0) return { state: 'overdue', days: -days, date: nextStart, cycleDay, avgCycle };
+    if (days === 0) return { state: 'today', date: nextStart, cycleDay, avgCycle };
+    return { state: 'ok', days, date: nextStart, cycleDay, avgCycle };
   };
   const computeTurnos = () => {
     const data = readLS(KEY_TURNOS);
@@ -557,24 +678,27 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     const events = [];
     const today = todayISO();
     const u = computeUnas();
-    if (u.state === 'ok') events.push({ view: 'unas', icon: '💅', title: `Uñas de ${u.kind}`, date: u.date, meta: 'Próximo turno' });
+    if (u.state === 'ok') {
+      const date = u.date < today ? today : u.date;
+      events.push({ view: 'unas', icon: 'nails', title: `Uñas de ${u.kind}`, date, meta: u.date < today ? `Se pasó la fecha (${fmtDate(u.date)})` : 'Fecha estimada', cal: unasCalEvent(u.kind, u.date, u.lead, u.time) });
+    }
     const c = computeCiclo();
     if (c.state === 'ok' || c.state === 'today' || c.state === 'overdue') {
-      events.push({ view: 'ciclo', icon: '🌸', title: c.state === 'overdue' ? 'Período (atrasado)' : 'Próximo período', date: c.date, meta: c.state === 'overdue' ? `Atraso de ${c.days} días` : 'Ciclo menstrual' });
+      events.push({ view: 'ciclo', icon: 'drop', title: c.state === 'overdue' ? 'Período (atrasado)' : 'Próximo período', date: c.state === 'overdue' ? today : c.date, meta: c.state === 'overdue' ? `Atraso de ${c.days} día${c.days === 1 ? '' : 's'}` : 'Fecha estimada', cal: c.state === 'overdue' ? null : { title: 'Período (estimado)', date: c.date, details: 'Fecha estimada por Mi espacio.' } });
     }
     const tD = readLS(KEY_TURNOS);
     if (tD && Array.isArray(tD.appointments)) {
       for (const a of tD.appointments) {
         if (!a || !isValidISODate(a.date) || a.date < today) continue;
         if (normalizeApptStatus(a) !== 'pending') continue;
-        events.push({ view: 'turnos', icon: '📅', title: a.title || 'Turno', date: a.date, time: a.time, meta: a.place || 'Turno agendado' });
+        events.push({ view: 'turnos', icon: 'calendar', title: a.title || 'Turno', date: a.date, time: a.time, meta: a.place || 'Turno', cal: { title: a.title || 'Turno', date: a.date, time: a.time, location: a.place, details: a.notes } });
       }
     }
     const rD = readLS(KEY_RECORDATORIOS);
     if (rD && Array.isArray(rD.reminders)) {
       for (const r of rD.reminders) {
         if (!r || !isValidISODate(r.date) || r.done || r.date < today) continue;
-        events.push({ view: 'recordatorios', icon: '🔔', title: r.title || 'Recordatorio', date: r.date, time: r.time, meta: 'Recordatorio' });
+        events.push({ view: 'recordatorios', icon: 'bell', title: r.title || 'Aviso', date: r.date, time: r.time, meta: 'Aviso', cal: { title: r.title || 'Aviso', date: r.date, time: r.time, details: r.notes } });
       }
     }
     events.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : (a.time || '').localeCompare(b.time || ''));
@@ -583,18 +707,19 @@ input[type="file"] { padding: 8px; cursor: pointer; }
   const computeAlerts = () => {
     const alerts = [];
     const c = computeCiclo();
-    if (c.state === 'overdue' && c.days >= 3) alerts.push({ icon: '🌸', text: `Tu período está ${c.days} días atrasado.`, danger: c.days >= 7 });
+    if (c.state === 'overdue' && c.days >= 3) alerts.push({ icon: 'drop', text: `Tu período está ${c.days} días atrasado.`, danger: c.days >= 7 });
     const rD = readLS(KEY_RECORDATORIOS);
     if (rD && Array.isArray(rD.reminders)) {
       const v = rD.reminders.filter(r => r && isValidISODate(r.date) && !r.done && r.date < todayISO()).length;
-      if (v > 0) alerts.push({ icon: '🔔', text: `Tenés ${v} recordatorio${v === 1 ? '' : 's'} vencido${v === 1 ? '' : 's'}.` });
+      if (v > 0) alerts.push({ icon: 'bell', text: `Tenés ${v} aviso${v === 1 ? '' : 's'} vencido${v === 1 ? '' : 's'}.` });
     }
     return alerts;
   };
 
   const parseHash = () => {
     const raw = (location.hash || '').replace(/^#\/?/, '').trim();
-    return VIEWS[raw] ? raw : DEFAULT_VIEW;
+    if (!loadProfile().welcomed) return 'bienvenida';
+    return VIEWS[raw] && raw !== 'bienvenida' ? raw : DEFAULT_VIEW;
   };
   const navigate = view => {
     if (!VIEWS[view]) view = DEFAULT_VIEW;
@@ -608,14 +733,15 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     const d = $('navDesktop'), m = $('navMobile');
     d.textContent = ''; m.textContent = '';
     for (const [key, v] of Object.entries(VIEWS)) {
+      if (!v.nav) continue;
       const db = document.createElement('button');
       db.type = 'button'; db.dataset.view = key;
-      db.innerHTML = `<span class="nav-ico" aria-hidden="true">${v.icon}</span><span>${v.label}</span>`;
+      db.innerHTML = `${icon(v.icon)}<span>${v.label}</span>`;
       db.addEventListener('click', () => navigate(key));
       d.appendChild(db);
       const mb = document.createElement('button');
       mb.type = 'button'; mb.dataset.view = key;
-      mb.innerHTML = `<span class="nm-ico" aria-hidden="true">${v.icon}</span><span class="nm-label">${v.label}</span>`;
+      mb.innerHTML = `${icon(v.icon)}<span class="nm-label">${v.label}</span>`;
       mb.addEventListener('click', () => navigate(key));
       m.appendChild(mb);
     }
@@ -628,13 +754,20 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     });
   };
 
-  const viewHeader = ({ tag, title, subtitle }) => `
+  const viewHeader = ({ tag, title, subtitle, back, action }) => `
     <div class="page-head">
-      ${tag ? `<div class="tag">${escapeHtml(tag)}</div>` : ''}
-      <h1>${escapeHtml(title)}</h1>
-      ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ''}
+      <div class="${back ? 'back-row' : 'ph-text'}">
+        ${back ? `<button type="button" class="icon-btn" data-action="go:${escapeHtml(back)}" aria-label="Volver">${icon('back')}</button>` : ''}
+        <div class="ph-text">
+          ${tag ? `<div class="tag">${escapeHtml(tag)}</div>` : ''}
+          <h1>${escapeHtml(title)}</h1>
+          ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ''}
+        </div>
+      </div>
+      ${action || ''}
     </div>
   `;
+  const settingsBtn = () => `<button type="button" class="icon-btn" data-action="go:ajustes" aria-label="Ajustes">${icon('gear')}</button>`;
   const placeholder = ({ icon, title, description }) => `
     <div class="placeholder">
       <div class="ph-icon" aria-hidden="true">${icon}</div>
@@ -642,9 +775,10 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       <p>${escapeHtml(description)}</p>
     </div>
   `;
-  const renderSummaryCard = ({ view, icon, label, value, sub, state }) => {
+  const renderSummaryCard = ({ view, icon: ic, label, value, sub, state, tone, progress }) => {
     const cls = state && state !== 'ok' ? `is-${state}` : '';
-    return `<div class="summary-card ${cls}" data-view="${escapeHtml(view)}" role="button" tabindex="0"><div class="sc-ico" aria-hidden="true">${icon}</div><div class="sc-label">${escapeHtml(label)}</div><div class="sc-value">${escapeHtml(value)}</div><div class="sc-sub">${escapeHtml(sub)}</div></div>`;
+    const bar = typeof progress === 'number' ? `<div class="progress" style="height:6px"><span style="width:${Math.max(0, Math.min(100, progress))}%"></span></div>` : '';
+    return `<div class="summary-card ${cls}" data-view="${escapeHtml(view)}" ${tone ? `data-tone="${escapeHtml(tone)}"` : ''} role="button" tabindex="0"><div class="sc-ico">${icon(ic)}</div><div class="sc-label">${escapeHtml(label)}</div><div class="sc-value">${escapeHtml(value)}</div>${sub ? `<div class="sc-sub">${escapeHtml(sub)}</div>` : ''}${bar}</div>`;
   };
   const whenLabel = date => {
     const d = dayDiff(todayISO(), date);
@@ -826,13 +960,49 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     };
     const pruneAll = async () => { if (!dbSupported) return; for (const k of ['manos', 'pies']) await prunePhotos(k); };
 
+    const PILL = { '': ['', 'Tranqui'], warn: ['warn', 'Pedí turno'], today: ['today', '¡Es hoy!'], overdue: ['overdue', 'Atrasada'] };
     const renderSections = () => {
       const cardsEl = $('unasCards'), historyEl = $('unasHistory');
       if (!cardsEl || !historyEl) return;
       cardsEl.innerHTML = ['manos', 'pies'].map(kind => {
         const v = latest(kind), due = dueDate(kind), photo = v ? photoCache.get(v.id) : null, rem = reminderText(kind);
-        return `<article class="nail-card" data-kind="${kind}"><div class="card-top"><div class="emoji" aria-hidden="true">${kind === 'manos' ? '💅' : '🦶'}</div><div><h3>Uñas de ${kind}</h3><small>${v ? 'Última visita: ' + escapeHtml(fmtDate(v.date)) : 'Todavía sin registrar'}</small></div></div>${photo ? `<div class="card-photo"><img src="${photo}" alt="Foto de la última visita de ${kind}" loading="lazy" data-visit="${escapeHtml(v.id)}"></div>` : ''}<div class="card-body"><div class="next-label">Próxima visita estimada</div><div class="next-date">${due ? escapeHtml(fmtDate(due)) : 'Añadí una fecha'}</div><span class="pill ${rem.cls}">${escapeHtml(rem.text)}</span><button class="btn btn-primary" type="button" data-done="${kind}">Uñas listas</button></div></article>`;
+        const title = kind === 'manos' ? 'Manos' : 'Pies';
+        const weeks = kind === 'manos' ? state.settings.handsInterval : state.settings.feetInterval;
+        const thumb = photo
+          ? `<div class="nail-thumb"><img src="${photo}" alt="Foto de la última visita de ${kind}" loading="lazy" data-visit="${escapeHtml(v.id)}"></div>`
+          : `<div class="nail-thumb" aria-hidden="true">${icon('camera')}</div>`;
+        if (!v) {
+          return `<article class="nail-card" data-kind="${kind}"><div class="card-top">${thumb}<div class="ct-text"><h3>${title}</h3><small>Todavía sin registrar</small></div><span class="pill none">Sin datos</span></div><div class="nail-due"><span class="nd-hint">Tocá el botón el día que te las hagas y te calculo la próxima fecha (cada ${weeks} semana${weeks === 1 ? '' : 's'}).</span></div><div class="nail-actions"><button class="btn btn-primary" type="button" data-done="${kind}">Me las hice hoy</button></div></article>`;
+        }
+        const delta = dayDiff(todayISO(), due);
+        const total = interval(kind);
+        const elapsed = dayDiff(v.date, todayISO());
+        const pct = Math.max(0, Math.min(100, Math.round((elapsed / total) * 100)));
+        const big = delta > 0 ? `En ${delta} día${delta === 1 ? '' : 's'}` : delta === 0 ? '¡Hoy!' : `Hace ${-delta} día${delta === -1 ? '' : 's'}`;
+        const [pillCls, pillTxt] = PILL[rem.cls] || PILL[''];
+        const cal = unasCalEvent(kind, due, state.settings.leadDays, state.settings.reminderTime);
+        return `<article class="nail-card" data-kind="${kind}">
+          <div class="card-top">${thumb}<div class="ct-text"><h3>${title}</h3><small>Última vez: ${escapeHtml(fmtDateLong(v.date))}</small></div><span class="pill ${pillCls}">${pillTxt}</span></div>
+          <div class="nail-due">
+            <div class="nd-row"><span class="nd-big ${pillCls}">${big}</span><span class="nd-date">${escapeHtml(fmtDateFull(due))}</span></div>
+            <div class="progress ${pillCls ? '' : 'soft'}"><span style="width:${pct}%"></span></div>
+            <span class="nd-hint">Día ${Math.max(0, elapsed)} de ${total} · cada ${weeks} semana${weeks === 1 ? '' : 's'}</span>
+          </div>
+          <div class="nail-actions"><button class="btn ${pillCls ? 'btn-primary' : 'btn-secondary'}" type="button" data-done="${kind}">Me las hice hoy</button>${gcalLink(cal, { label: 'Agendar aviso en Google Calendar', cls: 'btn btn-ghost btn-icon', iconOnly: true })}</div>
+        </article>`;
       }).join('');
+      const photosEl = $('unasPhotos');
+      if (photosEl) {
+        const list = [];
+        for (const [id, url] of photoCache) { const v = state.visits.find(x => x.id === id); if (v) list.push({ id, url, v }); }
+        list.sort((a, b) => b.v.date.localeCompare(a.v.date));
+        const wrap = $('unasPhotosWrap'); if (wrap) wrap.hidden = !list.length;
+        photosEl.innerHTML = list.slice(0, 6).map(p => `<button type="button" aria-label="Ver foto de ${p.v.kind} del ${escapeHtml(fmtDateLong(p.v.date))}"><img src="${p.url}" alt="" loading="lazy" data-visit="${escapeHtml(p.id)}"><span class="ps-tag">${p.v.kind === 'manos' ? 'Manos' : 'Pies'} · ${escapeHtml(fmtDate(p.v.date))}</span></button>`).join('');
+        if (!photosEl._bound) {
+          photosEl.addEventListener('click', e => { const img = e.target.closest('button') && e.target.closest('button').querySelector('img[data-visit]'); if (img) openLightbox(photoCache.get(img.dataset.visit)); });
+          photosEl._bound = true;
+        }
+      }
       const sorted = [...state.visits].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
       if (!sorted.length) historyEl.innerHTML = '<div class="empty">Todavía no hay visitas. Cuando registres una, aparecerá acá.</div>';
       else historyEl.innerHTML = sorted.map(v => {
@@ -1041,7 +1211,29 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       if (lbClose) lbClose.addEventListener('click', closeLightbox);
       if (lb) lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
     };
-    return { mount };
+    /* Para el respaldo completo (Ajustes): fotos guardadas en IndexedDB */
+    const exportPhotos = async () => {
+      if (!dbSupported) return [];
+      try { const all = await getAllPhotos(); return (all || []).filter(p => p && typeof p.visitId === 'string' && typeof p.dataUrl === 'string' && p.dataUrl.indexOf('data:image/') === 0); }
+      catch (e) { logErr('exportPhotos', e); return []; }
+    };
+    const importPhotos = async list => {
+      if (!dbSupported || !Array.isArray(list)) return 0;
+      try { await clearPhotos(); } catch (e) {}
+      photoCache.clear();
+      let n = 0;
+      for (const p of list) {
+        if (!p || typeof p.visitId !== 'string' || typeof p.dataUrl !== 'string' || p.dataUrl.indexOf('data:image/') !== 0) continue;
+        try { await putPhoto({ visitId: p.visitId, dataUrl: p.dataUrl }); n++; } catch (e) {}
+      }
+      return n;
+    };
+    const resetPhotos = async () => {
+      photoCache.clear();
+      if (!dbSupported) return;
+      try { await clearPhotos(); } catch (e) { logErr('resetPhotos', e); }
+    };
+    return { mount, exportPhotos, importPhotos, resetPhotos };
   })();
 
   /* ==================== CICLO ==================== */
@@ -1160,17 +1352,23 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       return segs;
     };
     const renderSummary = () => {
-      const el = $('cicloSummary'); if (!el) return;
+      const el = $('cicloSummary'), heroEl = $('cicloHero'); if (!el || !heroEl) return;
       const st = cycleStatus();
       if (st.type === 'none') {
-        el.innerHTML = `
-          ${renderSummaryCard({ view: 'ciclo', icon: '🌸', label: 'Próximo período', value: 'Sin datos', sub: 'Registrá tu primer período', state: 'empty' })}
-          ${renderSummaryCard({ view: 'ciclo', icon: '📅', label: 'Día del ciclo', value: '—', sub: 'Empezá registrando el inicio', state: 'empty' })}
-          ${renderSummaryCard({ view: 'ciclo', icon: '🌡️', label: 'Fase actual', value: '—', sub: '—', state: 'empty' })}
-          ${renderSummaryCard({ view: 'ciclo', icon: '💚', label: 'Ventana fértil', value: '—', sub: '—', state: 'empty' })}
-        `;
+        heroEl.innerHTML = `<div class="cycle-ring" style="background: var(--border-soft)"><div class="cr-inner"><span class="cr-label">Día</span><span class="cr-num">—</span></div></div><div><div class="ch-title">Todavía sin datos</div><div class="ch-sub">Tocá el botón el día que te venga y empiezo a calcular.</div></div><div id="cicloQuickActions" class="quick-actions"></div>`;
+        el.innerHTML = '';
         return;
       }
+      const cycleLenH = effectiveCycleLength();
+      const pctH = Math.max(0, Math.min(100, Math.round((Math.min(st.day, cycleLenH) / cycleLenH) * 100)));
+      const ringColor = st.type === 'ongoing' ? 'var(--phase-menstrual)' : st.type === 'overdue' ? 'var(--danger)' : 'var(--accent)';
+      let hTitle, hSub, hCls = '';
+      if (st.type === 'ongoing') { hTitle = `Período en curso · día ${st.dur}`; hSub = `Suele durar unos ${st.expected} días`; }
+      else if (st.type === 'overdue') { hTitle = `${st.days} día${st.days === 1 ? '' : 's'} de atraso`; hSub = `Se esperaba el ${fmtDateLong(st.next)}`; hCls = 'overdue'; }
+      else if (st.type === 'today') { hTitle = 'Podría venir hoy'; hSub = 'Fecha estimada'; }
+      else { hTitle = `Período en ${st.days} día${st.days === 1 ? '' : 's'}`; hSub = `Alrededor del ${fmtDateFull(st.next)}`; }
+      const calBtn = (st.type === 'upcoming') ? gcalLink({ title: 'Período (estimado)', date: st.next, details: 'Fecha estimada por Mi espacio.' }, { label: 'Agregar a Google Calendar', cls: 'btn btn-ghost' }) : '';
+      heroEl.innerHTML = `<div class="cycle-ring" style="background: conic-gradient(${ringColor} 0 ${pctH}%, var(--border-soft) ${pctH}% 100%)"><div class="cr-inner"><span class="cr-label">Día</span><span class="cr-num">${st.day}</span><span class="cr-label">de ~${cycleLenH}</span></div></div><div><div class="ch-title ${hCls}">${escapeHtml(hTitle)}</div><div class="ch-sub">${escapeHtml(hSub)}</div></div><div id="cicloQuickActions" class="quick-actions"></div>${calBtn ? `<div class="quick-actions">${calBtn}</div>` : ''}`;
       let nextValue, nextSub, nextState = 'ok';
       if (st.type === 'ongoing') { nextValue = 'En curso'; nextSub = `Día ${st.dur} del período`; nextState = 'today'; }
       else if (st.type === 'overdue') { nextValue = `${st.days} día${st.days === 1 ? '' : 's'} de atraso`; nextSub = `Esperado: ${fmtDate(st.next)}`; nextState = 'overdue'; }
@@ -1193,11 +1391,10 @@ input[type="file"] { padding: 8px; cursor: pointer; }
         if (next) { const nFs = addDaysISO(next, fs - 1), nFe = addDaysISO(next, fe - 1); fertValue = `Del ${fmtDate(nFs)} al ${fmtDate(nFe)}`; fertSub = 'Próxima ventana'; }
         else { fertValue = '—'; fertSub = '—'; }
       }
+      void nextValue; void nextSub; void nextState;
       el.innerHTML = `
-        ${renderSummaryCard({ view: 'ciclo', icon: '🌸', label: 'Próximo período', value: nextValue, sub: nextSub, state: nextState })}
-        ${renderSummaryCard({ view: 'ciclo', icon: '📅', label: 'Día del ciclo', value: `Día ${st.day}`, sub: `Ciclo de ~${effectiveCycleLength()} días`, state: 'ok' })}
-        ${renderSummaryCard({ view: 'ciclo', icon: '🌡️', label: 'Fase actual', value: phaseLabel(phase), sub: phaseSub, state: 'ok' })}
-        ${renderSummaryCard({ view: 'ciclo', icon: '💚', label: 'Ventana fértil', value: fertValue, sub: fertSub, state: fertState })}
+        ${renderSummaryCard({ view: 'ciclo', icon: 'drop', label: 'Fase de hoy', value: phaseLabel(phase), sub: phaseSub, state: 'ok', tone: 'ciclo' })}
+        ${renderSummaryCard({ view: 'ciclo', icon: 'sparkle', label: 'Ventana fértil', value: fertValue, sub: fertSub, state: fertState, tone: 'good' })}
       `;
     };
     const renderPhaseBar = () => {
@@ -1237,7 +1434,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       const ongoing = ongoingPeriod();
       if (!ongoing) {
         const btn = document.createElement('button');
-        btn.className = 'btn btn-primary'; btn.type = 'button'; btn.textContent = '🩸 Me vino hoy';
+        btn.className = 'btn btn-primary'; btn.type = 'button'; btn.textContent = 'Me vino hoy';
         btn.addEventListener('click', () => {
           const err = addPeriod(todayISO(), null);
           if (!err) { renderAll(); toast('Inicio registrado.'); }
@@ -1246,9 +1443,9 @@ input[type="file"] { padding: 8px; cursor: pointer; }
         wrap.appendChild(btn);
       } else {
         const btnEnd = document.createElement('button');
-        btnEnd.className = 'btn btn-primary'; btnEnd.type = 'button'; btnEnd.textContent = '✅ Terminó hoy';
+        btnEnd.className = 'btn btn-primary'; btnEnd.type = 'button'; btnEnd.textContent = 'Terminó hoy';
         btnEnd.addEventListener('click', () => {
-          setEndDate(ongoing.id, todayISO()); renderAll(); toast('Período marcado como terminado.');
+          if (setEndDate(ongoing.id, todayISO())) { renderAll(); toast('Período marcado como terminado.'); }
         });
         wrap.appendChild(btnEnd);
       }
@@ -1274,7 +1471,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
           const id = btn.dataset.endBtn;
           const input = el.querySelector(`[data-end-input="${CSS.escape(id)}"]`);
           if (!input) return;
-          setEndDate(id, input.value); renderAll(); toast('Fin registrado.');
+          if (setEndDate(id, input.value)) { renderAll(); toast('Fin registrado.'); }
         });
       });
       el.querySelectorAll('[data-del]').forEach(btn => {
@@ -1349,16 +1546,17 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     };
     const setEndDate = (id, endDate) => {
       const p = state.periods.find(x => x.id === id);
-      if (!p) return;
-      if (!isValidISODate(endDate)) { toast('Fecha inválida.', 'error'); return; }
-      if (endDate < p.startDate) { toast('El fin no puede ser anterior al inicio.', 'error'); return; }
-      if (endDate > todayISO()) { toast('El fin no puede ser futuro.', 'error'); return; }
+      if (!p) return false;
+      if (!isValidISODate(endDate)) { toast('Fecha inválida.', 'error'); return false; }
+      if (endDate < p.startDate) { toast('El fin no puede ser anterior al inicio.', 'error'); return false; }
+      if (endDate > todayISO()) { toast('El fin no puede ser futuro.', 'error'); return false; }
       for (const o of state.periods.filter(x => x.id !== id)) {
         const oEnd = o.endDate || '9999-12-31';
-        if (p.startDate <= oEnd && endDate >= o.startDate) { toast('Se superpone con otro período.', 'error'); return; }
+        if (p.startDate <= oEnd && endDate >= o.startDate) { toast('Se superpone con otro período.', 'error'); return false; }
       }
       p.endDate = endDate;
-      if (!save()) { p.endDate = null; return; }
+      if (!save()) { p.endDate = null; return false; }
+      return true;
     };
     const setInputDates = () => {
       const s = $('cicloStartDate'), e = $('cicloEndDate');
@@ -1493,10 +1691,8 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       const el = $('turnosStats'); if (!el) return;
       const s = stats();
       el.innerHTML = `
-        ${renderSummaryCard({ view: 'turnos', icon: '📅', label: 'Próximos', value: String(s.upcoming), sub: s.upcoming === 1 ? 'Turno pendiente' : 'Turnos pendientes', state: s.upcoming === 0 ? 'empty' : 'ok' })}
-        ${renderSummaryCard({ view: 'turnos', icon: '✅', label: 'Asistidos', value: String(s.attended), sub: 'Turnos a los que fuiste', state: s.attended === 0 ? 'empty' : 'ok' })}
-        ${renderSummaryCard({ view: 'turnos', icon: '🚫', label: 'No asistidos', value: String(s.no_show), sub: 'Turnos que no concretaste', state: s.no_show === 0 ? 'empty' : 'ok' })}
-        ${renderSummaryCard({ view: 'turnos', icon: '⚠️', label: 'Sin cerrar', value: String(s.overdue), sub: 'Ya pasaron, falta cerrarlos', state: s.overdue > 0 ? 'warn' : 'ok' })}
+        ${renderSummaryCard({ view: 'turnos', icon: 'calendar', label: 'Próximos', value: String(s.upcoming), sub: s.upcoming === 1 ? 'Turno pendiente' : 'Turnos pendientes', state: s.upcoming === 0 ? 'empty' : 'ok', tone: 'turnos' })}
+        ${renderSummaryCard({ view: 'turnos', icon: 'alert', label: 'Sin cerrar', value: String(s.overdue), sub: s.overdue ? 'Ya pasaron, marcá si fuiste' : 'Todo al día', state: s.overdue > 0 ? 'warn' : 'ok', tone: s.overdue > 0 ? 'avisos' : 'muted' })}
       `;
     };
 
@@ -1520,8 +1716,8 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       else if (isOverdue) badge = '<span class="appt-badge overdue">Sin cerrar</span>';
       else if (isToday) badge = '<span class="appt-badge today">Hoy</span>';
       const metaParts = [];
-      if (a.time) metaParts.push(`<span class="meta-item meta-time">${escapeHtml(a.time)}</span>`);
-      if (a.place) metaParts.push(`<span class="meta-item meta-place">${escapeHtml(a.place)}</span>`);
+      if (a.time) metaParts.push(`<span class="meta-item meta-time">${icon('clock')}${escapeHtml(a.time)}</span>`);
+      if (a.place) metaParts.push(`<span class="meta-item meta-place">${icon('pin')}${escapeHtml(a.place)}</span>`);
       const notesHtml = a.notes ? `<div class="appt-notes">${escapeHtml(a.notes)}</div>` : '';
       const editFormHtml = isEditing ? `
         <div class="edit-form" data-edit-form="${escapeHtml(a.id)}">
@@ -1538,17 +1734,19 @@ input[type="file"] { padding: 8px; cursor: pointer; }
             ${isClosed ? `<button class="btn btn-ghost btn-sm" type="button" data-reopen="${escapeHtml(a.id)}">Volver a pendiente</button>` : ''}
           </div>
         </div>` : '';
+      const calHtml = (a.status === 'pending' && !isPast) ? gcalLink({ title: a.title, date: a.date, time: a.time, location: a.place, details: a.notes }, { label: 'Agregar a Google Calendar', cls: 'btn btn-ghost btn-icon', iconOnly: true }) : '';
       const actionsHtml = !isEditing ? (a.status === 'pending' ? `
         <div class="appt-actions"><div class="appt-actions-row">
-          <button class="btn btn-close attended" type="button" data-close-attended="${escapeHtml(a.id)}" aria-label="Marcar como asistido" title="Marcar como asistido">✓ Asistí</button>
-          <button class="btn btn-close no_show" type="button" data-close-noshow="${escapeHtml(a.id)}" aria-label="Marcar como no asistido" title="Marcar como no asistido">✗ No fui</button>
-          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">✏️</button>
-          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">🗑</button>
+          <button class="btn btn-close attended" type="button" data-close-attended="${escapeHtml(a.id)}">${icon('check')} Fui</button>
+          <button class="btn btn-close no_show" type="button" data-close-noshow="${escapeHtml(a.id)}">${icon('x')} No fui</button>
+          ${calHtml}
+          <button class="btn btn-ghost btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">${icon('edit')}</button>
+          <button class="btn btn-ghost btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">${icon('trash')}</button>
         </div></div>
       ` : `
         <div class="appt-actions"><div class="appt-actions-row">
-          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">✏️</button>
-          <button class="btn btn-ghost btn-sm btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">🗑</button>
+          <button class="btn btn-ghost btn-icon" type="button" data-edit="${escapeHtml(a.id)}" aria-label="Editar">${icon('edit')}</button>
+          <button class="btn btn-ghost btn-icon" type="button" data-delete="${escapeHtml(a.id)}" aria-label="Eliminar">${icon('trash')}</button>
         </div></div>
       `) : '';
       return `
@@ -1581,7 +1779,8 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     };
 
     const bindListListeners = () => {
-      const el = $('turnosList'); if (!el) return;
+      const el = $('turnosList'); if (!el || el._bound) return;
+      el._bound = true;
       const mountAtBind = currentMountId;
       el.addEventListener('click', e => {
         if (mountAtBind !== currentMountId) return;
@@ -1768,17 +1967,15 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       const pend = document.querySelector('[data-rec-filter="pendientes"]');
       const cumpl = document.querySelector('[data-rec-filter="cumplidos"]');
       if (pend) pend.innerHTML = `Pendientes <span class="tab-count">${s.pending}</span>`;
-      if (cumpl) cumpl.innerHTML = `Cumplidos <span class="tab-count">${state.reminders.length - s.pending}</span>`;
+      if (cumpl) cumpl.innerHTML = `Hechos <span class="tab-count">${state.reminders.length - s.pending}</span>`;
     };
 
     const renderStatsCards = () => {
       const el = $('recStats'); if (!el) return;
       const s = stats();
       el.innerHTML = `
-        ${renderSummaryCard({ view: 'recordatorios', icon: '⏳', label: 'Pendientes', value: String(s.pending), sub: s.pending === 1 ? 'Recordatorio pendiente' : 'Recordatorios pendientes', state: s.pending === 0 ? 'empty' : 'ok' })}
-        ${renderSummaryCard({ view: 'recordatorios', icon: '📅', label: 'Para hoy', value: String(s.today), sub: s.today === 0 ? 'Nada para hoy' : (s.today === 1 ? 'Uno para hoy' : 'Varios para hoy'), state: s.today > 0 ? 'today' : 'empty' })}
-        ${renderSummaryCard({ view: 'recordatorios', icon: '⚠️', label: 'Vencidos', value: String(s.overdue), sub: s.overdue === 0 ? 'Todo al día' : (s.overdue === 1 ? 'Uno vencido' : 'Varios vencidos'), state: s.overdue > 0 ? 'overdue' : 'ok' })}
-        ${renderSummaryCard({ view: 'recordatorios', icon: '📋', label: 'Total', value: String(s.total), sub: 'Recordatorios registrados', state: s.total === 0 ? 'empty' : 'ok' })}
+        ${renderSummaryCard({ view: 'recordatorios', icon: 'bell', label: 'Para hoy', value: String(s.today), sub: `${s.pending} pendiente${s.pending === 1 ? '' : 's'} en total`, state: s.today > 0 ? 'today' : 'empty', tone: 'avisos' })}
+        ${renderSummaryCard({ view: 'recordatorios', icon: 'alert', label: 'Vencidos', value: String(s.overdue), sub: s.overdue === 0 ? 'Todo al día' : (s.overdue === 1 ? 'Uno vencido' : 'Varios vencidos'), state: s.overdue > 0 ? 'overdue' : 'ok', tone: s.overdue > 0 ? 'avisos' : 'muted' })}
       `;
     };
 
@@ -1792,8 +1989,8 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       else if (isToday) classes.push('today');
       if (isEditing) classes.push('is-editing');
       const dateCls = isOverdue ? 'overdue' : (isToday ? 'today' : '');
-      const metaParts = [`<span class="rm-date ${dateCls}">📅 ${escapeHtml(fmtDateFull(r.date))}</span>`];
-      if (r.time) metaParts.push(`<span class="rm-time">🕐 ${escapeHtml(r.time)}</span>`);
+      const metaParts = [`<span class="rm-date ${dateCls}">${icon('calendar')} ${escapeHtml(fmtDateFull(r.date))}</span>`];
+      if (r.time) metaParts.push(`<span class="rm-time">${icon('clock')} ${escapeHtml(r.time)}</span>`);
       const notesHtml = r.notes ? `<div class="reminder-notes">${escapeHtml(r.notes)}</div>` : '';
       const editFormHtml = isEditing ? `
         <div class="edit-form" data-edit-form="${escapeHtml(r.id)}">
@@ -1812,7 +2009,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       return `
         <div class="${classes.join(' ')}" data-reminder="${escapeHtml(r.id)}">
           <button class="reminder-check" type="button" ${isDone ? 'disabled aria-disabled="true"' : `data-mark-done="${escapeHtml(r.id)}"`} aria-label="${isDone ? 'Cumplido' : 'Marcar como cumplido'}">
-            <span class="check-icon" aria-hidden="true">✓</span>
+            <span class="check-icon">${icon('check')}</span>
           </button>
           <div class="reminder-body">
             <div class="reminder-title">${escapeHtml(r.title)}</div>
@@ -1822,8 +2019,9 @@ input[type="file"] { padding: 8px; cursor: pointer; }
           </div>
           ${!isEditing ? `
             <div class="reminder-actions">
-              <button class="btn btn-ghost btn-icon" type="button" data-edit="${escapeHtml(r.id)}" aria-label="Editar" title="Editar">✏️</button>
-              <button class="btn btn-ghost btn-icon" type="button" data-delete="${escapeHtml(r.id)}" aria-label="Eliminar" title="Eliminar">🗑</button>
+              ${(!isDone && !isPast) ? gcalLink({ title: r.title, date: r.date, time: r.time, details: r.notes }, { label: 'Agregar a Google Calendar', cls: 'btn btn-ghost btn-icon', iconOnly: true }) : ''}
+              <button class="btn btn-ghost btn-icon" type="button" data-edit="${escapeHtml(r.id)}" aria-label="Editar" title="Editar">${icon('edit')}</button>
+              <button class="btn btn-ghost btn-icon" type="button" data-delete="${escapeHtml(r.id)}" aria-label="Eliminar" title="Eliminar">${icon('trash')}</button>
             </div>
           ` : ''}
         </div>
@@ -1843,7 +2041,8 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     };
 
     const bindListListeners = () => {
-      const el = $('recList'); if (!el) return;
+      const el = $('recList'); if (!el || el._bound) return;
+      el._bound = true;
       const mountAtBind = currentMountId;
       el.addEventListener('click', e => {
         if (mountAtBind !== currentMountId) return;
@@ -2001,7 +2200,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       };
     };
     const computeStorage = () => {
-      const keys = [KEY_UNAS, KEY_CICLO, KEY_TURNOS, KEY_RECORDATORIOS, THEME_KEY];
+      const keys = [KEY_UNAS, KEY_CICLO, KEY_TURNOS, KEY_RECORDATORIOS, THEME_KEY, KEY_PERFIL];
       let total = 0;
       for (const k of keys) total += estimateBytes(readRaw(k));
       return total;
@@ -2017,7 +2216,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
         <div class="setting-row">
           <div class="sr-info">
             <div class="sr-title">Contenido actual</div>
-            <div class="sr-desc">${c.unas} visitas de uñas · ${c.ciclo} períodos · ${c.turnos} turnos · ${c.recs} recordatorios</div>
+            <div class="sr-desc">${c.unas} visitas de uñas · ${c.ciclo} períodos · ${c.turnos} turnos · ${c.recs} avisos</div>
           </div>
         </div>
         <div class="setting-row">
@@ -2040,19 +2239,22 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       `;
     };
 
-    const doExportAll = () => {
+    const doExportAll = async () => {
       try {
+        const photos = await unasModule.exportPhotos();
         const bundle = {
           app: 'mi-espacio-hub',
           version: HUB_VERSION,
           exportedAt: new Date().toISOString(),
           theme: currentTheme,
+          profile: loadProfile(),
           data: {
             unas: readLS(KEY_UNAS),
             ciclo: readLS(KEY_CICLO),
             turnos: readLS(KEY_TURNOS),
             recordatorios: readLS(KEY_RECORDATORIOS),
           },
+          photos,
         };
         const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -2095,39 +2297,55 @@ input[type="file"] { padding: 8px; cursor: pointer; }
           }
           throw new Error('nada-restaurado');
         }
-        if (typeof raw.theme === 'string' && (raw.theme === 'light' || raw.theme === 'dark')) {
-          currentTheme = raw.theme;
-          applyTheme(currentTheme); saveTheme(currentTheme);
-        }
-        renderOverview();
-        toast(`Copia restaurada (${restoredCount} sección${restoredCount === 1 ? '' : 'es'}).`);
+        if (typeof raw.theme === 'string' && (raw.theme === 'light' || raw.theme === 'dark')) setTheme(raw.theme);
+        if (raw.profile && typeof raw.profile === 'object') saveProfile({ name: typeof raw.profile.name === 'string' ? raw.profile.name : '', welcomed: true });
+        let photosCount = 0;
+        if (Array.isArray(raw.photos)) photosCount = await unasModule.importPhotos(raw.photos);
+        renderView('ajustes');
+        toast(`Copia restaurada (${restoredCount} sección${restoredCount === 1 ? '' : 'es'}${photosCount ? `, ${photosCount} foto${photosCount === 1 ? '' : 's'}` : ''}).`);
       } catch (err) {
         logErr('import-all', err);
         toast('No se pudo restaurar esa copia.', 'error');
       }
     };
 
-    const doResetAll = () => {
-      const answer = window.prompt('Esta acción borrará TODOS los datos de las 4 secciones. Escribí BORRAR para confirmar.');
-      if (answer !== 'BORRAR') { toast('Borrado cancelado.', 'error'); return; }
+    const doResetAll = async () => {
+      const answer = window.prompt('Esto borra TODOS los datos (uñas, fotos, ciclo, turnos y avisos). Escribí BORRAR para confirmar.');
+      if (answer === null) return;
+      if (answer.trim().toUpperCase() !== 'BORRAR') { toast('No se borró nada.', 'error'); return; }
       try {
         localStorage.removeItem(KEY_UNAS);
         localStorage.removeItem(KEY_CICLO);
         localStorage.removeItem(KEY_TURNOS);
         localStorage.removeItem(KEY_RECORDATORIOS);
-        if ('indexedDB' in window) {
-          try {
-            const req = indexedDB.deleteDatabase('agendaUnasDB');
-            req.onsuccess = () => log('IDB eliminada');
-          } catch (e) { logErr('idb delete', e); }
-        }
+        await unasModule.resetPhotos();
         renderOverview();
         toast('Todos los datos borrados.');
       } catch (e) { toast('No se pudo completar el borrado.', 'error'); }
     };
 
+    const renderThemeButtons = () => {
+      document.querySelectorAll('[data-set-theme]').forEach(b => {
+        const on = b.dataset.setTheme === currentTheme;
+        b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    };
+
     const mount = () => {
       renderOverview();
+      const nameInp = $('ajustesName'), preview = $('ajustesGreetPreview');
+      if (nameInp) {
+        nameInp.value = loadProfile().name;
+        const upd = () => { if (preview) preview.textContent = greetingFor(nameInp.value); };
+        upd();
+        nameInp.addEventListener('input', upd);
+        const saveName = () => { if (saveProfile({ name: nameInp.value, welcomed: true })) toast('Nombre guardado.'); else toast('No se pudo guardar.', 'error'); };
+        const nameBtn = $('ajustesSaveName');
+        if (nameBtn) nameBtn.addEventListener('click', saveName);
+        nameInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveName(); } });
+      }
+      renderThemeButtons();
+      document.querySelectorAll('[data-set-theme]').forEach(b => b.addEventListener('click', () => { setTheme(b.dataset.setTheme); renderThemeButtons(); }));
       const exportBtn = $('ajustesExportAll');
       if (exportBtn) exportBtn.addEventListener('click', doExportAll);
       const importBtn = $('ajustesImportAll'), importFile = $('ajustesImportFile');
@@ -2142,133 +2360,176 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       }
       const resetBtn = $('ajustesResetAll');
       if (resetBtn) resetBtn.addEventListener('click', doResetAll);
-      const themeBtn = $('ajustesThemeToggle');
-      if (themeBtn) themeBtn.addEventListener('click', () => { toggleTheme(); renderOverview(); toast('Tema cambiado.'); });
     };
     return { mount };
   })();
 
   /* VISTAS */
+  const fold = ({ id, title, ico, open, body }) => `
+    <details class="fold" ${id ? `id="${id}"` : ''} ${open ? 'open' : ''}>
+      <summary><span class="sum-left">${ico ? icon(ico) : ''}${escapeHtml(title)}</span>${icon('chevron', 'chev')}</summary>
+      <div class="fold-body">${body}</div>
+    </details>`;
+  const dataFold = prefix => fold({ title: 'Copia y datos de esta sección', ico: 'download', body: `
+    <p>Todo se guarda en este celular. Para una copia completa (con fotos) usá Ajustes.</p>
+    <div class="actions">
+      <button class="btn btn-ghost btn-sm" id="${prefix}ExportData" type="button">Exportar copia</button>
+      <button class="btn btn-ghost btn-sm" id="${prefix}ImportData" type="button">Restaurar copia</button>
+      <button class="btn btn-danger btn-sm" id="${prefix}ResetData" type="button">Borrar todo</button>
+    </div>
+    <input id="${prefix}ImportFile" type="file" accept="application/json,.json" hidden>` });
+
   const views = {
+    bienvenida: () => `
+      <div class="welcome">
+        <div class="w-logo"><img src="./icon.svg" alt=""></div>
+        <div>
+          <h1>Bienvenida a Mi espacio</h1>
+          <p class="w-lead">Uñas, ciclo, turnos y avisos en un solo lugar. Todo queda guardado en tu celular.</p>
+        </div>
+        <div>
+          <label for="welcomeName">¿Cómo te llamás?</label>
+          <input id="welcomeName" type="text" placeholder="Tu nombre" maxlength="30" autocomplete="given-name">
+          <div class="field-hint">Lo usamos solo para saludarte. Podés cambiarlo en Ajustes.</div>
+        </div>
+        <div class="w-preview"><span>Así te va a saludar</span><strong id="welcomePreview">Hola</strong></div>
+        <div class="w-actions">
+          <button class="btn btn-primary" id="welcomeStart" type="button">Empezar</button>
+          <button class="btn" id="welcomeSkip" type="button" style="color: var(--muted)">Ahora no</button>
+        </div>
+      </div>
+    `,
+
     inicio: () => {
       const unas = computeUnas(), ciclo = computeCiclo(), turnos = computeTurnos(), recs = computeRecordatorios();
       const events = computeEvents(), alerts = computeAlerts();
       const hasAny = [unas, ciclo, turnos, recs].some(s => s.state !== 'empty');
-      const h = new Date().getHours();
-      const gw = h >= 5 && h < 12 ? 'Buenos días' : h >= 12 && h < 19 ? 'Buenas tardes' : 'Buenas noches';
-      const ge = h >= 5 && h < 12 ? '☀️' : h >= 12 && h < 19 ? '🌤️' : '🌙';
       const now = new Date();
       const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
       const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-      let subtitle = `${days[now.getDay()]} ${now.getDate()} de ${months[now.getMonth()]}`;
-      if (alerts.length) subtitle += ' · Necesitás atención en algo';
-      else if (events.some(e => e.date === todayISO())) subtitle += ' · Tenés cosas para hoy';
-      else if (events.length) subtitle += ` · ${events.length} evento${events.length === 1 ? '' : 's'} próximo${events.length === 1 ? '' : 's'}`;
-      else if (!hasAny) subtitle += ' · Empezá registrando algo';
-      else subtitle += ' · Todo tranqui por acá';
+      const dateLine = `${days[now.getDay()]} ${now.getDate()} de ${months[now.getMonth()]}`;
+      const today = todayISO();
+
       let unasCard;
-      if (unas.state === 'empty') unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: 'Sin datos', sub: 'Registrá tu primer turno', state: 'empty' };
-      else if (unas.days < 0) unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: `Pasado hace ${-unas.days} día${-unas.days === 1 ? '' : 's'}`, sub: fmtDate(unas.date), state: 'warn' };
-      else if (unas.days === 0) unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: '¡Hoy!', sub: unas.kind, state: 'today' };
-      else unasCard = { view: 'unas', icon: '💅', label: 'Uñas', value: `En ${unas.days} día${unas.days === 1 ? '' : 's'}`, sub: `${unas.kind} · ${fmtDate(unas.date)}`, state: 'ok' };
+      if (unas.state === 'empty') unasCard = { view: 'unas', icon: 'nails', label: 'Uñas', value: 'Sin datos', sub: 'Registrá la última vez', state: 'empty' };
+      else {
+        const pct = Math.round(((unas.total - unas.days) / unas.total) * 100);
+        if (unas.days < 0) unasCard = { view: 'unas', icon: 'nails', label: 'Uñas', value: `Pasada ${-unas.days} día${-unas.days === 1 ? '' : 's'}`, sub: `De ${unas.kind}`, state: 'warn', progress: 100 };
+        else if (unas.days === 0) unasCard = { view: 'unas', icon: 'nails', label: 'Uñas', value: '¡Hoy!', sub: `De ${unas.kind}`, state: 'today', progress: 100 };
+        else unasCard = { view: 'unas', icon: 'nails', label: 'Uñas', value: `En ${unas.days} día${unas.days === 1 ? '' : 's'}`, sub: `De ${unas.kind} · ${fmtDate(unas.date)}`, state: 'ok', progress: pct };
+      }
       let cicloCard;
-      if (ciclo.state === 'empty') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: 'Sin datos', sub: 'Cargá tu primer período', state: 'empty' };
-      else if (ciclo.state === 'ongoing') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `En curso · día ${ciclo.day}`, sub: `Desde ${fmtDate(ciclo.date)}`, state: 'today' };
-      else if (ciclo.state === 'overdue') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `${ciclo.days} día${ciclo.days === 1 ? '' : 's'} de atraso`, sub: `Esperado ${fmtDate(ciclo.date)}`, state: 'overdue' };
-      else if (ciclo.state === 'today') cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: '¡Hoy!', sub: 'Período esperado', state: 'today' };
-      else cicloCard = { view: 'ciclo', icon: '🌸', label: 'Ciclo', value: `En ${ciclo.days} día${ciclo.days === 1 ? '' : 's'}`, sub: fmtDate(ciclo.date), state: 'ok' };
+      if (ciclo.state === 'empty') cicloCard = { view: 'ciclo', icon: 'drop', label: 'Ciclo', value: 'Sin datos', sub: 'Cargá tu período', state: 'empty', tone: 'ciclo' };
+      else if (ciclo.state === 'ongoing') cicloCard = { view: 'ciclo', icon: 'drop', label: 'Ciclo', value: `Período · día ${ciclo.day}`, sub: `Desde ${fmtDate(ciclo.date)}`, state: 'today', tone: 'ciclo' };
+      else if (ciclo.state === 'overdue') cicloCard = { view: 'ciclo', icon: 'drop', label: 'Ciclo', value: `${ciclo.days} día${ciclo.days === 1 ? '' : 's'} de atraso`, sub: `Esperado ${fmtDate(ciclo.date)}`, state: 'overdue', tone: 'ciclo' };
+      else if (ciclo.state === 'today') cicloCard = { view: 'ciclo', icon: 'drop', label: 'Ciclo', value: `Día ${ciclo.cycleDay}`, sub: 'Período esperado hoy', state: 'today', tone: 'ciclo' };
+      else cicloCard = { view: 'ciclo', icon: 'drop', label: 'Ciclo', value: `Día ${ciclo.cycleDay}`, sub: `Período en ${ciclo.days} día${ciclo.days === 1 ? '' : 's'}`, state: 'ok', tone: 'ciclo' };
       let turnosCard;
-      if (turnos.state === 'empty') turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: 'Sin datos', sub: 'Agregá un turno', state: 'empty' };
-      else if (turnos.days === 0) turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: '¡Hoy!', sub: turnos.title, state: 'today' };
-      else turnosCard = { view: 'turnos', icon: '📅', label: 'Turnos', value: `En ${turnos.days} día${turnos.days === 1 ? '' : 's'}`, sub: turnos.title, state: 'ok' };
+      if (turnos.state === 'empty') turnosCard = { view: 'turnos', icon: 'calendar', label: 'Turnos', value: 'Ninguno', sub: 'Agregá un turno', state: 'empty', tone: 'turnos' };
+      else turnosCard = { view: 'turnos', icon: 'calendar', label: 'Turnos', value: turnos.title, sub: `${turnos.days === 0 ? 'Hoy' : turnos.days === 1 ? 'Mañana' : fmtDateFull(turnos.date)}${turnos.time ? ' · ' + turnos.time : ''}`, state: turnos.days === 0 ? 'today' : 'ok', tone: 'turnos' };
       let recsCard;
-      if (recs.state === 'empty') recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: 'Sin datos', sub: 'Creá un recordatorio', state: 'empty' };
-      else if (recs.overdue > 0) recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: `${recs.overdue} vencido${recs.overdue === 1 ? '' : 's'}`, sub: `${recs.count} pendiente${recs.count === 1 ? '' : 's'} en total`, state: 'overdue' };
-      else recsCard = { view: 'recordatorios', icon: '🔔', label: 'Recordatorios', value: `${recs.count} pendiente${recs.count === 1 ? '' : 's'}`, sub: recs.next ? `Próximo: ${fmtDate(recs.next.date)}` : '', state: 'ok' };
-      const alertsHtml = alerts.length
-        ? alerts.map(a => `<div class="alert-banner ${a.danger ? 'danger' : ''}"><span class="ab-icon" aria-hidden="true">${a.icon}</span><span>${escapeHtml(a.text)}</span></div>`).join('')
-        : '';
+      if (recs.state === 'empty') recsCard = { view: 'recordatorios', icon: 'bell', label: 'Avisos', value: 'Ninguno', sub: 'Creá un aviso', state: 'empty', tone: 'avisos' };
+      else if (recs.overdue > 0) recsCard = { view: 'recordatorios', icon: 'bell', label: 'Avisos', value: `${recs.overdue} vencido${recs.overdue === 1 ? '' : 's'}`, sub: `${recs.count} pendiente${recs.count === 1 ? '' : 's'}`, state: 'overdue', tone: 'avisos' };
+      else {
+        const forToday = recs.next && recs.next.date === today;
+        recsCard = { view: 'recordatorios', icon: 'bell', label: 'Avisos', value: `${recs.count} pendiente${recs.count === 1 ? '' : 's'}`, sub: forToday ? 'Hay uno para hoy' : (recs.next ? `Próximo: ${fmtDate(recs.next.date)}` : ''), state: forToday ? 'warn' : 'ok', tone: 'avisos' };
+      }
+
+      const alertsHtml = alerts.map(a => `<div class="alert-banner ${a.danger ? 'danger' : ''}"><span class="ab-icon">${icon(a.icon)}</span><span>${escapeHtml(a.text)}</span></div>`).join('');
+
+      let heroHtml = '';
+      const first = events[0];
+      if (first) {
+        const d = dayDiff(today, first.date);
+        const when = d === 0 ? 'Hoy' : d === 1 ? 'Mañana' : `En ${d} días`;
+        heroHtml = `<div class="hero">
+          <div class="hero-kicker">${icon('sparkle')} Lo próximo</div>
+          <div><div class="hero-title">${escapeHtml(first.title)}</div><div class="hero-sub">${when} · ${escapeHtml(fmtDateFull(first.date))}${first.time ? ' · ' + escapeHtml(first.time) : ''}</div></div>
+          <div class="hero-actions">
+            ${first.cal ? gcalLink(first.cal, { label: 'Agregar a Google Calendar', cls: 'btn-light' }) : ''}
+            <button type="button" class="btn-outline-light" data-action="go:${escapeHtml(first.view)}">Ver</button>
+          </div>
+        </div>`;
+      }
+
+      const DOW = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
       let eventsHtml = '';
-      if (events.length) {
-        eventsHtml = `<h2 class="section-title">Próximos eventos</h2><div class="event-list">${events.slice(0, 6).map(e => {
-          const isToday = e.date === todayISO();
-          const timeStr = e.time ? ` · ${e.time}` : '';
-          return `<div class="event-item ${isToday ? 'is-today' : ''}" data-view="${escapeHtml(e.view)}" role="button" tabindex="0"><div class="ei-ico" aria-hidden="true">${e.icon}</div><div class="ei-body"><div class="ei-title">${escapeHtml(e.title)}</div><div class="ei-meta">${escapeHtml(e.meta)}${timeStr}</div></div><div class="ei-when">${whenLabel(e.date)}<span class="ei-when-sub">${fmtDate(e.date)}</span></div></div>`;
+      const rest = events.slice(first ? 1 : 0, 7);
+      if (rest.length) {
+        eventsHtml = `<h2 class="section-title">Lo que viene</h2><div class="event-list">${rest.map(e => {
+          const [y, m, dd] = e.date.split('-').map(Number);
+          const isToday = e.date === today;
+          const dow = isToday ? 'Hoy' : DOW[new Date(y, m - 1, dd).getDay()];
+          return `<div class="event-item ${isToday ? 'is-today' : ''}" data-view="${escapeHtml(e.view)}" role="button" tabindex="0"><div class="ei-date"><span class="ei-day">${dd}</span><span class="ei-dow">${dow}</span></div><div class="ei-body"><div class="ei-title">${escapeHtml(e.title)}</div><div class="ei-meta">${escapeHtml(e.meta)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div><span class="ei-when">${escapeHtml(whenLabel(e.date).toLowerCase())}</span></div>`;
         }).join('')}</div>`;
       }
+
       let emptyHtml = '';
       if (!hasAny) {
-        emptyHtml = `<div class="empty-dashboard"><h2>Tu espacio está vacío</h2><p>Empezá por donde quieras. Todo queda guardado en tu dispositivo.</p><div class="empty-shortcuts"><button type="button" data-view="unas"><span class="es-ico">💅</span><span>Registrar uñas</span></button><button type="button" data-view="ciclo"><span class="es-ico">🌸</span><span>Mi ciclo</span></button><button type="button" data-view="turnos"><span class="es-ico">📅</span><span>Agregar turno</span></button><button type="button" data-view="recordatorios"><span class="es-ico">🔔</span><span>Recordatorio</span></button></div></div>`;
+        emptyHtml = `<div class="empty-dashboard"><h2>Empecemos</h2><p>Elegí por dónde arrancar. Todo queda guardado en tu celular.</p><div class="empty-shortcuts"><button type="button" data-view="unas"><span class="es-ico">${icon('nails')}</span><span>Uñas</span></button><button type="button" data-view="ciclo"><span class="es-ico">${icon('drop')}</span><span>Ciclo</span></button><button type="button" data-view="turnos"><span class="es-ico">${icon('calendar')}</span><span>Turnos</span></button><button type="button" data-view="recordatorios"><span class="es-ico">${icon('bell')}</span><span>Avisos</span></button></div></div>`;
       }
+
       return `
-        <div class="page-head"><h1>${gw} ${ge}</h1><p>${escapeHtml(subtitle)}</p></div>
+        <div class="page-head"><div class="ph-text"><div class="tag cap">${escapeHtml(dateLine)}</div><h1>${escapeHtml(greetingFor(loadProfile().name))}</h1></div>${settingsBtn()}</div>
         ${alertsHtml}
-        <div class="summary-grid">
+        ${heroHtml}
+        ${hasAny ? `<div class="summary-grid">
           ${renderSummaryCard(unasCard)}
           ${renderSummaryCard(cicloCard)}
           ${renderSummaryCard(turnosCard)}
           ${renderSummaryCard(recsCard)}
-        </div>
+        </div>` : ''}
         ${eventsHtml}
         ${emptyHtml}
       `;
     },
 
     unas: () => `
-      ${viewHeader({ tag: 'Sección', title: '💅 Agenda de uñas', subtitle: 'Registrá cuándo te hiciste las uñas y calculá el próximo turno. Se guardan las últimas 3 fotos de cada tipo.' })}
+      ${viewHeader({ title: 'Mis uñas', action: `<button type="button" class="btn btn-ghost btn-sm" data-open-fold="unasFormFold">${icon('plus')} Otra fecha</button>` })}
       <div id="unasCards" class="cards-grid"></div>
-      <div class="panel">
-        <h2>Registrar una visita</h2>
-        <p>Elegí manos o pies, cargá la fecha de la última vez y, si querés, sacale una foto.</p>
+      <div id="unasPhotosWrap" hidden>
+        <h2 class="section-title">Últimas fotos</h2>
+        <div id="unasPhotos" class="photo-strip"></div>
+      </div>
+      ${fold({ id: 'unasFormFold', title: 'Registrar otra fecha o una foto', ico: 'camera', body: `
+        <p>Para cargar una visita de otro día, o sumarle una foto. Se guardan las últimas 3 fotos de manos y 3 de pies.</p>
         <div class="form-grid">
-          <div><label for="unasKind">Tipo de visita</label><select id="unasKind"><option value="manos">Manos</option><option value="pies">Pies</option></select></div>
-          <div><label for="unasDate">Fecha de la visita</label><input id="unasDate" type="date"></div>
+          <div><label for="unasKind">Tipo</label><select id="unasKind"><option value="manos">Manos</option><option value="pies">Pies</option></select></div>
+          <div><label for="unasDate">Fecha</label><input id="unasDate" type="date"></div>
           <div class="full">
             <label for="unasPhoto">Foto (opcional)</label>
-            <input id="unasPhoto" type="file" accept="image/*" capture="environment">
-            <div class="field-hint">Se comprime automáticamente (máx. 900 px).</div>
+            <input id="unasPhoto" type="file" accept="image/*">
+            <div class="field-hint">Se achica sola para no ocupar lugar.</div>
             <div id="unasPhotoPreviewWrap" class="photo-preview-wrap" hidden>
               <div id="unasPhotoPreview" class="photo-preview"></div>
               <button type="button" class="btn btn-ghost btn-sm" id="unasClearPhoto" style="margin-top:8px;">Quitar foto</button>
             </div>
           </div>
         </div>
-        <div class="actions"><button class="btn btn-primary" id="unasSaveVisit" type="button">Guardar última visita</button></div>
-      </div>
-      <div class="panel">
-        <h2>Configurar recordatorios</h2>
-        <p>Indicá cada cuántas semanas solés hacerte las uñas y cuántos días antes querés que te avise.</p>
+        <div class="actions"><button class="btn btn-primary btn-block" id="unasSaveVisit" type="button">Guardar</button></div>` })}
+      ${fold({ title: 'Historial de visitas', ico: 'list', body: `<div id="unasHistory"></div>` })}
+      ${fold({ title: 'Cada cuánto y cuándo avisar', ico: 'clock', body: `
         <div class="form-grid">
-          <div><label for="unasHandsInterval">Manos: cada cuántas semanas</label><input id="unasHandsInterval" type="number" min="1" max="52" step="1" value="3"></div>
-          <div><label for="unasFeetInterval">Pies: cada cuántas semanas</label><input id="unasFeetInterval" type="number" min="1" max="52" step="1" value="5"></div>
-          <div><label for="unasLeadDays">Avisar con anticipación (días)</label><input id="unasLeadDays" type="number" min="0" max="30" step="1" value="3"></div>
-          <div><label for="unasReminderTime">Hora orientativa del aviso</label><select id="unasReminderTime"><option value="09:00">09:00</option><option value="12:00">12:00</option><option value="18:00">18:00</option></select></div>
+          <div><label for="unasHandsInterval">Manos: cada (semanas)</label><input id="unasHandsInterval" type="number" inputmode="numeric" min="1" max="52" step="1" value="3"></div>
+          <div><label for="unasFeetInterval">Pies: cada (semanas)</label><input id="unasFeetInterval" type="number" inputmode="numeric" min="1" max="52" step="1" value="5"></div>
+          <div><label for="unasLeadDays">Avisar antes (días)</label><input id="unasLeadDays" type="number" inputmode="numeric" min="0" max="30" step="1" value="3"></div>
+          <div><label for="unasReminderTime">Hora del aviso</label><select id="unasReminderTime"><option value="09:00">09:00</option><option value="12:00">12:00</option><option value="18:00">18:00</option></select></div>
         </div>
-        <div class="actions"><button class="btn btn-secondary" id="unasSaveSettings" type="button">Guardar configuración</button></div>
-      </div>
-      <div class="panel">
-        <h2>Historial de visitas</h2>
-        <p>Las visitas registradas, de la más reciente a la más antigua.</p>
-        <div id="unasHistory"></div>
-        <div class="actions">
-          <button class="btn btn-ghost" id="unasExportData" type="button">Exportar copia</button>
-          <button class="btn btn-ghost" id="unasImportData" type="button">Restaurar copia</button>
-          <button class="btn btn-ghost" id="unasResetData" type="button">Borrar todo</button>
-        </div>
-        <input id="unasImportFile" type="file" accept="application/json" hidden>
-      </div>
+        <div class="field-hint">El botón de calendario agenda "Pedir turno" esos días antes, a esa hora.</div>
+        <div class="actions"><button class="btn btn-secondary" id="unasSaveSettings" type="button">Guardar</button></div>` })}
+      ${dataFold('unas')}
       <div id="unasLightbox" class="lightbox" hidden><button type="button" class="lightbox-close" id="unasLightboxClose" aria-label="Cerrar">×</button><img id="unasLightboxImg" alt=""></div>
     `,
 
     ciclo: () => `
-      ${viewHeader({ tag: 'Sección', title: '🌸 Mi ciclo', subtitle: 'Registrá tu período y llevá el control de tus ciclos.' })}
-      <div id="cicloSummary" class="summary-grid"></div>
-      <div class="panel" style="margin-top:16px;">
-        <h2>Tu ciclo</h2>
+      ${viewHeader({ title: 'Mi ciclo' })}
+      <div id="cicloHero" class="cycle-hero"></div>
+      <div class="panel">
+        <h2>Fases</h2>
         <div class="phase-wrap">
           <div id="cicloPhaseBar" class="phase-bar"></div>
           <div class="phase-legend">
-            <span><span class="dot menstrual"></span> Menstrual</span>
+            <span><span class="dot menstrual"></span> Período</span>
             <span><span class="dot follicular"></span> Folicular</span>
             <span><span class="dot fertile"></span> Fértil</span>
             <span><span class="dot luteal"></span> Lútea</span>
@@ -2276,154 +2537,101 @@ input[type="file"] { padding: 8px; cursor: pointer; }
           <div id="cicloPhaseTodayLabel" class="phase-today-label"></div>
         </div>
       </div>
-      <div class="panel"><h2>Acciones rápidas</h2><div id="cicloQuickActions" class="quick-actions"></div></div>
-      <div class="panel">
-        <h2>Registrar un período</h2>
-        <p>Para el día a día usá las acciones rápidas. Este formulario es para cargar un período pasado o corregir fechas.</p>
+      <div id="cicloSummary" class="summary-grid" style="margin-top:14px"></div>
+      ${fold({ title: 'Historial', ico: 'list', body: `<div id="cicloHistory"></div>` })}
+      ${fold({ title: 'Estadísticas', ico: 'hourglass', body: `<div id="cicloStats" class="stats-grid"></div>` })}
+      ${fold({ title: 'Cargar un período pasado', ico: 'plus', body: `
+        <p>Para el día a día usá el botón de arriba. Esto es para cargar fechas viejas o corregir.</p>
         <div class="form-grid">
           <div><label for="cicloStartDate">Inicio</label><input id="cicloStartDate" type="date"></div>
-          <div><label for="cicloEndDate">Fin (opcional)</label><input id="cicloEndDate" type="date"><div class="field-hint">Dejalo vacío si sigue en curso.</div></div>
+          <div><label for="cicloEndDate">Fin (opcional)</label><input id="cicloEndDate" type="date"><div class="field-hint">Vacío si sigue en curso.</div></div>
         </div>
-        <div class="actions"><button class="btn btn-primary" id="cicloAddPeriod" type="button">Guardar período</button></div>
-      </div>
-      <div class="panel"><h2>Historial</h2><p>Del más reciente al más antiguo.</p><div id="cicloHistory"></div></div>
-      <div class="panel"><h2>Estadísticas</h2><div id="cicloStats" class="stats-grid"></div></div>
-      <div class="panel">
-        <h2>Configuración</h2>
-        <p>Estos valores se usan cuando no hay suficientes ciclos registrados para calcular un promedio.</p>
+        <div class="actions"><button class="btn btn-primary" id="cicloAddPeriod" type="button">Guardar período</button></div>` })}
+      ${fold({ title: 'Configuración', ico: 'gear', body: `
+        <p>Se usan mientras no haya suficientes ciclos cargados para sacar un promedio.</p>
         <div class="form-grid">
-          <div><label for="cicloDefaultCycleLength">Duración del ciclo (días)</label><input id="cicloDefaultCycleLength" type="number" min="21" max="45" step="1" value="28"></div>
-          <div><label for="cicloDefaultPeriodLength">Duración del período (días)</label><input id="cicloDefaultPeriodLength" type="number" min="1" max="15" step="1" value="5"></div>
-          <div><label for="cicloLutealPhase">Fase lútea (días)</label><input id="cicloLutealPhase" type="number" min="9" max="17" step="1" value="14"></div>
+          <div><label for="cicloDefaultCycleLength">Ciclo (días)</label><input id="cicloDefaultCycleLength" type="number" inputmode="numeric" min="21" max="45" step="1" value="28"></div>
+          <div><label for="cicloDefaultPeriodLength">Período (días)</label><input id="cicloDefaultPeriodLength" type="number" inputmode="numeric" min="1" max="15" step="1" value="5"></div>
+          <div><label for="cicloLutealPhase">Fase lútea (días)</label><input id="cicloLutealPhase" type="number" inputmode="numeric" min="9" max="17" step="1" value="14"></div>
         </div>
-        <div class="actions"><button class="btn btn-secondary" id="cicloSaveSettings" type="button">Guardar configuración</button></div>
-      </div>
-      <div class="panel">
-        <h2>Datos</h2>
-        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
-        <div class="actions">
-          <button class="btn btn-ghost" id="cicloExportData" type="button">Exportar copia</button>
-          <button class="btn btn-ghost" id="cicloImportData" type="button">Restaurar copia</button>
-          <button class="btn btn-ghost" id="cicloResetData" type="button">Borrar todo</button>
-        </div>
-        <input id="cicloImportFile" type="file" accept="application/json" hidden>
-        <div class="field-hint" style="margin-top:12px;">Esta app no reemplaza la consulta médica. Las estimaciones de ovulación y ventana fértil son aproximadas y no deben usarse como método anticonceptivo.</div>
-      </div>
+        <div class="actions"><button class="btn btn-secondary" id="cicloSaveSettings" type="button">Guardar</button></div>` })}
+      ${dataFold('ciclo')}
+      <div class="field-hint" style="margin-top:14px;">Las fechas son estimadas. No sirve como método anticonceptivo ni reemplaza la consulta médica.</div>
     `,
 
     turnos: () => `
-      ${viewHeader({ tag: 'Sección', title: '📅 Turnos', subtitle: 'Médicos, dentista, peluquería: todo lo que tenga fecha.' })}
+      ${viewHeader({ title: 'Turnos', subtitle: 'Médicos, dentista, peluquería: todo lo que tenga fecha.' })}
       <div id="turnosStats" class="summary-grid"></div>
-      <div class="panel">
-        <h2>Agregar un turno</h2>
-        <p>Completá los datos. El título y la fecha son obligatorios.</p>
+      ${fold({ id: 'turnosFormFold', title: 'Agregar un turno', ico: 'plus', body: `
         <div class="form-grid">
-          <div class="full"><label for="turnosTitle">Título <span class="required">*</span></label><input id="turnosTitle" type="text" placeholder="Ej: Dentista" maxlength="80"></div>
+          <div class="full"><label for="turnosTitle">Qué es <span class="required">*</span></label><input id="turnosTitle" type="text" placeholder="Ej: Dentista" maxlength="80"></div>
           <div><label for="turnosDate">Fecha <span class="required">*</span></label><input id="turnosDate" type="date"></div>
-          <div><label for="turnosTime">Hora (opcional)</label><input id="turnosTime" type="time"></div>
-          <div class="full"><label for="turnosPlace">Lugar (opcional)</label><input id="turnosPlace" type="text" placeholder="Ej: Clínica del Sol" maxlength="100"></div>
-          <div class="full"><label for="turnosNotes">Notas (opcional)</label><textarea id="turnosNotes" placeholder="Cosas para recordar: llevar estudios, ayuno, etc." maxlength="500"></textarea></div>
+          <div><label for="turnosTime">Hora</label><input id="turnosTime" type="time"></div>
+          <div class="full"><label for="turnosPlace">Lugar</label><input id="turnosPlace" type="text" placeholder="Ej: Consultorio" maxlength="100"></div>
+          <div class="full"><label for="turnosNotes">Notas</label><textarea id="turnosNotes" placeholder="Llevar estudios, ayuno, etc." maxlength="500"></textarea></div>
         </div>
-        <div class="actions"><button class="btn btn-primary" id="turnosAdd" type="button">Agregar turno</button></div>
-      </div>
-      <div class="panel">
-        <h2>Lista de turnos</h2>
+        <div class="actions"><button class="btn btn-primary btn-block" id="turnosAdd" type="button">Agregar turno</button></div>` })}
+      <div class="list-block">
         <div class="filter-tabs">
           <button type="button" data-filter="proximos" class="active">Próximos</button>
           <button type="button" data-filter="cerrados">Cerrados</button>
         </div>
         <div id="turnosList" class="appt-list"></div>
       </div>
-      <div class="panel">
-        <h2>Datos</h2>
-        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
-        <div class="actions">
-          <button class="btn btn-ghost" id="turnosExportData" type="button">Exportar copia</button>
-          <button class="btn btn-ghost" id="turnosImportData" type="button">Restaurar copia</button>
-          <button class="btn btn-ghost" id="turnosResetData" type="button">Borrar todo</button>
-        </div>
-        <input id="turnosImportFile" type="file" accept="application/json" hidden>
-      </div>
+      ${dataFold('turnos')}
     `,
 
     recordatorios: () => `
-      ${viewHeader({ tag: 'Sección', title: '🔔 Recordatorios', subtitle: 'Tareas con fecha para no olvidarte de nada. Cuando las cumplís, quedan cerradas.' })}
+      ${viewHeader({ title: 'Avisos', subtitle: 'Cosas para no olvidarte. Cuando las hacés, las tildás.' })}
       <div id="recStats" class="summary-grid"></div>
-      <div class="panel">
-        <h2>Agregar un recordatorio</h2>
-        <p>El título y la fecha son obligatorios. La hora y las notas son opcionales.</p>
+      ${fold({ id: 'recFormFold', title: 'Agregar un aviso', ico: 'plus', body: `
         <div class="form-grid">
-          <div class="full"><label for="recTitle">Título <span class="required">*</span></label><input id="recTitle" type="text" placeholder="Ej: Llamar al plomero" maxlength="100"></div>
+          <div class="full"><label for="recTitle">Qué hay que hacer <span class="required">*</span></label><input id="recTitle" type="text" placeholder="Ej: Comprar acetona" maxlength="100"></div>
           <div><label for="recDate">Fecha <span class="required">*</span></label><input id="recDate" type="date"></div>
-          <div><label for="recTime">Hora (opcional)</label><input id="recTime" type="time"></div>
-          <div class="full"><label for="recNotes">Notas (opcional)</label><textarea id="recNotes" placeholder="Detalles para no olvidar" maxlength="500"></textarea></div>
+          <div><label for="recTime">Hora</label><input id="recTime" type="time"></div>
+          <div class="full"><label for="recNotes">Notas</label><textarea id="recNotes" placeholder="Detalles" maxlength="500"></textarea></div>
         </div>
-        <div class="actions"><button class="btn btn-primary" id="recAdd" type="button">Agregar recordatorio</button></div>
-      </div>
-      <div class="panel">
-        <h2>Lista de recordatorios</h2>
+        <div class="actions"><button class="btn btn-primary btn-block" id="recAdd" type="button">Agregar aviso</button></div>` })}
+      <div class="list-block">
         <div class="filter-tabs">
           <button type="button" data-rec-filter="pendientes" class="active">Pendientes</button>
-          <button type="button" data-rec-filter="cumplidos">Cumplidos</button>
+          <button type="button" data-rec-filter="cumplidos">Hechos</button>
         </div>
         <div id="recList" class="reminder-list"></div>
       </div>
-      <div class="panel">
-        <h2>Datos</h2>
-        <p>Todo se guarda en este navegador. Exportá una copia para no perderlo.</p>
-        <div class="actions">
-          <button class="btn btn-ghost" id="recExportData" type="button">Exportar copia</button>
-          <button class="btn btn-ghost" id="recImportData" type="button">Restaurar copia</button>
-          <button class="btn btn-ghost" id="recResetData" type="button">Borrar todo</button>
-        </div>
-        <input id="recImportFile" type="file" accept="application/json" hidden>
-      </div>
+      ${dataFold('rec')}
     `,
 
     ajustes: () => `
-      ${viewHeader({ tag: 'Sección', title: '⚙️ Ajustes', subtitle: 'Configuración general, gestión de datos y respaldo completo.' })}
+      ${viewHeader({ title: 'Ajustes', back: 'inicio' })}
       <div class="panel">
-        <h2>Resumen</h2>
-        <div id="ajustesOverview" class="settings-list"></div>
+        <label for="ajustesName">Tu nombre</label>
+        <div style="display:flex; gap:10px;">
+          <input id="ajustesName" type="text" placeholder="Tu nombre" maxlength="30" autocomplete="given-name">
+          <button class="btn btn-primary" id="ajustesSaveName" type="button">Guardar</button>
+        </div>
+        <div class="greet-preview">En Inicio vas a ver: <strong id="ajustesGreetPreview">Hola</strong></div>
       </div>
       <div class="panel">
         <h2>Apariencia</h2>
-        <div class="settings-list">
-          <div class="setting-row">
-            <div class="sr-info">
-              <div class="sr-title">Tema</div>
-              <div class="sr-desc">Alterná entre oscuro y claro. También podés hacerlo desde el ícono del header.</div>
-            </div>
-            <div class="sr-action"><button class="btn btn-secondary btn-sm" id="ajustesThemeToggle" type="button">Cambiar tema</button></div>
-          </div>
+        <div class="segmented" role="group" aria-label="Tema">
+          <button type="button" data-set-theme="light">Claro</button>
+          <button type="button" data-set-theme="dark">Oscuro</button>
         </div>
       </div>
       <div class="panel">
-        <h2>Respaldo completo</h2>
-        <p>Exportá todo el hub (uñas, ciclo, turnos, recordatorios) en un solo archivo. Restaurar reemplaza las secciones incluidas en la copia.</p>
-        <div class="settings-list">
-          <div class="setting-row">
-            <div class="sr-info"><div class="sr-title">Exportar todo</div><div class="sr-desc">Un único JSON con todas las secciones. Ideal para llevar a otro dispositivo.</div></div>
-            <div class="sr-action"><button class="btn btn-primary btn-sm" id="ajustesExportAll" type="button">Exportar</button></div>
-          </div>
-          <div class="setting-row">
-            <div class="sr-info"><div class="sr-title">Restaurar todo</div><div class="sr-desc">Cargá una copia completa. Se conserva el tema si viene en el archivo.</div></div>
-            <div class="sr-action"><button class="btn btn-secondary btn-sm" id="ajustesImportAll" type="button">Restaurar</button></div>
-          </div>
+        <h2>Copia de seguridad</h2>
+        <p>Guarda todo, fotos incluidas, en un archivo. Sirve si cambiás de celular o borrás el navegador.</p>
+        <div class="form-grid">
+          <button class="btn btn-primary" id="ajustesExportAll" type="button">${icon('download')} Guardar copia</button>
+          <button class="btn btn-secondary" id="ajustesImportAll" type="button">${icon('upload')} Restaurar</button>
         </div>
-        <input id="ajustesImportFile" type="file" accept="application/json" hidden>
+        <input id="ajustesImportFile" type="file" accept="application/json,.json" hidden>
       </div>
-      <div class="panel">
-        <h2>Zona de peligro</h2>
-        <div class="danger-zone">
-          <div class="dz-title">Borrar todos los datos</div>
-          <div class="dz-desc">Se eliminan las 4 secciones y las fotos asociadas en este dispositivo. El tema se conserva. Esta acción no se puede deshacer.</div>
-          <button class="btn btn-danger btn-sm" id="ajustesResetAll" type="button">Borrar todo</button>
-        </div>
-      </div>
-      <div class="panel">
-        <h2>Acerca de</h2>
-        <p>Mi espacio es un hub local sin servidores. Todo queda guardado en este navegador. El respaldo completo es tu seguro contra cualquier pérdida.</p>
+      ${fold({ title: 'Información', ico: 'list', body: `<div id="ajustesOverview" class="settings-list"></div>` })}
+      <div class="danger-zone">
+        <button class="btn-text-danger" id="ajustesResetAll" type="button">Borrar todos los datos</button>
+        <div class="dz-desc">Borra uñas, fotos, ciclo, turnos y avisos de este celular. No se puede deshacer.</div>
       </div>
     `,
   };
@@ -2434,7 +2642,24 @@ input[type="file"] { padding: 8px; cursor: pointer; }
     turnos: () => turnosModule.mount(),
     recordatorios: () => recordatoriosModule.mount(),
     ajustes: () => ajustesModule.mount(),
+    bienvenida: () => {
+      const inp = $('welcomeName'), prev = $('welcomePreview');
+      const p = loadProfile();
+      if (inp) {
+        inp.value = p.name;
+        const upd = () => { if (prev) prev.textContent = greetingFor(inp.value); };
+        upd(); inp.addEventListener('input', upd);
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('welcomeStart').click(); } });
+      }
+      const finish = name => {
+        if (!saveProfile({ name, welcomed: true })) toast('No se pudo guardar. Revisá que el navegador permita guardar datos.', 'error');
+        navigate('inicio');
+      };
+      $('welcomeStart').addEventListener('click', () => finish(inp ? inp.value : ''));
+      $('welcomeSkip').addEventListener('click', () => finish(''));
+    },
   };
+  const toast = (msg, type) => showToast(msg, type);
 
   const renderView = view => {
     if (!VIEWS[view]) view = DEFAULT_VIEW;
@@ -2446,7 +2671,16 @@ input[type="file"] { padding: 8px; cursor: pointer; }
       main.innerHTML = `<div class="view-enter"><div class="placeholder"><h2>Algo se rompió</h2><p>${escapeHtml(e.message || '')}</p></div></div>`;
     }
     setActiveNav(view);
+    document.body.classList.toggle('no-nav', view === 'bienvenida');
     document.title = VIEWS[view].title + ' · Mi espacio';
+    main.querySelectorAll('[data-open-fold]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const d = $(btn.dataset.openFold);
+        if (!d) return;
+        d.open = true;
+        d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
     main.querySelectorAll('[data-view]').forEach(el => {
       if (el.tagName !== 'BUTTON') {
         el.addEventListener('click', () => navigate(el.dataset.view));
@@ -2472,7 +2706,7 @@ input[type="file"] { padding: 8px; cursor: pointer; }
 
   const init = () => {
     renderNav();
-    $('themeToggle').addEventListener('click', toggleTheme);
+    $('headerSettings').addEventListener('click', () => navigate('ajustes'));
     $('brand').addEventListener('click', () => navigate('inicio'));
     $('brand').addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('inicio'); }

@@ -1,10 +1,12 @@
-const CACHE = 'mi-espacio-v1';
+const CACHE = 'mi-espacio-v2';
 const PRECACHE = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon.svg',
-  './icon-maskable.svg'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png'
 ];
 
 self.addEventListener('install', e => {
@@ -28,7 +30,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // HTML: red primero (para recibir actualizaciones), caché como fallback
+  // HTML: red primero (para recibir actualizaciones), caché como respaldo
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request)
@@ -42,7 +44,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Assets: caché primero, red como fallback
+  // Resto: caché primero, red como respaldo
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );
