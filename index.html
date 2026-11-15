@@ -111,6 +111,9 @@ details.fold > .fold-body { padding: 0 18px 18px; }
 details.fold > .fold-body > p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.5; }
 
 .alert-banner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); background: var(--warn-soft); color: var(--warn); font-size: .92rem; font-weight: 700; margin-bottom: 12px; line-height: 1.4; }
+.alert-banner[data-view] { cursor: pointer; }
+.btn.is-added, .btn-light.is-added { color: var(--good); }
+button.nail-thumb { border: 1.5px dashed var(--border-strong); background: var(--accent-tint); color: var(--accent); cursor: pointer; }
 .alert-banner.danger { background: var(--danger-soft); color: var(--danger); }
 .alert-banner .ab-icon { display: grid; place-items: center; flex-shrink: 0; }
 
@@ -432,7 +435,8 @@ body.no-nav .nav-mobile { display: none; }
   const KEY_TURNOS = 'hubTurnosV1';
   const KEY_RECORDATORIOS = 'hubRecordatoriosV1';
   const KEY_PERFIL = 'hubPerfilV1';
-  const HUB_VERSION = '2.0.0';
+  const KEY_CAL = 'hubCalAddedV1';
+  const HUB_VERSION = '3.0.0';
 
   /* Íconos de línea (SVG) */
   const ICON_PATHS = {
@@ -441,6 +445,7 @@ body.no-nav .nav-mobile { display: none; }
     drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
     calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
     calPlus: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>',
+    calCheck: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M9 15.5l2 2 4-4"/>',
     bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
@@ -474,7 +479,9 @@ body.no-nav .nav-mobile { display: none; }
   const DEFAULT_VIEW = 'inicio';
 
   /* Perfil (nombre) */
+  let profileMem = null;
   const loadProfile = () => {
+    if (profileMem) return { ...profileMem };
     try {
       const raw = JSON.parse(localStorage.getItem(KEY_PERFIL) || 'null');
       if (raw && typeof raw === 'object') return { name: typeof raw.name === 'string' ? raw.name.slice(0, 30) : '', welcomed: !!raw.welcomed };
@@ -482,7 +489,9 @@ body.no-nav .nav-mobile { display: none; }
     return { name: '', welcomed: false };
   };
   const saveProfile = p => {
-    try { localStorage.setItem(KEY_PERFIL, JSON.stringify({ name: (p.name || '').trim().slice(0, 30), welcomed: !!p.welcomed })); return true; }
+    const clean = { name: (p.name || '').trim().slice(0, 30), welcomed: !!p.welcomed };
+    profileMem = clean;
+    try { localStorage.setItem(KEY_PERFIL, JSON.stringify(clean)); return true; }
     catch (e) { return false; }
   };
   const greetingFor = name => { const n = (name || '').trim(); return n ? `Hola, ${n}` : 'Hola'; };
@@ -507,13 +516,41 @@ body.no-nav .nav-mobile { display: none; }
     try { const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; if (tz) p.set('ctz', tz); } catch (e) {}
     return 'https://calendar.google.com/calendar/render?' + p.toString();
   };
+  const loadCalAdded = () => {
+    try { const raw = JSON.parse(localStorage.getItem(KEY_CAL) || '{}'); return raw && typeof raw === 'object' ? raw : {}; }
+    catch (e) { return {}; }
+  };
+  const calKey = o => `${o.date}|${o.time || ''}|${o.title || ''}`;
+  const markCalAdded = key => {
+    const all = loadCalAdded();
+    const limit = addDaysISO(todayISO(), -60);
+    for (const k of Object.keys(all)) if (k.slice(0, 10) < limit) delete all[k];
+    all[key] = 1;
+    try { localStorage.setItem(KEY_CAL, JSON.stringify(all)); } catch (e) {}
+  };
+  const ADDED_LABEL = 'Ya agendado (tocá para agregarlo otra vez)';
   const gcalLink = (opts, { label = 'Agregar a Google Calendar', cls = 'btn btn-secondary', iconOnly = false } = {}) => {
     const url = gcalUrl(opts);
     if (!url) return '';
+    const key = calKey(opts);
+    const added = !!loadCalAdded()[key];
+    const ic = icon(added ? 'calCheck' : 'calPlus');
+    const aria = added ? ADDED_LABEL : label;
+    const base = `class="${cls}${added ? ' is-added' : ''}" href="${escapeHtml(url)}" target="_blank" rel="noopener" data-cal-key="${escapeHtml(key)}"`;
     return iconOnly
-      ? `<a class="${cls}" href="${escapeHtml(url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}">${icon('calPlus')}</a>`
-      : `<a class="${cls}" href="${escapeHtml(url)}" target="_blank" rel="noopener">${icon('calPlus')}<span>${escapeHtml(label)}</span></a>`;
+      ? `<a ${base} aria-label="${escapeHtml(aria)}" title="${escapeHtml(aria)}">${ic}</a>`
+      : `<a ${base}>${ic}<span>${escapeHtml(added ? 'Agendado' : label)}</span></a>`;
   };
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[data-cal-key]');
+    if (!a) return;
+    markCalAdded(a.dataset.calKey);
+    a.classList.add('is-added');
+    const svg = a.querySelector('svg'); if (svg) svg.outerHTML = icon('calCheck');
+    const span = a.querySelector('span');
+    if (span) span.textContent = 'Agendado';
+    else { a.setAttribute('aria-label', ADDED_LABEL); a.setAttribute('title', ADDED_LABEL); }
+  });
 
   const $ = id => document.getElementById(id);
   const log = (...args) => { if (location.search.includes('debug')) console.log('[hub]', ...args); };
@@ -680,11 +717,11 @@ body.no-nav .nav-mobile { display: none; }
     const u = computeUnas();
     if (u.state === 'ok') {
       const date = u.date < today ? today : u.date;
-      events.push({ view: 'unas', icon: 'nails', title: `Uñas de ${u.kind}`, date, meta: u.date < today ? `Se pasó la fecha (${fmtDate(u.date)})` : 'Fecha estimada', cal: unasCalEvent(u.kind, u.date, u.lead, u.time) });
+      events.push({ view: 'unas', icon: 'nails', title: `Uñas de ${u.kind}`, date, late: u.date < today ? dayDiff(u.date, today) : 0, origDate: u.date, meta: u.date < today ? `Se pasó la fecha (${fmtDate(u.date)})` : 'Fecha estimada', cal: unasCalEvent(u.kind, u.date, u.lead, u.time) });
     }
     const c = computeCiclo();
     if (c.state === 'ok' || c.state === 'today' || c.state === 'overdue') {
-      events.push({ view: 'ciclo', icon: 'drop', title: c.state === 'overdue' ? 'Período (atrasado)' : 'Próximo período', date: c.state === 'overdue' ? today : c.date, meta: c.state === 'overdue' ? `Atraso de ${c.days} día${c.days === 1 ? '' : 's'}` : 'Fecha estimada', cal: c.state === 'overdue' ? null : { title: 'Período (estimado)', date: c.date, details: 'Fecha estimada por Mi espacio.' } });
+      events.push({ view: 'ciclo', icon: 'drop', title: c.state === 'overdue' ? 'Período (atrasado)' : 'Próximo período', late: c.state === 'overdue' ? c.days : 0, origDate: c.date, date: c.state === 'overdue' ? today : c.date, meta: c.state === 'overdue' ? `Atraso de ${c.days} día${c.days === 1 ? '' : 's'}` : 'Fecha estimada', cal: c.state === 'overdue' ? null : { title: 'Período (estimado)', date: c.date, details: 'Fecha estimada por Mi espacio.' } });
     }
     const tD = readLS(KEY_TURNOS);
     if (tD && Array.isArray(tD.appointments)) {
@@ -707,11 +744,16 @@ body.no-nav .nav-mobile { display: none; }
   const computeAlerts = () => {
     const alerts = [];
     const c = computeCiclo();
-    if (c.state === 'overdue' && c.days >= 3) alerts.push({ icon: 'drop', text: `Tu período está ${c.days} días atrasado.`, danger: c.days >= 7 });
+    if (c.state === 'overdue' && c.days >= 3) alerts.push({ view: 'ciclo', icon: 'drop', text: `Tu período está ${c.days} días atrasado.`, danger: c.days >= 7 });
     const rD = readLS(KEY_RECORDATORIOS);
     if (rD && Array.isArray(rD.reminders)) {
       const v = rD.reminders.filter(r => r && isValidISODate(r.date) && !r.done && r.date < todayISO()).length;
-      if (v > 0) alerts.push({ icon: 'bell', text: `Tenés ${v} aviso${v === 1 ? '' : 's'} vencido${v === 1 ? '' : 's'}.` });
+      if (v > 0) alerts.push({ view: 'recordatorios', icon: 'bell', text: `Tenés ${v} aviso${v === 1 ? '' : 's'} vencido${v === 1 ? '' : 's'}.` });
+    }
+    const tD = readLS(KEY_TURNOS);
+    if (tD && Array.isArray(tD.appointments)) {
+      const t = tD.appointments.filter(a => a && isValidISODate(a.date) && a.date < todayISO() && normalizeApptStatus(a) === 'pending').length;
+      if (t > 0) alerts.push({ view: 'turnos', icon: 'calendar', text: t === 1 ? 'Tenés 1 turno que ya pasó: marcá si fuiste.' : `Tenés ${t} turnos que ya pasaron: marcá si fuiste.` });
     }
     return alerts;
   };
@@ -823,7 +865,7 @@ body.no-nav .nav-mobile { display: none; }
   /* ==================== UÑAS ==================== */
   const unasModule = (() => {
     const DB_NAME = 'agendaUnasDB'; const DB_VERSION = 1; const PHOTO_STORE = 'photos';
-    const MAX_PHOTOS_PER_KIND = 3; const PHOTO_MAX_DIM = 900; const PHOTO_QUALITY = 0.75;
+    const MAX_PHOTOS_PER_KIND = 12; const NOTE_MAX = 120; const PHOTO_MAX_DIM = 900; const PHOTO_QUALITY = 0.75;
     const VALID_TIMES = ['09:00', '12:00', '18:00'];
     const DEFAULTS = () => ({ settings: { handsInterval: 3, feetInterval: 5, leadDays: 3, reminderTime: '09:00' }, visits: [] });
     let state = DEFAULTS();
@@ -833,7 +875,7 @@ body.no-nav .nav-mobile { display: none; }
     let currentMountId = 0;
     try { const k = '__t__' + Math.random(); localStorage.setItem(k, '1'); localStorage.removeItem(k); }
     catch (e) { lsAvailable = false; }
-    const toast = (msg, type) => window.__hubToast ? window.__hubToast(msg, type) : console.log(msg);
+    const toast = (msg, type, opts) => window.__hubToast ? window.__hubToast(msg, type, opts) : console.log(msg);
 
     const openDB = () => {
       if (dbPromise) return dbPromise;
@@ -900,7 +942,7 @@ body.no-nav .nav-mobile { display: none; }
       if (!v || typeof v !== 'object') return null;
       if (!['manos','pies'].includes(v.kind)) return null;
       if (!isValidISODate(v.date)) return null;
-      return { id: (typeof v.id === 'string' && v.id) ? v.id : newId(), kind: v.kind, date: v.date };
+      return { id: (typeof v.id === 'string' && v.id) ? v.id : newId(), kind: v.kind, date: v.date, note: typeof v.note === 'string' ? v.note.trim().slice(0, NOTE_MAX) : '' };
     };
     const sanitizeState = raw => {
       const out = { settings: sanitizeSettings(raw && raw.settings), visits: [] };
@@ -970,7 +1012,8 @@ body.no-nav .nav-mobile { display: none; }
         const weeks = kind === 'manos' ? state.settings.handsInterval : state.settings.feetInterval;
         const thumb = photo
           ? `<div class="nail-thumb"><img src="${photo}" alt="Foto de la última visita de ${kind}" loading="lazy" data-visit="${escapeHtml(v.id)}"></div>`
-          : `<div class="nail-thumb" aria-hidden="true">${icon('camera')}</div>`;
+          : (v ? `<button type="button" class="nail-thumb" data-add-photo="${kind}" aria-label="Agregar foto de ${kind}">${icon('camera')}</button>`
+               : `<div class="nail-thumb" aria-hidden="true">${icon('camera')}</div>`);
         if (!v) {
           return `<article class="nail-card" data-kind="${kind}"><div class="card-top">${thumb}<div class="ct-text"><h3>${title}</h3><small>Todavía sin registrar</small></div><span class="pill none">Sin datos</span></div><div class="nail-due"><span class="nd-hint">Tocá el botón el día que te las hagas y te calculo la próxima fecha (cada ${weeks} semana${weeks === 1 ? '' : 's'}).</span></div><div class="nail-actions"><button class="btn btn-primary" type="button" data-done="${kind}">Me las hice hoy</button></div></article>`;
         }
@@ -982,7 +1025,7 @@ body.no-nav .nav-mobile { display: none; }
         const [pillCls, pillTxt] = PILL[rem.cls] || PILL[''];
         const cal = unasCalEvent(kind, due, state.settings.leadDays, state.settings.reminderTime);
         return `<article class="nail-card" data-kind="${kind}">
-          <div class="card-top">${thumb}<div class="ct-text"><h3>${title}</h3><small>Última vez: ${escapeHtml(fmtDateLong(v.date))}</small></div><span class="pill ${pillCls}">${pillTxt}</span></div>
+          <div class="card-top">${thumb}<div class="ct-text"><h3>${title}</h3><small>Última vez: ${escapeHtml(fmtDateLong(v.date))}${v.note ? ' · ' + escapeHtml(v.note) : ''}</small></div><span class="pill ${pillCls}">${pillTxt}</span></div>
           <div class="nail-due">
             <div class="nd-row"><span class="nd-big ${pillCls}">${big}</span><span class="nd-date">${escapeHtml(fmtDateFull(due))}</span></div>
             <div class="progress ${pillCls ? '' : 'soft'}"><span style="width:${pct}%"></span></div>
@@ -997,7 +1040,7 @@ body.no-nav .nav-mobile { display: none; }
         for (const [id, url] of photoCache) { const v = state.visits.find(x => x.id === id); if (v) list.push({ id, url, v }); }
         list.sort((a, b) => b.v.date.localeCompare(a.v.date));
         const wrap = $('unasPhotosWrap'); if (wrap) wrap.hidden = !list.length;
-        photosEl.innerHTML = list.slice(0, 6).map(p => `<button type="button" aria-label="Ver foto de ${p.v.kind} del ${escapeHtml(fmtDateLong(p.v.date))}"><img src="${p.url}" alt="" loading="lazy" data-visit="${escapeHtml(p.id)}"><span class="ps-tag">${p.v.kind === 'manos' ? 'Manos' : 'Pies'} · ${escapeHtml(fmtDate(p.v.date))}</span></button>`).join('');
+        photosEl.innerHTML = list.slice(0, 9).map(p => `<button type="button" aria-label="Ver foto de ${p.v.kind} del ${escapeHtml(fmtDateLong(p.v.date))}"><img src="${p.url}" alt="" loading="lazy" data-visit="${escapeHtml(p.id)}"><span class="ps-tag">${p.v.kind === 'manos' ? 'Manos' : 'Pies'} · ${escapeHtml(fmtDate(p.v.date))}</span></button>`).join('');
         if (!photosEl._bound) {
           photosEl.addEventListener('click', e => { const img = e.target.closest('button') && e.target.closest('button').querySelector('img[data-visit]'); if (img) openLightbox(photoCache.get(img.dataset.visit)); });
           photosEl._bound = true;
@@ -1007,7 +1050,7 @@ body.no-nav .nav-mobile { display: none; }
       if (!sorted.length) historyEl.innerHTML = '<div class="empty">Todavía no hay visitas. Cuando registres una, aparecerá acá.</div>';
       else historyEl.innerHTML = sorted.map(v => {
         const dataUrl = photoCache.get(v.id);
-        return `<div class="history-item"><div class="history-left">${dataUrl ? `<img class="history-thumb" src="${dataUrl}" alt="Foto de ${v.kind}" loading="lazy" data-visit="${escapeHtml(v.id)}">` : ''}<div><strong>${v.kind === 'manos' ? 'Manos' : 'Pies'}</strong><small>${escapeHtml(fmtDateLong(v.date))}</small></div></div><button class="btn btn-ghost btn-sm" type="button" data-delete="${escapeHtml(v.id)}">Eliminar</button></div>`;
+        return `<div class="history-item"><div class="history-left">${dataUrl ? `<img class="history-thumb" src="${dataUrl}" alt="Foto de ${v.kind}" loading="lazy" data-visit="${escapeHtml(v.id)}">` : ''}<div><strong>${v.kind === 'manos' ? 'Manos' : 'Pies'}</strong><small>${escapeHtml(fmtDateLong(v.date))}</small>${v.note ? `<small>${escapeHtml(v.note)}</small>` : ''}</div></div><button class="btn btn-ghost btn-sm" type="button" data-delete="${escapeHtml(v.id)}">Eliminar</button></div>`;
       }).join('');
       bindSectionListeners();
     };
@@ -1019,10 +1062,12 @@ body.no-nav .nav-mobile { display: none; }
           if (mountAtBind !== currentMountId) return;
           const img = e.target.closest('img[data-visit]');
           if (img) { openLightbox(photoCache.get(img.dataset.visit)); return; }
+          const addPhoto = e.target.closest('[data-add-photo]');
+          if (addPhoto) { quickPhotoKind = addPhoto.dataset.addPhoto; const qi = $('unasQuickPhoto'); if (qi) { qi.value = ''; qi.click(); } return; }
           const btn = e.target.closest('[data-done]');
           if (!btn || btn.disabled) return;
           btn.disabled = true;
-          try { await registerVisit(btn.dataset.done, todayISO(), null); }
+          try { await registerVisit(btn.dataset.done, todayISO(), null, { undo: true }); }
           finally { if (btn.isConnected) btn.disabled = false; }
         });
         cardsEl._bound = true;
@@ -1058,10 +1103,26 @@ body.no-nav .nav-mobile { display: none; }
       const prev = $('unasPhotoPreview'); if (prev) prev.textContent = '';
       const wrap = $('unasPhotoPreviewWrap'); if (wrap) wrap.hidden = true;
     };
-    const registerVisit = async (kind, date, photoDataUrl) => {
+    let quickPhotoKind = null;
+    const removeVisit = async id => {
+      const v = state.visits.find(x => x.id === id);
+      if (!v) return false;
+      state.visits = state.visits.filter(x => x.id !== id);
+      if (!save()) { state.visits.push(v); return false; }
+      if (photoCache.has(id)) { photoCache.delete(id); try { await deletePhoto(id); } catch (e) {} }
+      if ($('unasCards')) renderSections();
+      return true;
+    };
+    const registerVisit = async (kind, date, photoDataUrl, opts = {}) => {
       if (!isValidISODate(date)) { toast('Elegí una fecha válida.', 'error'); return false; }
       if (date > todayISO()) { toast('La fecha no puede ser futura.', 'error'); return false; }
+      const note = typeof opts.note === 'string' ? opts.note.trim().slice(0, NOTE_MAX) : '';
       const existing = state.visits.find(v => v.kind === kind && v.date === date);
+      if (existing && note && note !== existing.note) {
+        const prevNote = existing.note; existing.note = note;
+        if (!save()) { existing.note = prevNote; return false; }
+        if (!photoDataUrl) { renderSections(); toast('Nota guardada.'); return true; }
+      }
       if (existing) {
         if (photoDataUrl && dbSupported) {
           try {
@@ -1077,7 +1138,7 @@ body.no-nav .nav-mobile { display: none; }
         toast(`La visita de ${kind} de ${fmtDate(date)} ya está registrada.`);
         return true;
       }
-      const visit = { id: newId(), kind, date };
+      const visit = { id: newId(), kind, date, note };
       state.visits.push(visit);
       if (!save()) { state.visits = state.visits.filter(v => v.id !== visit.id); return false; }
       if (photoDataUrl && dbSupported) {
@@ -1085,7 +1146,9 @@ body.no-nav .nav-mobile { display: none; }
         catch (e) { toast('La visita se guardó, pero la foto no.', 'error'); }
       }
       renderSections(); clearPhotoSelection();
-      toast(`Visita de ${kind} guardada.`);
+      if (opts.undo) {
+        toast(`Listo: uñas de ${kind} anotadas hoy.`, 'success', { duration: 7000, action: { label: 'Deshacer', onClick: async () => { if (await removeVisit(visit.id)) toast('Deshecho.'); } } });
+      } else toast(`Visita de ${kind} guardada.`);
       return true;
     };
     const deleteVisit = async id => {
@@ -1135,6 +1198,22 @@ body.no-nav .nav-mobile { display: none; }
         } catch (err) { clearPhotoSelection(); toast('No se pudo procesar la imagen.', 'error'); }
       });
       const clearBtn = $('unasClearPhoto'); if (clearBtn) clearBtn.addEventListener('click', clearPhotoSelection);
+      const quickInp = $('unasQuickPhoto');
+      if (quickInp) quickInp.addEventListener('change', async e => {
+        const file = e.target.files && e.target.files[0];
+        const kind = quickPhotoKind; quickPhotoKind = null;
+        if (!file || !kind) return;
+        const v = latest(kind);
+        if (!v) return;
+        if (!dbSupported) { toast('Este navegador no permite guardar fotos.', 'error'); return; }
+        try {
+          const dataUrl = await compressImage(file);
+          await putPhoto({ visitId: v.id, dataUrl });
+          photoCache.set(v.id, dataUrl);
+          await prunePhotos(kind);
+          renderSections(); toast('Foto guardada.');
+        } catch (err) { toast('No se pudo guardar la foto.', 'error'); }
+      });
       const kindSel = $('unasKind');
       if (kindSel) kindSel.addEventListener('change', () => {
         if (pendingPhoto && pendingPhotoKind && pendingPhotoKind !== kindSel.value) {
@@ -1146,8 +1225,8 @@ body.no-nav .nav-mobile { display: none; }
         if (saving) return;
         saving = true; saveBtn.disabled = true;
         try {
-          const ok = await registerVisit($('unasKind').value, getInputDate(), pendingPhoto);
-          if (ok) { setInputDate(todayISO()); clearPhotoSelection(); }
+          const ok = await registerVisit($('unasKind').value, getInputDate(), pendingPhoto, { note: $('unasNote') ? $('unasNote').value : '' });
+          if (ok) { setInputDate(todayISO()); clearPhotoSelection(); if ($('unasNote')) $('unasNote').value = ''; }
         } catch (e) { toast('Error inesperado al guardar.', 'error'); }
         finally { saving = false; if (saveBtn.isConnected) saveBtn.disabled = false; }
       });
@@ -1164,7 +1243,7 @@ body.no-nav .nav-mobile { display: none; }
       const exportBtn = $('unasExportData');
       if (exportBtn) exportBtn.addEventListener('click', () => {
         try {
-          const data = { app: 'agenda-unas', version: 2, exportedAt: new Date().toISOString(), settings: state.settings, visits: state.visits.map(v => ({ id: v.id, kind: v.kind, date: v.date, photo: photoCache.get(v.id) || null })) };
+          const data = { app: 'agenda-unas', version: 2, exportedAt: new Date().toISOString(), settings: state.settings, visits: state.visits.map(v => ({ id: v.id, kind: v.kind, date: v.date, note: v.note || '', photo: photoCache.get(v.id) || null })) };
           const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
           const url = URL.createObjectURL(blob); const a = document.createElement('a');
           a.href = url; a.download = `copia-agenda-unas-${todayISO()}.json`;
@@ -1683,7 +1762,7 @@ body.no-nav .nav-mobile { display: none; }
       if (prox) prox.innerHTML = `Próximos <span class="tab-count">${s.upcoming}</span>`;
       if (cerrados) {
         const total = state.appointments.length - s.upcoming;
-        cerrados.innerHTML = `Cerrados <span class="tab-count">${total}</span>`;
+        cerrados.innerHTML = `Pasados <span class="tab-count">${total}</span>`;
       }
     };
 
@@ -1870,7 +1949,7 @@ body.no-nav .nav-mobile { display: none; }
 
     const mount = () => {
       currentMountId++; editingId = null;
-      load(); resetForm(); renderStatsCards(); setFilter('proximos');
+      load(); resetForm(); renderStatsCards(); setFilter(stats().overdue > 0 ? 'cerrados' : 'proximos');
       document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filter)));
       const addBtn = $('turnosAdd');
       if (addBtn) addBtn.addEventListener('click', () => { if (addAppointment()) resetForm(); });
@@ -2318,6 +2397,7 @@ body.no-nav .nav-mobile { display: none; }
         localStorage.removeItem(KEY_CICLO);
         localStorage.removeItem(KEY_TURNOS);
         localStorage.removeItem(KEY_RECORDATORIOS);
+        localStorage.removeItem(KEY_CAL);
         await unasModule.resetPhotos();
         renderOverview();
         toast('Todos los datos borrados.');
@@ -2435,16 +2515,16 @@ body.no-nav .nav-mobile { display: none; }
         recsCard = { view: 'recordatorios', icon: 'bell', label: 'Avisos', value: `${recs.count} pendiente${recs.count === 1 ? '' : 's'}`, sub: forToday ? 'Hay uno para hoy' : (recs.next ? `Próximo: ${fmtDate(recs.next.date)}` : ''), state: forToday ? 'warn' : 'ok', tone: 'avisos' };
       }
 
-      const alertsHtml = alerts.map(a => `<div class="alert-banner ${a.danger ? 'danger' : ''}"><span class="ab-icon">${icon(a.icon)}</span><span>${escapeHtml(a.text)}</span></div>`).join('');
+      const alertsHtml = alerts.map(a => `<div class="alert-banner ${a.danger ? 'danger' : ''}" data-view="${escapeHtml(a.view)}" role="button" tabindex="0"><span class="ab-icon">${icon(a.icon)}</span><span style="flex:1">${escapeHtml(a.text)}</span>${icon('chevron')}</div>`).join('');
 
       let heroHtml = '';
       const first = events[0];
       if (first) {
         const d = dayDiff(today, first.date);
-        const when = d === 0 ? 'Hoy' : d === 1 ? 'Mañana' : `En ${d} días`;
+        const when = first.late ? `Se pasó hace ${first.late} día${first.late === 1 ? '' : 's'}` : (d === 0 ? 'Hoy' : d === 1 ? 'Mañana' : `En ${d} días`);
         heroHtml = `<div class="hero">
           <div class="hero-kicker">${icon('sparkle')} Lo próximo</div>
-          <div><div class="hero-title">${escapeHtml(first.title)}</div><div class="hero-sub">${when} · ${escapeHtml(fmtDateFull(first.date))}${first.time ? ' · ' + escapeHtml(first.time) : ''}</div></div>
+          <div><div class="hero-title">${escapeHtml(first.title)}</div><div class="hero-sub">${when} · ${escapeHtml(fmtDateFull(first.late ? first.origDate : first.date))}${first.time ? ' · ' + escapeHtml(first.time) : ''}</div></div>
           <div class="hero-actions">
             ${first.cal ? gcalLink(first.cal, { label: 'Agregar a Google Calendar', cls: 'btn-light' }) : ''}
             <button type="button" class="btn-outline-light" data-action="go:${escapeHtml(first.view)}">Ver</button>
@@ -2460,7 +2540,7 @@ body.no-nav .nav-mobile { display: none; }
           const [y, m, dd] = e.date.split('-').map(Number);
           const isToday = e.date === today;
           const dow = isToday ? 'Hoy' : DOW[new Date(y, m - 1, dd).getDay()];
-          return `<div class="event-item ${isToday ? 'is-today' : ''}" data-view="${escapeHtml(e.view)}" role="button" tabindex="0"><div class="ei-date"><span class="ei-day">${dd}</span><span class="ei-dow">${dow}</span></div><div class="ei-body"><div class="ei-title">${escapeHtml(e.title)}</div><div class="ei-meta">${escapeHtml(e.meta)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div><span class="ei-when">${escapeHtml(whenLabel(e.date).toLowerCase())}</span></div>`;
+          return `<div class="event-item ${isToday ? 'is-today' : ''}" data-view="${escapeHtml(e.view)}" role="button" tabindex="0"><div class="ei-date"><span class="ei-day">${dd}</span><span class="ei-dow">${dow}</span></div><div class="ei-body"><div class="ei-title">${escapeHtml(e.title)}</div><div class="ei-meta">${escapeHtml(e.meta)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div><span class="ei-when">${escapeHtml(e.late ? 'atrasado' : whenLabel(e.date).toLowerCase())}</span></div>`;
         }).join('')}</div>`;
       }
 
@@ -2492,10 +2572,11 @@ body.no-nav .nav-mobile { display: none; }
         <div id="unasPhotos" class="photo-strip"></div>
       </div>
       ${fold({ id: 'unasFormFold', title: 'Registrar otra fecha o una foto', ico: 'camera', body: `
-        <p>Para cargar una visita de otro día, o sumarle una foto. Se guardan las últimas 3 fotos de manos y 3 de pies.</p>
+        <p>Para cargar una visita de otro día, o sumarle una foto. Se guardan las últimas 12 fotos de manos y 12 de pies.</p>
         <div class="form-grid">
           <div><label for="unasKind">Tipo</label><select id="unasKind"><option value="manos">Manos</option><option value="pies">Pies</option></select></div>
           <div><label for="unasDate">Fecha</label><input id="unasDate" type="date"></div>
+          <div class="full"><label for="unasNote">Nota (opcional)</label><input id="unasNote" type="text" maxlength="120" placeholder="Color, diseño, precio..."></div>
           <div class="full">
             <label for="unasPhoto">Foto (opcional)</label>
             <input id="unasPhoto" type="file" accept="image/*">
@@ -2518,6 +2599,7 @@ body.no-nav .nav-mobile { display: none; }
         <div class="field-hint">El botón de calendario agenda "Pedir turno" esos días antes, a esa hora.</div>
         <div class="actions"><button class="btn btn-secondary" id="unasSaveSettings" type="button">Guardar</button></div>` })}
       ${dataFold('unas')}
+      <input id="unasQuickPhoto" type="file" accept="image/*" hidden>
       <div id="unasLightbox" class="lightbox" hidden><button type="button" class="lightbox-close" id="unasLightboxClose" aria-label="Cerrar">×</button><img id="unasLightboxImg" alt=""></div>
     `,
 
@@ -2574,7 +2656,7 @@ body.no-nav .nav-mobile { display: none; }
       <div class="list-block">
         <div class="filter-tabs">
           <button type="button" data-filter="proximos" class="active">Próximos</button>
-          <button type="button" data-filter="cerrados">Cerrados</button>
+          <button type="button" data-filter="cerrados">Pasados</button>
         </div>
         <div id="turnosList" class="appt-list"></div>
       </div>
@@ -2661,8 +2743,10 @@ body.no-nav .nav-mobile { display: none; }
   };
   const toast = (msg, type) => showToast(msg, type);
 
+  let currentView = DEFAULT_VIEW, lastRenderDay = '';
   const renderView = view => {
     if (!VIEWS[view]) view = DEFAULT_VIEW;
+    currentView = view; lastRenderDay = todayISO();
     const main = $('view');
     try {
       main.innerHTML = `<div class="view-enter">${views[view]()}</div>`;
@@ -2719,6 +2803,14 @@ body.no-nav .nav-mobile { display: none; }
           if (cancelBtn) { e.preventDefault(); cancelBtn.click(); }
         }
       }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') return;
+      const dayChanged = lastRenderDay !== todayISO();
+      const ae = document.activeElement;
+      const typing = ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+      if (typing) return;
+      if (dayChanged || currentView === 'inicio') renderView(parseHash());
     });
     window.addEventListener('hashchange', onHashChange);
     onHashChange();
